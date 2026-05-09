@@ -8627,12 +8627,12 @@ function mapIssues(nodes) {
 function mapReviews(nodes) {
   return nodes.map((n2) => ({
     kind: "review",
-    repo: n2.pullRequest.pullRequest.repository.nameWithOwner,
+    repo: n2.pullRequest.repository.nameWithOwner,
     ts: n2.occurredAt,
     payload: {
-      prNumber: n2.pullRequest.pullRequest.number,
-      prTitle: n2.pullRequest.pullRequest.title,
-      prUrl: n2.pullRequest.pullRequest.url
+      prNumber: n2.pullRequest.number,
+      prTitle: n2.pullRequest.title,
+      prUrl: n2.pullRequest.url
     }
   }));
 }
@@ -13670,11 +13670,15 @@ var initCmd = defineCommand({
     console.log("Next steps:");
     console.log(`  1. cd ${args.dir === "." ? "." : args.dir}`);
     console.log("  2. Edit config.json \u2014 set your GitHub login and LLM provider");
-    console.log("  3. Create a PRIVATE GitHub repository and push:");
-    console.log("       git remote add origin git@github.com:<you>/<repo>.git");
-    console.log("       git push -u origin main");
-    console.log("  4. Add LLM_API_KEY as a repository secret (Settings \u2192 Secrets)");
-    console.log("  5. Trigger the first run: Actions \u2192 Delta CV \u2192 Run workflow (bootstrap mode)");
+    console.log("  3. Copy .env.local.example to .env.local and fill GITHUB_TOKEN + LLM_API_KEY");
+    console.log("  4. Run locally from the Delta source checkout:");
+    console.log("       node /path/to/delta/dist/cli.js observe --since 2026-01-01");
+    console.log("       node /path/to/delta/dist/cli.js evolve --since 2026-01-01");
+    console.log("       node /path/to/delta/dist/cli.js tailor");
+    console.log(
+      "       node /path/to/delta/dist/cli.js lint --file data/tailored/default.md --lang zh"
+    );
+    console.log("  5. Optional later: create a private GitHub repo and push this resume repo");
   }
 });
 var main = defineCommand({

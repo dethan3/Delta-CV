@@ -9229,12 +9229,12 @@ function mapIssues(nodes) {
 function mapReviews(nodes) {
   return nodes.map((n) => ({
     kind: "review",
-    repo: n.pullRequest.pullRequest.repository.nameWithOwner,
+    repo: n.pullRequest.repository.nameWithOwner,
     ts: n.occurredAt,
     payload: {
-      prNumber: n.pullRequest.pullRequest.number,
-      prTitle: n.pullRequest.pullRequest.title,
-      prUrl: n.pullRequest.pullRequest.url
+      prNumber: n.pullRequest.number,
+      prTitle: n.pullRequest.title,
+      prUrl: n.pullRequest.url
     }
   }));
 }

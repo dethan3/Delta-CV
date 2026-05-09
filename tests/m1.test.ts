@@ -312,9 +312,19 @@ describe("collectViaGraphQL", () => {
         nodes: [],
       },
       pullRequestReviewContributions: {
-        totalCount: 0,
+        totalCount: 1,
         pageInfo: { hasNextPage: false, endCursor: null },
-        nodes: [],
+        nodes: [
+          {
+            occurredAt: "2026-05-04T10:00:00Z",
+            pullRequest: {
+              number: 43,
+              title: "Review feature",
+              url: "https://github.com/alice/project/pull/43",
+              repository: { nameWithOwner: "alice/project" },
+            },
+          },
+        ],
       },
     });
 
@@ -324,11 +334,14 @@ describe("collectViaGraphQL", () => {
       since: "2026-01-01T00:00:00Z",
     });
 
-    expect(events).toHaveLength(2);
+    expect(events).toHaveLength(3);
     expect(events[0]?.kind).toBe("commit");
     expect(events[0]?.repo).toBe("alice/project");
     expect(events[1]?.kind).toBe("pr");
     expect(events[1]?.payload).toHaveProperty("number", 42);
+    expect(events[2]?.kind).toBe("review");
+    expect(events[2]?.repo).toBe("alice/project");
+    expect(events[2]?.payload).toHaveProperty("prNumber", 43);
   });
 
   it("filters ignored repos", async () => {

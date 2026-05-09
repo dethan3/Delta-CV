@@ -2,41 +2,65 @@
 
 > 生成时间：<%= it.generatedAt %>
 
+<%
+const entries = it.entries.slice(0, 12);
+const timeline = [...it.entries].sort((a, b) => a.period.from.localeCompare(b.period.from));
+const allStack = [...new Set(it.entries.flatMap((e) => e.stack))].filter(Boolean).slice(0, 36);
+const short = (text, max = 72) => {
+  const normalized = String(text).replace(/\s+/g, " ").trim();
+  return normalized.length > max ? `${normalized.slice(0, max - 1)}…` : normalized;
+};
+const splitHighlights = (text) =>
+  String(text)
+    .split(/(?<=。)|(?=-\s*[\u4e00-\u9fff])/)
+    .map((part) => part.replace(/^-\s*/, "").trim())
+    .filter(Boolean);
+%>
+
 ## 概要
 
 <% if (it.topTags && it.topTags.length > 0) { %>
 **核心技术方向**：<%= it.topTags.slice(0, 8).join("、") %>
+
 <% } %>
 <% if (it.focusRising && it.focusRising.length > 0) { %>
-**上升趋势**：<%= it.focusRising.join("、") %>
+**上升趋势**：<%= it.focusRising.slice(0, 8).join("、") %>
+
 <% } %>
 <% if (it.focusDeclining && it.focusDeclining.length > 0) { %>
-**下降趋势**：<%= it.focusDeclining.join("、") %>
-<% } %>
-
-## 项目经历
-
-<% for (const entry of it.entries) { %>
-### <%= entry.title %> · `<%= entry.repo %>`
-
-**时间**：<%= entry.period.from %> — <%= entry.period.to %>
-
-**技术栈**：<%= entry.stack.join(", ") %>
-
-<% for (const h of entry.highlights) { %>
-- <%= h.text %>
-<% } %>
+**下降趋势**：<%= it.focusDeclining.slice(0, 8).join("、") %>
 
 <% } %>
 
 ## 技术栈总览
 
-<% const allStack = [...new Set(it.entries.flatMap(e => e.stack))]; %>
-<%= allStack.join(" · ") %>
+<% for (let i = 0; i < allStack.length; i += 6) { %>
+<%= allStack.slice(i, i + 6).join(" · ") %>
+
+<% } %>
+
+<% for (const entry of entries) { %>
+## <%= entry.title %>
+
+`<%= entry.repo %>` · <%= entry.period.from.slice(0, 10) %> — <%= entry.period.to.slice(0, 10) %>
+
+<% if (entry.stack.length > 0) { %>
+**技术栈**：<%= short(entry.stack.join("、"), 96) %>
+
+<% } %>
+<%
+const highlights = entry.highlights
+  .flatMap((h) => splitHighlights(h.text))
+  .slice(0, 3);
+%>
+<%= highlights.map((h) => `- ${short(h)}`).join("\n") %>
+
+<% } %>
 
 ## 时间线
 
-<% const sorted = [...it.entries].sort((a, b) => a.period.from.localeCompare(b.period.from)); %>
-<% for (const entry of sorted) { %>
-- **<%= entry.period.from.slice(0, 7) %>** — <%= entry.title %> (`<%= entry.repo %>`)
+| 时间 | 项目 | 仓库 |
+|------|------|------|
+<% for (const entry of timeline) { %>
+| <%= entry.period.from.slice(0, 7) %> | <%= short(entry.title, 32) %> | `<%= entry.repo %>` |
 <% } %>

@@ -46,14 +46,10 @@ interface IssueNode {
 }
 
 interface ReviewNode {
-  submittedAt: string;
-  state: string;
-  pullRequest: {
-    number: number;
-    title: string;
-    url: string;
-    repository: { nameWithOwner: string };
-  };
+  number: number;
+  title: string;
+  url: string;
+  repository: { nameWithOwner: string };
 }
 
 interface ContributionNode<T> {
@@ -317,12 +313,12 @@ function mapReviews(
 ): EventEnvelope[] {
   return nodes.map((n) => ({
     kind: "review" as const,
-    repo: n.pullRequest.pullRequest.repository.nameWithOwner,
+    repo: n.pullRequest.repository.nameWithOwner,
     ts: n.occurredAt,
     payload: {
-      prNumber: n.pullRequest.pullRequest.number,
-      prTitle: n.pullRequest.pullRequest.title,
-      prUrl: n.pullRequest.pullRequest.url,
+      prNumber: n.pullRequest.number,
+      prTitle: n.pullRequest.title,
+      prUrl: n.pullRequest.url,
     },
   }));
 }

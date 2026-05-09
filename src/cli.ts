@@ -232,11 +232,15 @@ const initCmd = defineCommand({
     console.log("Next steps:");
     console.log(`  1. cd ${args.dir === "." ? "." : args.dir}`);
     console.log("  2. Edit config.json — set your GitHub login and LLM provider");
-    console.log("  3. Create a PRIVATE GitHub repository and push:");
-    console.log("       git remote add origin git@github.com:<you>/<repo>.git");
-    console.log("       git push -u origin main");
-    console.log("  4. Add LLM_API_KEY as a repository secret (Settings → Secrets)");
-    console.log("  5. Trigger the first run: Actions → Delta CV → Run workflow (bootstrap mode)");
+    console.log("  3. Copy .env.local.example to .env.local and fill GITHUB_TOKEN + LLM_API_KEY");
+    console.log("  4. Run locally from the Delta source checkout:");
+    console.log("       node /path/to/delta/dist/cli.js observe --since 2026-01-01");
+    console.log("       node /path/to/delta/dist/cli.js evolve --since 2026-01-01");
+    console.log("       node /path/to/delta/dist/cli.js tailor");
+    console.log(
+      "       node /path/to/delta/dist/cli.js lint --file data/tailored/default.md --lang zh",
+    );
+    console.log("  5. Optional later: create a private GitHub repo and push this resume repo");
   },
 });
 
