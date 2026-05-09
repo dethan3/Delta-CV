@@ -1,0 +1,40 @@
+name: Delta CV
+
+on:
+  # Run weekly on Monday 00:00 UTC
+  schedule:
+    - cron: "0 0 * * 1"
+  # Allow manual trigger for bootstrap or on-demand refresh
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Pipeline mode"
+        required: false
+        default: incremental
+        type: choice
+        options:
+          - incremental
+          - bootstrap
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  delta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Delta CV
+        uses: delta-cv/delta@v0  # pin to a tag after M4 release
+        with:
+          mode: ${{ inputs.mode || 'incremental' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          # Optional overrides — uncomment as needed:
+          # LLM_BASE_URL: https://api.deepseek.com/v1
+          # LLM_MODEL: deepseek-chat

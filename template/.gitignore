@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Delta runtime cache — safe to delete, will be regenerated
+data/_cache/

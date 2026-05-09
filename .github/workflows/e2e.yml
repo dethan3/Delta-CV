@@ -1,0 +1,74 @@
+name: E2E
+
+on:
+  # Automatic triggers are intentionally paused before the initial GitHub upload.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      - name: Scaffold demo repo
+        run: |
+          node "$GITHUB_WORKSPACE/dist/cli.js" init /tmp/delta-e2e
+          cd /tmp/delta-e2e
+          # Overwrite config with demo account
+          cat > config.json <<'EOF'
+          {
+            "login": "${{ secrets.E2E_DEMO_LOGIN }}",
+            "language": "en",
+            "llm": {
+              "provider": "openai-compatible",
+              "baseUrl": "https://api.deepseek.com/v1",
+              "model": "deepseek-chat"
+            },
+            "ignore": {
+              "repos": [],
+              "authors": ["dependabot[bot]", "renovate[bot]"]
+            }
+          }
+          EOF
+
+      - name: Run observe
+        env:
+          GITHUB_TOKEN: ${{ secrets.E2E_GITHUB_TOKEN }}
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" observe --since 2024-01-01
+
+      - name: Run evolve
+        env:
+          LLM_API_KEY: ${{ secrets.E2E_LLM_API_KEY }}
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" evolve
+
+      - name: Run tailor
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" tailor
+
+      - name: Run lint
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" lint data/tailored/default.md --lang en
+
+      - name: Verify output
+        run: |
+          test -f /tmp/delta-e2e/data/tailored/default.md
+          test -s /tmp/delta-e2e/data/tailored/default.md
+          echo "E2E passed — resume generated successfully"

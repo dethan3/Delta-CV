@@ -1,0 +1,50 @@
+name: Delta CV
+description: >
+  Track your real engineering capabilities through GitHub activity
+  and auto-update your resume.
+author: delta-cv contributors
+
+branding:
+  icon: activity
+  color: blue
+
+inputs:
+  mode:
+    description: >
+      Pipeline mode: "bootstrap" performs a full re-scan of the past three years,
+      "incremental" only processes events since the last run (default).
+    required: false
+    default: incremental
+
+  since:
+    description: >
+      ISO-8601 date override for the earliest event to collect (e.g. "2024-01-01").
+      Ignored when mode is "bootstrap". Leave blank to use the stored cursor.
+    required: false
+    default: ""
+
+  include-private:
+    description: Whether to include private repository activity (requires token scope).
+    required: false
+    default: "false"
+
+  data-dir:
+    description: Path within the repository where delta stores its data files.
+    required: false
+    default: data
+
+  config-path:
+    description: Path to the delta config file.
+    required: false
+    default: config.json
+
+  github-token:
+    description: >
+      GitHub token with read access to the user's activity. Defaults to the
+      built-in GITHUB_TOKEN; override for cross-repo access.
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: node20
+  main: dist/index.js

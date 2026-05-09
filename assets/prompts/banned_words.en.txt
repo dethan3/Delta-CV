@@ -1,0 +1,9 @@
+# English banned words for resume lint
+# One entry per line. Lines starting with # are comments.
+# TODO M3: Expand this list with common resume clichés in English tech hiring.
+responsible for
+worked on
+helped with
+assisted in
+participated in
+involved in

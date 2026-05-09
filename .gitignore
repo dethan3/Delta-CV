@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test, build, and tool caches
+coverage/
+.cache/
+.vite/
+.turbo/
+*.tsbuildinfo
+*.local
+.eslintcache
+
+# Local editor and agent state
+.DS_Store
+.idea/
+.vscode/
+.claude/
+.codex
+.codex/
+
+# Temporary files
+tmp/
+temp/
+
+# Delta runtime outputs when dogfooding the CLI from this source repo root.
+/data/
+/resume.md
+/tailored/
+
+# dist/ is intentionally not ignored. Local builds produce runnable CLI/Action bundles.

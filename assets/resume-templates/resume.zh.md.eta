@@ -1,0 +1,42 @@
+# <%= it.login %> — 技术简历
+
+> 生成时间：<%= it.generatedAt %>
+
+## 概要
+
+<% if (it.topTags && it.topTags.length > 0) { %>
+**核心技术方向**：<%= it.topTags.slice(0, 8).join("、") %>
+<% } %>
+<% if (it.focusRising && it.focusRising.length > 0) { %>
+**上升趋势**：<%= it.focusRising.join("、") %>
+<% } %>
+<% if (it.focusDeclining && it.focusDeclining.length > 0) { %>
+**下降趋势**：<%= it.focusDeclining.join("、") %>
+<% } %>
+
+## 项目经历
+
+<% for (const entry of it.entries) { %>
+### <%= entry.title %> · `<%= entry.repo %>`
+
+**时间**：<%= entry.period.from %> — <%= entry.period.to %>
+
+**技术栈**：<%= entry.stack.join(", ") %>
+
+<% for (const h of entry.highlights) { %>
+- <%= h.text %>
+<% } %>
+
+<% } %>
+
+## 技术栈总览
+
+<% const allStack = [...new Set(it.entries.flatMap(e => e.stack))]; %>
+<%= allStack.join(" · ") %>
+
+## 时间线
+
+<% const sorted = [...it.entries].sort((a, b) => a.period.from.localeCompare(b.period.from)); %>
+<% for (const entry of sorted) { %>
+- **<%= entry.period.from.slice(0, 7) %>** — <%= entry.title %> (`<%= entry.repo %>`)
+<% } %>

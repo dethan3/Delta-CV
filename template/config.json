@@ -1,0 +1,17 @@
+{
+  "login": "YOUR_GITHUB_LOGIN",
+  "language": "zh",
+  "llm": {
+    "provider": "openai-compatible",
+    "baseUrl": "https://api.deepseek.com/v1",
+    "model": "deepseek-chat"
+  },
+  "ignore": {
+    "repos": [],
+    "authors": ["dependabot[bot]", "renovate[bot]"]
+  },
+  "schedule": {
+    "cron": "0 0 * * 1",
+    "lookbackDays": 7
+  }
+}

@@ -1,0 +1,42 @@
+# <%= it.login %> — Engineering Resume
+
+> Generated: <%= it.generatedAt %>
+
+## Summary
+
+<% if (it.topTags && it.topTags.length > 0) { %>
+**Core Focus Areas**: <%= it.topTags.slice(0, 8).join(", ") %>
+<% } %>
+<% if (it.focusRising && it.focusRising.length > 0) { %>
+**Rising Trends**: <%= it.focusRising.join(", ") %>
+<% } %>
+<% if (it.focusDeclining && it.focusDeclining.length > 0) { %>
+**Declining Trends**: <%= it.focusDeclining.join(", ") %>
+<% } %>
+
+## Project Experience
+
+<% for (const entry of it.entries) { %>
+### <%= entry.title %> · `<%= entry.repo %>`
+
+**Period**: <%= entry.period.from %> – <%= entry.period.to %>
+
+**Stack**: <%= entry.stack.join(", ") %>
+
+<% for (const h of entry.highlights) { %>
+- <%= h.text %>
+<% } %>
+
+<% } %>
+
+## Technology Stack
+
+<% const allStack = [...new Set(it.entries.flatMap(e => e.stack))]; %>
+<%= allStack.join(" · ") %>
+
+## Timeline
+
+<% const sorted = [...it.entries].sort((a, b) => a.period.from.localeCompare(b.period.from)); %>
+<% for (const entry of sorted) { %>
+- **<%= entry.period.from.slice(0, 7) %>** — <%= entry.title %> (`<%= entry.repo %>`)
+<% } %>

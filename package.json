@@ -1,0 +1,75 @@
+{
+  "name": "@delta-cv/cli",
+  "version": "0.1.0",
+  "description": "Track real engineering capabilities through GitHub activity and auto-update your resume.",
+  "license": "AGPL-3.0-or-later",
+  "author": "delta-cv contributors",
+  "homepage": "https://github.com/delta-cv/delta#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delta-cv/delta.git"
+  },
+  "bugs": {
+    "url": "https://github.com/delta-cv/delta/issues"
+  },
+  "keywords": ["resume", "cv", "github-action", "developer-tools", "automation"],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "delta": "./dist/cli.js"
+  },
+  "files": [
+    "dist/cli.js",
+    "dist/cli.js.map",
+    "template",
+    "assets",
+    "LICENSE",
+    "README.md",
+    "README.zh-CN.md",
+    "ARCHITECTURE.md",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "build": "pnpm build:action && pnpm build:cli",
+    "build:action": "DELTA_BUILD_TARGET=action tsup",
+    "build:cli": "DELTA_BUILD_TARGET=cli tsup",
+    "dev:cli": "tsx src/cli.ts",
+    "dev:action": "tsx src/action.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "verify:dist": "node scripts/check-dist-present.mjs",
+    "verify:bundle-size": "node scripts/check-bundle-size.mjs",
+    "verify:template-version": "node scripts/check-template-version.mjs",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm verify:bundle-size && pnpm verify:template-version",
+    "prepare": "node scripts/setup-git-hooks.mjs"
+  },
+  "dependencies": {
+    "@octokit/graphql": "^8.1.1",
+    "@octokit/rest": "^21.0.2",
+    "citty": "^0.1.6",
+    "eta": "^3.5.0",
+    "fast-fuzzy": "^1.12.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/node": "^20.17.6",
+    "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
+  },
+  "simple-git-hooks": {
+    "commit-msg": "pnpm exec commitlint --edit \"$1\"",
+    "pre-commit": "pnpm exec biome check --changed --no-errors-on-unmatched"
+  },
+  "packageManager": "pnpm@10.23.0"
+}

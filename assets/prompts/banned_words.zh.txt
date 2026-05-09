@@ -1,0 +1,11 @@
+# Chinese banned words for resume lint
+# One entry per line. Lines starting with # are comments.
+# TODO M3: Expand this list with common resume clichés in Chinese tech hiring.
+负责
+参与了
+协助
+努力
+认真
+刻苦
+积极
+主动配合
