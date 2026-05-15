@@ -1,6 +1,16 @@
 import type { z } from "zod";
 import type { LlmConfig } from "./schema/config.ts";
 
+/** Thrown when the LLM API rate limit is hit and all retries are exhausted. */
+export class RateLimitError extends Error {
+  constructor() {
+    super(
+      "LLM API rate limit exceeded after all retries. Run the command again to resume from the last checkpoint.",
+    );
+    this.name = "RateLimitError";
+  }
+}
+
 const ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1";
 const DEFAULT_OPENAI_BASE_URL = "https://api.deepseek.com/v1";
 const DEFAULT_MAX_TOKENS = 4096;
@@ -31,7 +41,7 @@ async function callApi(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     let res: Response;
-
+    try {
     if (config.provider === "anthropic") {
       res = await fetch(`${ANTHROPIC_BASE_URL}/messages`, {
         method: "POST",
@@ -61,6 +71,14 @@ async function callApi(
         },
         body: JSON.stringify(body),
       });
+    }
+
+    } catch (networkErr) {
+      if (attempt < maxRetries) {
+        await new Promise((r) => setTimeout(r, 2 ** attempt * 1000));
+        continue;
+      }
+      throw new RateLimitError();
     }
 
     if (res.status === 429) {
@@ -96,7 +114,7 @@ async function callApi(
       completionTokens: data.usage.completion_tokens,
     };
   }
-  throw new Error("LLM API: exceeded retry limit on rate limit");
+  throw new RateLimitError();
 }
 
 /**

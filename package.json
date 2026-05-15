@@ -26,9 +26,7 @@
     "assets",
     "LICENSE",
     "README.md",
-    "README.zh-CN.md",
-    "ARCHITECTURE.md",
-    "CONTRIBUTING.md"
+    "README.zh-CN.md"
   ],
   "scripts": {
     "build": "pnpm build:action && pnpm build:cli",
@@ -36,8 +34,6 @@
     "build:cli": "DELTA_BUILD_TARGET=cli tsup",
     "dev:cli": "tsx src/cli.ts",
     "dev:action": "tsx src/action.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
@@ -45,8 +41,7 @@
     "verify:dist": "node scripts/check-dist-present.mjs",
     "verify:bundle-size": "node scripts/check-bundle-size.mjs",
     "verify:template-version": "node scripts/check-template-version.mjs",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm verify:bundle-size && pnpm verify:template-version",
-    "prepare": "node scripts/setup-git-hooks.mjs"
+    "verify": "pnpm lint && pnpm typecheck && pnpm build && pnpm verify:bundle-size && pnpm verify:template-version"
   },
   "dependencies": {
     "@octokit/graphql": "^8.1.1",
@@ -58,18 +53,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@commitlint/cli": "^19.6.0",
-    "@commitlint/config-conventional": "^19.6.0",
     "@types/node": "^20.17.6",
-    "simple-git-hooks": "^2.11.1",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
-    "vitest": "^2.1.5"
-  },
-  "simple-git-hooks": {
-    "commit-msg": "pnpm exec commitlint --edit \"$1\"",
-    "pre-commit": "pnpm exec biome check --changed --no-errors-on-unmatched"
+    "typescript": "^5.6.3"
   },
   "packageManager": "pnpm@11.0.9+sha512.34ce82e6780233cf9cad8685029a8f81d2e06196c5a9bad98879f7424940c6817c4e4524fb7d38b8553ceed48b9758b8ebaf1abd3600c232c4c8cf7366086f38"
 }

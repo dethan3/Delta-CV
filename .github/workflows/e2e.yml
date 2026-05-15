@@ -57,7 +57,7 @@ jobs:
           cd /tmp/delta-e2e
           node "$GITHUB_WORKSPACE/dist/cli.js" evolve
 
-      - name: Run tailor
+      - name: Run tailor (legacy)
         run: |
           cd /tmp/delta-e2e
           node "$GITHUB_WORKSPACE/dist/cli.js" tailor
@@ -67,8 +67,22 @@ jobs:
           cd /tmp/delta-e2e
           node "$GITHUB_WORKSPACE/dist/cli.js" lint data/tailored/default.md --lang en
 
+      - name: Run compose (agent pipeline)
+        env:
+          LLM_API_KEY: ${{ secrets.E2E_LLM_API_KEY }}
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" compose --format both
+
+      - name: Run render (clean style)
+        run: |
+          cd /tmp/delta-e2e
+          node "$GITHUB_WORKSPACE/dist/cli.js" render --style clean
+
       - name: Verify output
         run: |
           test -f /tmp/delta-e2e/data/tailored/default.md
           test -s /tmp/delta-e2e/data/tailored/default.md
+          test -f /tmp/delta-e2e/data/agent/drafts/default.resume.json
+          test -f /tmp/delta-e2e/data/resumes/default.html
           echo "E2E passed — resume generated successfully"

@@ -2,9 +2,9 @@
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
-Turn your real GitHub engineering activity into a continuously updated resume — no manual editing, no AI fluff.
+Turn your real GitHub engineering activity into a precisely crafted, evidence-backed resume — no manual editing, no AI fluff.
 
-Delta CV collects your commits, PRs, issues, and reviews, clusters them into meaningful projects, extracts your actual technology stack and focus areas, and renders a Markdown resume that stays current automatically via a weekly GitHub Action.
+Delta CV collects your commits, PRs, issues, and reviews, clusters them into meaningful projects, scores and curates your capabilities, and drives an LLM agent to compose, critique, and render a resume that stays current automatically via a weekly GitHub Action.
 
 > Status: pre-release. The CLI is not published to npm yet; use the source checkout for now.
 
@@ -38,33 +38,115 @@ After 5–15 minutes, a PR will appear with your generated resume.
 
 ```text
 GitHub Activity
-    │
-    ▼
-┌─────────┐     ┌─────────┐     ┌─────────┐
-│ observe  │ ──▶ │ evolve  │ ──▶ │ tailor  │
-│ (fetch)  │     │ (LLM)   │     │ (render) │
-└─────────┘     └─────────┘     └─────────┘
-    │               │               │
-    ▼               ▼               ▼
- data/events/   experience.json   resume.md
- cursor.json    snapshot.json     tailored/
+      │
+      ▼
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│ observe  │───▶│  evolve  │───▶│  curate  │───▶│ compose  │
+│ (fetch)  │    │  (LLM)   │    │ (score)  │    │  (LLM)   │
+└──────────┘    └──────────┘    └──────────┘    └──────────┘
+                                                      │
+                ┌──────────┐    ┌──────────┐         │
+                │  render  │◀───│  revise  │◀────────┘
+                │  (HTML)  │    │  (LLM)   │  (optional critique loop)
+                └──────────┘    └──────────┘
+                      │
+              data/resumes/*.html
+              data/resumes/*.md
 ```
 
 1. **observe** — Fetches your GitHub activity (commits, PRs, issues, reviews) via GraphQL + REST APIs.
 2. **evolve** — Clusters events by project, tags capabilities, detects focus shifts, and generates structured experience entries via LLM.
-3. **tailor** — Renders a Markdown resume from the experience log. Optionally reranks highlights against a target job description.
+3. **curate** — Merges overlapping projects, scores them by signal quality, and extracts evidence-backed capability claims.
+4. **compose** — Calls the LLM once to produce a structured `ResumeDraft` (headline, summary, skills, project sections). Optionally parses a JD first and re-ranks content for the target role.
+5. **critique / revise** — Iterative LLM loop: critique the draft against 5 quality dimensions, then revise based on a specific instruction.
+6. **render** — Converts the draft to self-contained HTML (3 built-in styles + LLM-generated custom style) and/or Markdown.
 
-A weekly GitHub Action runs this pipeline automatically and opens a PR with any changes.
+A weekly GitHub Action runs the core pipeline automatically and opens a PR with any changes.
 
 ## CLI Commands
+
+### Data Collection
 
 | Command | Description |
 |---------|-------------|
 | `delta init [dir]` | Scaffold a new resume repo from the template |
 | `delta observe` | Fetch GitHub events → `data/events/` |
 | `delta evolve` | Process events → experience log + snapshot via LLM |
-| `delta tailor [--jd <file>]` | Generate resume, optionally ranked against a JD |
+
+### Resume Agent
+
+| Command | Description |
+|---------|-------------|
+| `delta curate` | Score and curate projects, extract capability claims |
+| `delta compose` | Generate a structured resume draft via LLM |
+| `delta compose --jd <file>` | Parse JD, re-rank content, compose a targeted draft |
+| `delta critique` | LLM critique of current draft (5 quality dimensions) |
+| `delta revise --instruction "<text>"` | Revise draft based on a natural language instruction |
+| `delta render` | Render draft to HTML and/or Markdown |
+| `delta render --style <name>` | Render with a specific HTML style |
+| `delta render --style agent --instruction "<text>"` | LLM-generated custom HTML style |
+| `delta styles` | List all available HTML styles |
+
+### Legacy / Utilities
+
+| Command | Description |
+|---------|-------------|
+| `delta tailor [--jd <file>]` | Legacy resume render from experience log |
 | `delta lint <file>` | Check resume for banned words and structural limits |
+
+## Resume Agent
+
+### Basic Usage
+
+```bash
+# Collect and process GitHub activity first
+delta observe
+delta evolve
+
+# Generate a general resume draft
+delta compose                          # saves to data/agent/drafts/default.resume.json
+
+# Iterate with critique and revise
+delta critique                         # score draft, list issues
+delta revise --instruction "make the summary more technical and concise"
+
+# Render to HTML
+delta render --style clean             # ATS-friendly (default)
+delta render --style developer         # monospace accents, badge tags
+delta render --style compact           # serif, two-column skills, print-ready
+```
+
+### JD-Specific Resume
+
+```bash
+# Give Delta a job description — it parses it and re-ranks your content
+delta compose --jd ./job-description.txt
+
+# The draft is automatically saved as e.g. data/agent/drafts/jd-senior-ai-engineer.resume.json
+# Render it with any style
+delta render --slug jd-senior-ai-engineer --style compact
+```
+
+When `--jd` is provided, `compose` runs a two-phase pipeline:
+1. **Parse** the JD → structured `JdProfile` (job title, seniority, required/nice-to-have skills)
+2. **Score** your projects and capability claims against those requirements (algorithmic, no extra LLM call)
+3. **Compose** with JD-prioritised content and the parsed job title as the target role
+
+### HTML Styles
+
+| Style | Description |
+|-------|-------------|
+| `clean` | Dense, ATS-friendly, restrained. Good default. |
+| `developer` | Monospace accents, badge tags, left-border project cards. |
+| `compact` | Serif font, two-column skills, no footer. Optimised for printing one page. |
+| `agent` | LLM-generated custom design. Requires `--instruction`. |
+
+```bash
+# Custom style via LLM
+delta render --style agent --instruction "dark minimalist, suits an AI tools developer"
+```
+
+The agent style validates the generated HTML: checks for self-contained CSS, `@media print`, content completeness, and no external assets.
 
 ## Configuration
 
@@ -141,13 +223,19 @@ Your resume data is personal. The template creates a private repo by default. Th
 Typical weekly runs cost < $0.01 with DeepSeek. Bootstrap (3 years of history) costs < $0.05.
 
 **Q: Can I customize the resume template?**
-Yes. Copy `assets/resume-templates/` to your repo and edit the Eta templates. The `delta tailor` command will use your custom templates.
+Yes. Use `delta render --style agent --instruction "<your design direction>"` for a fully custom LLM-generated HTML layout. For static styles, the three built-in options (clean, developer, compact) cover most needs.
+
+**Q: How many LLM calls does the agent pipeline make?**
+Typically 2–3 per full run: one for `compose`, one optional `critique`, one optional `revise`. JD parsing adds one more. Agent-style rendering adds one. All calls use your own API key.
 
 **Q: Can I use this with GitLab/Bitbucket?**
 Not yet. Multi-platform support is planned for post-v1.0.
 
 **Q: The PR has AI-sounding language.**
-Run `delta lint resume.md` to catch banned words. You can customize the banned words list in `prompts/banned_words.<lang>.txt`.
+Run `delta lint resume.md` to catch banned words, or run `delta critique` to get a full quality review. You can customize the banned words list in `prompts/banned_words.<lang>.txt`.
+
+**Q: How does the JD ranking work?**
+When you pass `--jd`, the JD is parsed into a structured profile (required skills, nice-to-have skills, responsibilities). Each of your projects is then scored by skill overlap. The final ordering combines the JD match score (60%) with the project's own signal quality score (40%), ensuring that JD-relevant projects surface first without ignoring evidence quality.
 
 ## Contributing
 

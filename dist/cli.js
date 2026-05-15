@@ -33,9 +33,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// node_modules/.pnpm/tsup@8.5.1_jiti@2.6.1_postcss@8.5.14_tsx@4.21.0_typescript@5.9.3/node_modules/tsup/assets/cjs_shims.js
+// node_modules/.pnpm/tsup@8.5.1_tsx@4.21.0_typescript@5.9.3/node_modules/tsup/assets/cjs_shims.js
 var init_cjs_shims = __esm({
-  "node_modules/.pnpm/tsup@8.5.1_jiti@2.6.1_postcss@8.5.14_tsx@4.21.0_typescript@5.9.3/node_modules/tsup/assets/cjs_shims.js"() {
+  "node_modules/.pnpm/tsup@8.5.1_tsx@4.21.0_typescript@5.9.3/node_modules/tsup/assets/cjs_shims.js"() {
     "use strict";
   }
 });
@@ -892,803 +892,6 @@ var require_fast_content_type_parse = __commonJS({
     module2.exports.parse = parse3;
     module2.exports.safeParse = safeParse2;
     module2.exports.defaultContentType = defaultContentType;
-  }
-});
-
-// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js
-var require_types = __commonJS({
-  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    module2.exports = {
-      Other: 0,
-      CR: 1 << 0,
-      LF: 1 << 1,
-      Control: 1 << 2,
-      Extend: 1 << 3,
-      ZWJ: 1 << 4,
-      Regional_Indicator: 1 << 5,
-      Prepend: 1 << 6,
-      SpacingMark: 1 << 7,
-      L: 1 << 8,
-      V: 1 << 9,
-      T: 1 << 10,
-      LV: 1 << 11,
-      LVT: 1 << 12,
-      Extended_Pictographic: 1 << 13,
-      InCB_Linker: 1 << 14,
-      InCB_Consonant: 1 << 15,
-      InCB_Extend: 1 << 16
-    };
-  }
-});
-
-// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/typeTrie.json
-var require_typeTrie = __commonJS({
-  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/typeTrie.json"(exports2, module2) {
-    module2.exports = { data: "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" };
-  }
-});
-
-// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/extPict.json
-var require_extPict = __commonJS({
-  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/extPict.json"(exports2, module2) {
-    module2.exports = { data: "AAACAAAAAACAOAAAAbYBSf7t2S1IBEEYBuDVDZ7FYrQMNsFiu3hgEYOI0SCXRIUrB8JhEZtgs5gEg1GMFk02m82oGI02m+9xezCOczv/uwv3fvAwc/PzfXOzcdqzWdaBDdiGPdiHdjE+DS3RNDuCfsn8idQ/g3OH3BdwKf0e96/gumTfYcncLdzBPTzAo+RZ+f0Cr/AG7/AJX4738x1wtz9FO5PX/50n6UXMNdfg/0lERERERERERERERETpdedHBvDRql4nq0cXtW9af98qdRby0Vvp8K4W0V+C5Xw0t4J2bfjeBp3cnEu1brnnCTYNa7eKdz91XP7WO9Lb4GqRb7cY6xbtAdqeVOsY/QGcevw/tb6OT85YhvfKYEx9CMuxKsKnrs+eJtVInVvHJ0eVYVvTZk2siFVLOCjb61PTZX3MdVWEyP7fjzpmMxdzTyq2Ebue6x61nXRGnzndWpf1an7dXmGYE4Y1ptqqKsK1nu26Ju0ty+maV2Rpvk+qnDZjKUIobUiesdAQE/jmCTmHmsskpFZsVYbtmXRcaoSGUPomunW2derQhDPFjtT1Q/eb8vnm990fq35oHVt11bU9m89c7DNI8Qs=" };
-  }
-});
-
-// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/inCB.json
-var require_inCB = __commonJS({
-  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/inCB.json"(exports2, module2) {
-    module2.exports = { data: "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" };
-  }
-});
-
-// node_modules/.pnpm/tiny-inflate@1.0.3/node_modules/tiny-inflate/index.js
-var require_tiny_inflate = __commonJS({
-  "node_modules/.pnpm/tiny-inflate@1.0.3/node_modules/tiny-inflate/index.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    var TINF_OK = 0;
-    var TINF_DATA_ERROR = -3;
-    function Tree() {
-      this.table = new Uint16Array(16);
-      this.trans = new Uint16Array(288);
-    }
-    function Data(source, dest) {
-      this.source = source;
-      this.sourceIndex = 0;
-      this.tag = 0;
-      this.bitcount = 0;
-      this.dest = dest;
-      this.destLen = 0;
-      this.ltree = new Tree();
-      this.dtree = new Tree();
-    }
-    var sltree = new Tree();
-    var sdtree = new Tree();
-    var length_bits = new Uint8Array(30);
-    var length_base = new Uint16Array(30);
-    var dist_bits = new Uint8Array(30);
-    var dist_base = new Uint16Array(30);
-    var clcidx = new Uint8Array([
-      16,
-      17,
-      18,
-      0,
-      8,
-      7,
-      9,
-      6,
-      10,
-      5,
-      11,
-      4,
-      12,
-      3,
-      13,
-      2,
-      14,
-      1,
-      15
-    ]);
-    var code_tree = new Tree();
-    var lengths = new Uint8Array(288 + 32);
-    function tinf_build_bits_base(bits, base, delta, first) {
-      var i2, sum;
-      for (i2 = 0; i2 < delta; ++i2) bits[i2] = 0;
-      for (i2 = 0; i2 < 30 - delta; ++i2) bits[i2 + delta] = i2 / delta | 0;
-      for (sum = first, i2 = 0; i2 < 30; ++i2) {
-        base[i2] = sum;
-        sum += 1 << bits[i2];
-      }
-    }
-    function tinf_build_fixed_trees(lt, dt) {
-      var i2;
-      for (i2 = 0; i2 < 7; ++i2) lt.table[i2] = 0;
-      lt.table[7] = 24;
-      lt.table[8] = 152;
-      lt.table[9] = 112;
-      for (i2 = 0; i2 < 24; ++i2) lt.trans[i2] = 256 + i2;
-      for (i2 = 0; i2 < 144; ++i2) lt.trans[24 + i2] = i2;
-      for (i2 = 0; i2 < 8; ++i2) lt.trans[24 + 144 + i2] = 280 + i2;
-      for (i2 = 0; i2 < 112; ++i2) lt.trans[24 + 144 + 8 + i2] = 144 + i2;
-      for (i2 = 0; i2 < 5; ++i2) dt.table[i2] = 0;
-      dt.table[5] = 32;
-      for (i2 = 0; i2 < 32; ++i2) dt.trans[i2] = i2;
-    }
-    var offs = new Uint16Array(16);
-    function tinf_build_tree(t2, lengths2, off, num) {
-      var i2, sum;
-      for (i2 = 0; i2 < 16; ++i2) t2.table[i2] = 0;
-      for (i2 = 0; i2 < num; ++i2) t2.table[lengths2[off + i2]]++;
-      t2.table[0] = 0;
-      for (sum = 0, i2 = 0; i2 < 16; ++i2) {
-        offs[i2] = sum;
-        sum += t2.table[i2];
-      }
-      for (i2 = 0; i2 < num; ++i2) {
-        if (lengths2[off + i2]) t2.trans[offs[lengths2[off + i2]]++] = i2;
-      }
-    }
-    function tinf_getbit(d2) {
-      if (!d2.bitcount--) {
-        d2.tag = d2.source[d2.sourceIndex++];
-        d2.bitcount = 7;
-      }
-      var bit = d2.tag & 1;
-      d2.tag >>>= 1;
-      return bit;
-    }
-    function tinf_read_bits(d2, num, base) {
-      if (!num)
-        return base;
-      while (d2.bitcount < 24) {
-        d2.tag |= d2.source[d2.sourceIndex++] << d2.bitcount;
-        d2.bitcount += 8;
-      }
-      var val = d2.tag & 65535 >>> 16 - num;
-      d2.tag >>>= num;
-      d2.bitcount -= num;
-      return val + base;
-    }
-    function tinf_decode_symbol(d2, t2) {
-      while (d2.bitcount < 24) {
-        d2.tag |= d2.source[d2.sourceIndex++] << d2.bitcount;
-        d2.bitcount += 8;
-      }
-      var sum = 0, cur = 0, len = 0;
-      var tag = d2.tag;
-      do {
-        cur = 2 * cur + (tag & 1);
-        tag >>>= 1;
-        ++len;
-        sum += t2.table[len];
-        cur -= t2.table[len];
-      } while (cur >= 0);
-      d2.tag = tag;
-      d2.bitcount -= len;
-      return t2.trans[sum + cur];
-    }
-    function tinf_decode_trees(d2, lt, dt) {
-      var hlit, hdist, hclen;
-      var i2, num, length;
-      hlit = tinf_read_bits(d2, 5, 257);
-      hdist = tinf_read_bits(d2, 5, 1);
-      hclen = tinf_read_bits(d2, 4, 4);
-      for (i2 = 0; i2 < 19; ++i2) lengths[i2] = 0;
-      for (i2 = 0; i2 < hclen; ++i2) {
-        var clen = tinf_read_bits(d2, 3, 0);
-        lengths[clcidx[i2]] = clen;
-      }
-      tinf_build_tree(code_tree, lengths, 0, 19);
-      for (num = 0; num < hlit + hdist; ) {
-        var sym = tinf_decode_symbol(d2, code_tree);
-        switch (sym) {
-          case 16:
-            var prev = lengths[num - 1];
-            for (length = tinf_read_bits(d2, 2, 3); length; --length) {
-              lengths[num++] = prev;
-            }
-            break;
-          case 17:
-            for (length = tinf_read_bits(d2, 3, 3); length; --length) {
-              lengths[num++] = 0;
-            }
-            break;
-          case 18:
-            for (length = tinf_read_bits(d2, 7, 11); length; --length) {
-              lengths[num++] = 0;
-            }
-            break;
-          default:
-            lengths[num++] = sym;
-            break;
-        }
-      }
-      tinf_build_tree(lt, lengths, 0, hlit);
-      tinf_build_tree(dt, lengths, hlit, hdist);
-    }
-    function tinf_inflate_block_data(d2, lt, dt) {
-      while (1) {
-        var sym = tinf_decode_symbol(d2, lt);
-        if (sym === 256) {
-          return TINF_OK;
-        }
-        if (sym < 256) {
-          d2.dest[d2.destLen++] = sym;
-        } else {
-          var length, dist, offs2;
-          var i2;
-          sym -= 257;
-          length = tinf_read_bits(d2, length_bits[sym], length_base[sym]);
-          dist = tinf_decode_symbol(d2, dt);
-          offs2 = d2.destLen - tinf_read_bits(d2, dist_bits[dist], dist_base[dist]);
-          for (i2 = offs2; i2 < offs2 + length; ++i2) {
-            d2.dest[d2.destLen++] = d2.dest[i2];
-          }
-        }
-      }
-    }
-    function tinf_inflate_uncompressed_block(d2) {
-      var length, invlength;
-      var i2;
-      while (d2.bitcount > 8) {
-        d2.sourceIndex--;
-        d2.bitcount -= 8;
-      }
-      length = d2.source[d2.sourceIndex + 1];
-      length = 256 * length + d2.source[d2.sourceIndex];
-      invlength = d2.source[d2.sourceIndex + 3];
-      invlength = 256 * invlength + d2.source[d2.sourceIndex + 2];
-      if (length !== (~invlength & 65535))
-        return TINF_DATA_ERROR;
-      d2.sourceIndex += 4;
-      for (i2 = length; i2; --i2)
-        d2.dest[d2.destLen++] = d2.source[d2.sourceIndex++];
-      d2.bitcount = 0;
-      return TINF_OK;
-    }
-    function tinf_uncompress(source, dest) {
-      var d2 = new Data(source, dest);
-      var bfinal, btype, res;
-      do {
-        bfinal = tinf_getbit(d2);
-        btype = tinf_read_bits(d2, 2, 0);
-        switch (btype) {
-          case 0:
-            res = tinf_inflate_uncompressed_block(d2);
-            break;
-          case 1:
-            res = tinf_inflate_block_data(d2, sltree, sdtree);
-            break;
-          case 2:
-            tinf_decode_trees(d2, d2.ltree, d2.dtree);
-            res = tinf_inflate_block_data(d2, d2.ltree, d2.dtree);
-            break;
-          default:
-            res = TINF_DATA_ERROR;
-        }
-        if (res !== TINF_OK)
-          throw new Error("Data error");
-      } while (!bfinal);
-      if (d2.destLen < d2.dest.length) {
-        if (typeof d2.dest.slice === "function")
-          return d2.dest.slice(0, d2.destLen);
-        else
-          return d2.dest.subarray(0, d2.destLen);
-      }
-      return d2.dest;
-    }
-    tinf_build_fixed_trees(sltree, sdtree);
-    tinf_build_bits_base(length_bits, length_base, 4, 3);
-    tinf_build_bits_base(dist_bits, dist_base, 2, 1);
-    length_bits[28] = 0;
-    length_base[28] = 258;
-    module2.exports = tinf_uncompress;
-  }
-});
-
-// node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/swap.js
-var require_swap = __commonJS({
-  "node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/swap.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    var isBigEndian = new Uint8Array(new Uint32Array([305419896]).buffer)[0] === 18;
-    var swap = (b2, n2, m2) => {
-      let i2 = b2[n2];
-      b2[n2] = b2[m2];
-      b2[m2] = i2;
-    };
-    var swap32 = (array) => {
-      const len = array.length;
-      for (let i2 = 0; i2 < len; i2 += 4) {
-        swap(array, i2, i2 + 3);
-        swap(array, i2 + 1, i2 + 2);
-      }
-    };
-    var swap32LE = (array) => {
-      if (isBigEndian) {
-        swap32(array);
-      }
-    };
-    module2.exports = {
-      swap32LE
-    };
-  }
-});
-
-// node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/index.js
-var require_unicode_trie = __commonJS({
-  "node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/index.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    var inflate = require_tiny_inflate();
-    var { swap32LE } = require_swap();
-    var SHIFT_1 = 6 + 5;
-    var SHIFT_2 = 5;
-    var SHIFT_1_2 = SHIFT_1 - SHIFT_2;
-    var OMITTED_BMP_INDEX_1_LENGTH = 65536 >> SHIFT_1;
-    var INDEX_2_BLOCK_LENGTH = 1 << SHIFT_1_2;
-    var INDEX_2_MASK = INDEX_2_BLOCK_LENGTH - 1;
-    var INDEX_SHIFT = 2;
-    var DATA_BLOCK_LENGTH = 1 << SHIFT_2;
-    var DATA_MASK = DATA_BLOCK_LENGTH - 1;
-    var LSCP_INDEX_2_OFFSET = 65536 >> SHIFT_2;
-    var LSCP_INDEX_2_LENGTH = 1024 >> SHIFT_2;
-    var INDEX_2_BMP_LENGTH = LSCP_INDEX_2_OFFSET + LSCP_INDEX_2_LENGTH;
-    var UTF8_2B_INDEX_2_OFFSET = INDEX_2_BMP_LENGTH;
-    var UTF8_2B_INDEX_2_LENGTH = 2048 >> 6;
-    var INDEX_1_OFFSET = UTF8_2B_INDEX_2_OFFSET + UTF8_2B_INDEX_2_LENGTH;
-    var DATA_GRANULARITY = 1 << INDEX_SHIFT;
-    var UnicodeTrie = class {
-      constructor(data) {
-        const isBuffer = typeof data.readUInt32BE === "function" && typeof data.slice === "function";
-        if (isBuffer || data instanceof Uint8Array) {
-          let uncompressedLength;
-          if (isBuffer) {
-            this.highStart = data.readUInt32LE(0);
-            this.errorValue = data.readUInt32LE(4);
-            uncompressedLength = data.readUInt32LE(8);
-            data = data.slice(12);
-          } else {
-            const view = new DataView(data.buffer);
-            this.highStart = view.getUint32(0, true);
-            this.errorValue = view.getUint32(4, true);
-            uncompressedLength = view.getUint32(8, true);
-            data = data.subarray(12);
-          }
-          data = inflate(data, new Uint8Array(uncompressedLength));
-          data = inflate(data, new Uint8Array(uncompressedLength));
-          swap32LE(data);
-          this.data = new Uint32Array(data.buffer);
-        } else {
-          ({ data: this.data, highStart: this.highStart, errorValue: this.errorValue } = data);
-        }
-      }
-      get(codePoint) {
-        let index;
-        if (codePoint < 0 || codePoint > 1114111) {
-          return this.errorValue;
-        }
-        if (codePoint < 55296 || codePoint > 56319 && codePoint <= 65535) {
-          index = (this.data[codePoint >> SHIFT_2] << INDEX_SHIFT) + (codePoint & DATA_MASK);
-          return this.data[index];
-        }
-        if (codePoint <= 65535) {
-          index = (this.data[LSCP_INDEX_2_OFFSET + (codePoint - 55296 >> SHIFT_2)] << INDEX_SHIFT) + (codePoint & DATA_MASK);
-          return this.data[index];
-        }
-        if (codePoint < this.highStart) {
-          index = this.data[INDEX_1_OFFSET - OMITTED_BMP_INDEX_1_LENGTH + (codePoint >> SHIFT_1)];
-          index = this.data[index + (codePoint >> SHIFT_2 & INDEX_2_MASK)];
-          index = (index << INDEX_SHIFT) + (codePoint & DATA_MASK);
-          return this.data[index];
-        }
-        return this.data[this.data.length - DATA_GRANULARITY];
-      }
-    };
-    module2.exports = UnicodeTrie;
-  }
-});
-
-// node_modules/.pnpm/js-base64@3.7.8/node_modules/js-base64/base64.js
-var require_base64 = __commonJS({
-  "node_modules/.pnpm/js-base64@3.7.8/node_modules/js-base64/base64.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    (function(global2, factory) {
-      typeof exports2 === "object" && typeof module2 !== "undefined" ? module2.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (
-        // cf. https://github.com/dankogai/js-base64/issues/119
-        (function() {
-          var _Base64 = global2.Base64;
-          var gBase64 = factory();
-          gBase64.noConflict = function() {
-            global2.Base64 = _Base64;
-            return gBase64;
-          };
-          if (global2.Meteor) {
-            Base64 = gBase64;
-          }
-          global2.Base64 = gBase64;
-        })()
-      );
-    })(typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : exports2, function() {
-      "use strict";
-      var version = "3.7.8";
-      var VERSION10 = version;
-      var _hasBuffer = typeof Buffer === "function";
-      var _TD = typeof TextDecoder === "function" ? new TextDecoder() : void 0;
-      var _TE = typeof TextEncoder === "function" ? new TextEncoder() : void 0;
-      var b64ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-      var b64chs = Array.prototype.slice.call(b64ch);
-      var b64tab = (function(a2) {
-        var tab = {};
-        a2.forEach(function(c3, i2) {
-          return tab[c3] = i2;
-        });
-        return tab;
-      })(b64chs);
-      var b64re = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
-      var _fromCC = String.fromCharCode.bind(String);
-      var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : function(it) {
-        return new Uint8Array(Array.prototype.slice.call(it, 0));
-      };
-      var _mkUriSafe = function(src2) {
-        return src2.replace(/=/g, "").replace(/[+\/]/g, function(m0) {
-          return m0 == "+" ? "-" : "_";
-        });
-      };
-      var _tidyB64 = function(s2) {
-        return s2.replace(/[^A-Za-z0-9\+\/]/g, "");
-      };
-      var btoaPolyfill = function(bin) {
-        var u32, c0, c1, c22, asc = "";
-        var pad = bin.length % 3;
-        for (var i2 = 0; i2 < bin.length; ) {
-          if ((c0 = bin.charCodeAt(i2++)) > 255 || (c1 = bin.charCodeAt(i2++)) > 255 || (c22 = bin.charCodeAt(i2++)) > 255)
-            throw new TypeError("invalid character found");
-          u32 = c0 << 16 | c1 << 8 | c22;
-          asc += b64chs[u32 >> 18 & 63] + b64chs[u32 >> 12 & 63] + b64chs[u32 >> 6 & 63] + b64chs[u32 & 63];
-        }
-        return pad ? asc.slice(0, pad - 3) + "===".substring(pad) : asc;
-      };
-      var _btoa = typeof btoa === "function" ? function(bin) {
-        return btoa(bin);
-      } : _hasBuffer ? function(bin) {
-        return Buffer.from(bin, "binary").toString("base64");
-      } : btoaPolyfill;
-      var _fromUint8Array = _hasBuffer ? function(u8a) {
-        return Buffer.from(u8a).toString("base64");
-      } : function(u8a) {
-        var maxargs = 4096;
-        var strs = [];
-        for (var i2 = 0, l2 = u8a.length; i2 < l2; i2 += maxargs) {
-          strs.push(_fromCC.apply(null, u8a.subarray(i2, i2 + maxargs)));
-        }
-        return _btoa(strs.join(""));
-      };
-      var fromUint8Array = function(u8a, urlsafe) {
-        if (urlsafe === void 0) {
-          urlsafe = false;
-        }
-        return urlsafe ? _mkUriSafe(_fromUint8Array(u8a)) : _fromUint8Array(u8a);
-      };
-      var cb_utob = function(c3) {
-        if (c3.length < 2) {
-          var cc = c3.charCodeAt(0);
-          return cc < 128 ? c3 : cc < 2048 ? _fromCC(192 | cc >>> 6) + _fromCC(128 | cc & 63) : _fromCC(224 | cc >>> 12 & 15) + _fromCC(128 | cc >>> 6 & 63) + _fromCC(128 | cc & 63);
-        } else {
-          var cc = 65536 + (c3.charCodeAt(0) - 55296) * 1024 + (c3.charCodeAt(1) - 56320);
-          return _fromCC(240 | cc >>> 18 & 7) + _fromCC(128 | cc >>> 12 & 63) + _fromCC(128 | cc >>> 6 & 63) + _fromCC(128 | cc & 63);
-        }
-      };
-      var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
-      var utob = function(u3) {
-        return u3.replace(re_utob, cb_utob);
-      };
-      var _encode = _hasBuffer ? function(s2) {
-        return Buffer.from(s2, "utf8").toString("base64");
-      } : _TE ? function(s2) {
-        return _fromUint8Array(_TE.encode(s2));
-      } : function(s2) {
-        return _btoa(utob(s2));
-      };
-      var encode = function(src2, urlsafe) {
-        if (urlsafe === void 0) {
-          urlsafe = false;
-        }
-        return urlsafe ? _mkUriSafe(_encode(src2)) : _encode(src2);
-      };
-      var encodeURI2 = function(src2) {
-        return encode(src2, true);
-      };
-      var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
-      var cb_btou = function(cccc) {
-        switch (cccc.length) {
-          case 4:
-            var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3), offset = cp - 65536;
-            return _fromCC((offset >>> 10) + 55296) + _fromCC((offset & 1023) + 56320);
-          case 3:
-            return _fromCC((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
-          default:
-            return _fromCC((31 & cccc.charCodeAt(0)) << 6 | 63 & cccc.charCodeAt(1));
-        }
-      };
-      var btou = function(b2) {
-        return b2.replace(re_btou, cb_btou);
-      };
-      var atobPolyfill = function(asc) {
-        asc = asc.replace(/\s+/g, "");
-        if (!b64re.test(asc))
-          throw new TypeError("malformed base64.");
-        asc += "==".slice(2 - (asc.length & 3));
-        var u24, r1, r22;
-        var binArray = [];
-        for (var i2 = 0; i2 < asc.length; ) {
-          u24 = b64tab[asc.charAt(i2++)] << 18 | b64tab[asc.charAt(i2++)] << 12 | (r1 = b64tab[asc.charAt(i2++)]) << 6 | (r22 = b64tab[asc.charAt(i2++)]);
-          if (r1 === 64) {
-            binArray.push(_fromCC(u24 >> 16 & 255));
-          } else if (r22 === 64) {
-            binArray.push(_fromCC(u24 >> 16 & 255, u24 >> 8 & 255));
-          } else {
-            binArray.push(_fromCC(u24 >> 16 & 255, u24 >> 8 & 255, u24 & 255));
-          }
-        }
-        return binArray.join("");
-      };
-      var _atob = typeof atob === "function" ? function(asc) {
-        return atob(_tidyB64(asc));
-      } : _hasBuffer ? function(asc) {
-        return Buffer.from(asc, "base64").toString("binary");
-      } : atobPolyfill;
-      var _toUint8Array = _hasBuffer ? function(a2) {
-        return _U8Afrom(Buffer.from(a2, "base64"));
-      } : function(a2) {
-        return _U8Afrom(_atob(a2).split("").map(function(c3) {
-          return c3.charCodeAt(0);
-        }));
-      };
-      var toUint8Array = function(a2) {
-        return _toUint8Array(_unURI(a2));
-      };
-      var _decode = _hasBuffer ? function(a2) {
-        return Buffer.from(a2, "base64").toString("utf8");
-      } : _TD ? function(a2) {
-        return _TD.decode(_toUint8Array(a2));
-      } : function(a2) {
-        return btou(_atob(a2));
-      };
-      var _unURI = function(a2) {
-        return _tidyB64(a2.replace(/[-_]/g, function(m0) {
-          return m0 == "-" ? "+" : "/";
-        }));
-      };
-      var decode = function(src2) {
-        return _decode(_unURI(src2));
-      };
-      var isValid2 = function(src2) {
-        if (typeof src2 !== "string")
-          return false;
-        var s2 = src2.replace(/\s+/g, "").replace(/={0,2}$/, "");
-        return !/[^\s0-9a-zA-Z\+/]/.test(s2) || !/[^\s0-9a-zA-Z\-_]/.test(s2);
-      };
-      var _noEnum = function(v2) {
-        return {
-          value: v2,
-          enumerable: false,
-          writable: true,
-          configurable: true
-        };
-      };
-      var extendString = function() {
-        var _add = function(name, body) {
-          return Object.defineProperty(String.prototype, name, _noEnum(body));
-        };
-        _add("fromBase64", function() {
-          return decode(this);
-        });
-        _add("toBase64", function(urlsafe) {
-          return encode(this, urlsafe);
-        });
-        _add("toBase64URI", function() {
-          return encode(this, true);
-        });
-        _add("toBase64URL", function() {
-          return encode(this, true);
-        });
-        _add("toUint8Array", function() {
-          return toUint8Array(this);
-        });
-      };
-      var extendUint8Array = function() {
-        var _add = function(name, body) {
-          return Object.defineProperty(Uint8Array.prototype, name, _noEnum(body));
-        };
-        _add("toBase64", function(urlsafe) {
-          return fromUint8Array(this, urlsafe);
-        });
-        _add("toBase64URI", function() {
-          return fromUint8Array(this, true);
-        });
-        _add("toBase64URL", function() {
-          return fromUint8Array(this, true);
-        });
-      };
-      var extendBuiltins = function() {
-        extendString();
-        extendUint8Array();
-      };
-      var gBase64 = {
-        version,
-        VERSION: VERSION10,
-        atob: _atob,
-        atobPolyfill,
-        btoa: _btoa,
-        btoaPolyfill,
-        fromBase64: decode,
-        toBase64: encode,
-        encode,
-        encodeURI: encodeURI2,
-        encodeURL: encodeURI2,
-        utob,
-        btou,
-        decode,
-        isValid: isValid2,
-        fromUint8Array,
-        toUint8Array,
-        extendString,
-        extendUint8Array,
-        extendBuiltins
-      };
-      gBase64.Base64 = {};
-      Object.keys(gBase64).forEach(function(k2) {
-        return gBase64.Base64[k2] = gBase64[k2];
-      });
-      return gBase64;
-    });
-  }
-});
-
-// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/index.js
-var require_graphemesplit = __commonJS({
-  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/index.js"(exports2, module2) {
-    "use strict";
-    init_cjs_shims();
-    var types = require_types();
-    var typeTrieData = require_typeTrie().data;
-    var extPictData = require_extPict().data;
-    var inCBData = require_inCB().data;
-    var UnicodeTrie = require_unicode_trie();
-    var Base642 = require_base64().Base64;
-    var typeTrie = new UnicodeTrie(Base642.toUint8Array(typeTrieData));
-    var extPict = new UnicodeTrie(Base642.toUint8Array(extPictData));
-    var inCB = new UnicodeTrie(Base642.toUint8Array(inCBData));
-    function is(type, bit) {
-      return (type & bit) !== 0;
-    }
-    function nextGraphemeClusterSize(s2, ts, start) {
-      const L3 = ts.length;
-      for (let i2 = start; i2 + 1 < L3; i2++) {
-        const curr = ts[i2 + 0];
-        const next = ts[i2 + 1];
-        switch (s2.gb9c) {
-          case 0:
-            if (is(curr, types.InCB_Consonant)) s2.gb9c = 1;
-            break;
-          case 1:
-            if (is(curr, types.InCB_Extend)) s2.gb9c = 1;
-            else if (is(curr, types.InCB_Linker)) s2.gb9c = 2;
-            else s2.gb9c = is(curr, types.InCB_Consonant) ? 1 : 0;
-            break;
-          case 2:
-            if (is(curr, types.InCB_Extend | types.InCB_Linker)) s2.gb9c = 2;
-            else s2.gb9c = is(curr, types.InCB_Consonant) ? 1 : 0;
-            break;
-        }
-        switch (s2.gb11) {
-          case 0:
-            if (is(curr, types.Extended_Pictographic)) s2.gb11 = 1;
-            break;
-          case 1:
-            if (is(curr, types.Extend)) s2.gb11 = 1;
-            else if (is(curr, types.ZWJ)) s2.gb11 = 2;
-            else s2.gb11 = is(curr, types.Extended_Pictographic) ? 1 : 0;
-            break;
-          case 2:
-            s2.gb11 = is(curr, types.Extended_Pictographic) ? 1 : 0;
-            break;
-        }
-        switch (s2.gb12) {
-          case 0:
-            if (is(curr, types.Regional_Indicator)) s2.gb12 = 1;
-            else s2.gb12 = -1;
-            break;
-          case 1:
-            if (is(curr, types.Regional_Indicator)) s2.gb12 = 0;
-            else s2.gb12 = -1;
-            break;
-        }
-        switch (s2.gb13) {
-          case 0:
-            if (!is(curr, types.Regional_Indicator)) s2.gb13 = 1;
-            break;
-          case 1:
-            if (is(curr, types.Regional_Indicator)) s2.gb13 = 2;
-            else s2.gb13 = 1;
-            break;
-          case 2:
-            s2.gb13 = 1;
-            break;
-        }
-        if (is(curr, types.CR) && is(next, types.LF)) {
-          continue;
-        }
-        if (is(curr, types.Control | types.CR | types.LF)) {
-          return i2 + 1 - start;
-        }
-        if (is(next, types.Control | types.CR | types.LF)) {
-          return i2 + 1 - start;
-        }
-        if (is(curr, types.L) && is(next, types.L | types.V | types.LV | types.LVT)) {
-          continue;
-        }
-        if (is(curr, types.LV | types.V) && is(next, types.V | types.T)) {
-          continue;
-        }
-        if (is(curr, types.LVT | types.T) && is(next, types.T)) {
-          continue;
-        }
-        if (is(next, types.Extend | types.ZWJ)) {
-          continue;
-        }
-        if (is(next, types.SpacingMark)) {
-          continue;
-        }
-        if (is(curr, types.Prepend)) {
-          continue;
-        }
-        if (is(next, types.InCB_Consonant) && s2.gb9c === 2) {
-          continue;
-        }
-        if (is(next, types.Extended_Pictographic) && s2.gb11 === 2) {
-          continue;
-        }
-        if (is(next, types.Regional_Indicator) && s2.gb12 === 1) {
-          continue;
-        }
-        if (is(next, types.Regional_Indicator) && s2.gb13 === 2) {
-          continue;
-        }
-        return i2 + 1 - start;
-      }
-      return L3 - start;
-    }
-    module2.exports = function split2(str) {
-      const graphemeClusters = [];
-      const map = [0];
-      const ts = [];
-      for (let i2 = 0; i2 < str.length; ) {
-        const code = str.codePointAt(i2);
-        ts.push(typeTrie.get(code) | extPict.get(code) | inCB.get(code));
-        i2 += code > 65535 ? 2 : 1;
-        map.push(i2);
-      }
-      const s2 = {
-        gb9c: 0,
-        gb11: 0,
-        gb12: 0,
-        gb13: 0
-      };
-      for (let offset = 0; offset < ts.length; ) {
-        const size = nextGraphemeClusterSize(s2, ts, offset);
-        const start = map[offset];
-        const end = map[offset + size];
-        graphemeClusters.push(str.slice(start, end));
-        offset += size;
-      }
-      return graphemeClusters;
-    };
   }
 });
 
@@ -5853,6 +5056,933 @@ var init_experience = __esm({
   }
 });
 
+// src/core/schema/agent.ts
+var agent_exports = {};
+__export(agent_exports, {
+  CapabilityClaimSchema: () => CapabilityClaimSchema,
+  CritiqueIssueCategorySchema: () => CritiqueIssueCategorySchema,
+  CritiqueIssueSchema: () => CritiqueIssueSchema,
+  CritiqueIssueSeveritySchema: () => CritiqueIssueSeveritySchema,
+  CritiqueResultSchema: () => CritiqueResultSchema,
+  CurateResultSchema: () => CurateResultSchema,
+  JdProfileSchema: () => JdProfileSchema,
+  JdSenioritySchema: () => JdSenioritySchema,
+  ProjectMemorySchema: () => ProjectMemorySchema,
+  ProjectSectionSchema: () => ProjectSectionSchema,
+  ResumeDraftSchema: () => ResumeDraftSchema,
+  RevisionRecordSchema: () => RevisionRecordSchema,
+  SkillGroupSchema: () => SkillGroupSchema
+});
+var ProjectMemorySchema, CapabilityClaimSchema, SkillGroupSchema, ProjectSectionSchema, ResumeDraftSchema, CurateResultSchema, CritiqueIssueSeveritySchema, CritiqueIssueCategorySchema, CritiqueIssueSchema, CritiqueResultSchema, RevisionRecordSchema, JdSenioritySchema, JdProfileSchema;
+var init_agent = __esm({
+  "src/core/schema/agent.ts"() {
+    "use strict";
+    init_cjs_shims();
+    init_zod();
+    init_experience();
+    ProjectMemorySchema = external_exports.object({
+      id: external_exports.string(),
+      repo: external_exports.string(),
+      title: external_exports.string(),
+      period: external_exports.object({ from: external_exports.string(), to: external_exports.string() }),
+      activeMonths: external_exports.number().int().positive(),
+      category: external_exports.string(),
+      importance: external_exports.number().min(0).max(1),
+      signalScore: external_exports.number().min(0).max(1),
+      highlights: external_exports.array(HighlightSchema),
+      weakSignals: external_exports.array(external_exports.string()),
+      stack: external_exports.array(external_exports.string()),
+      tags: external_exports.array(external_exports.string()),
+      evidenceEntryIds: external_exports.array(external_exports.string())
+    });
+    CapabilityClaimSchema = external_exports.object({
+      claim: external_exports.string(),
+      category: external_exports.string(),
+      technologies: external_exports.array(external_exports.string()),
+      confidence: external_exports.number().min(0).max(1),
+      projectIds: external_exports.array(external_exports.string()),
+      resumeUse: external_exports.boolean()
+    });
+    SkillGroupSchema = external_exports.object({
+      category: external_exports.string(),
+      items: external_exports.array(external_exports.string())
+    });
+    ProjectSectionSchema = external_exports.object({
+      projectId: external_exports.string(),
+      title: external_exports.string(),
+      period: external_exports.object({ from: external_exports.string(), to: external_exports.string() }),
+      bullets: external_exports.array(external_exports.string()),
+      stack: external_exports.array(external_exports.string())
+    });
+    ResumeDraftSchema = external_exports.object({
+      version: external_exports.number().int().positive(),
+      generatedAt: external_exports.string().datetime(),
+      login: external_exports.string(),
+      headline: external_exports.string(),
+      summary: external_exports.string(),
+      skills: external_exports.array(SkillGroupSchema),
+      selectedProjects: external_exports.array(ProjectSectionSchema),
+      otherExperience: external_exports.array(external_exports.string()),
+      evidenceMap: external_exports.record(external_exports.string(), external_exports.array(external_exports.string())),
+      styleNotes: external_exports.string().optional()
+    });
+    CurateResultSchema = external_exports.object({
+      version: external_exports.number().int().positive(),
+      generatedAt: external_exports.string().datetime(),
+      projects: external_exports.array(ProjectMemorySchema),
+      claims: external_exports.array(CapabilityClaimSchema)
+    });
+    CritiqueIssueSeveritySchema = external_exports.enum(["error", "warning", "suggestion"]);
+    CritiqueIssueCategorySchema = external_exports.enum([
+      "structure",
+      "content",
+      "language",
+      "positioning",
+      "length"
+    ]);
+    CritiqueIssueSchema = external_exports.object({
+      severity: CritiqueIssueSeveritySchema,
+      category: CritiqueIssueCategorySchema,
+      description: external_exports.string(),
+      location: external_exports.string().optional(),
+      suggestion: external_exports.string()
+    });
+    CritiqueResultSchema = external_exports.object({
+      version: external_exports.number().int().positive(),
+      generatedAt: external_exports.string().datetime(),
+      draftSlug: external_exports.string(),
+      overallScore: external_exports.number().min(0).max(10),
+      summary: external_exports.string(),
+      issues: external_exports.array(CritiqueIssueSchema),
+      passedChecks: external_exports.array(external_exports.string())
+    });
+    RevisionRecordSchema = external_exports.object({
+      version: external_exports.number().int().positive(),
+      generatedAt: external_exports.string().datetime(),
+      slug: external_exports.string(),
+      instruction: external_exports.string(),
+      previousDraftSlug: external_exports.string(),
+      draft: ResumeDraftSchema
+    });
+    JdSenioritySchema = external_exports.enum([
+      "junior",
+      "mid",
+      "senior",
+      "staff",
+      "principal",
+      "unknown"
+    ]);
+    JdProfileSchema = external_exports.object({
+      version: external_exports.literal(1),
+      parsedAt: external_exports.string().datetime(),
+      slug: external_exports.string(),
+      jobTitle: external_exports.string(),
+      seniority: JdSenioritySchema,
+      requiredSkills: external_exports.array(external_exports.string()),
+      niceToHaveSkills: external_exports.array(external_exports.string()),
+      keyResponsibilities: external_exports.array(external_exports.string()),
+      targetProfile: external_exports.string()
+    });
+  }
+});
+
+// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js
+var require_types = __commonJS({
+  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    module2.exports = {
+      Other: 0,
+      CR: 1 << 0,
+      LF: 1 << 1,
+      Control: 1 << 2,
+      Extend: 1 << 3,
+      ZWJ: 1 << 4,
+      Regional_Indicator: 1 << 5,
+      Prepend: 1 << 6,
+      SpacingMark: 1 << 7,
+      L: 1 << 8,
+      V: 1 << 9,
+      T: 1 << 10,
+      LV: 1 << 11,
+      LVT: 1 << 12,
+      Extended_Pictographic: 1 << 13,
+      InCB_Linker: 1 << 14,
+      InCB_Consonant: 1 << 15,
+      InCB_Extend: 1 << 16
+    };
+  }
+});
+
+// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/typeTrie.json
+var require_typeTrie = __commonJS({
+  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/typeTrie.json"(exports2, module2) {
+    module2.exports = { data: "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" };
+  }
+});
+
+// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/extPict.json
+var require_extPict = __commonJS({
+  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/extPict.json"(exports2, module2) {
+    module2.exports = { data: "AAACAAAAAACAOAAAAbYBSf7t2S1IBEEYBuDVDZ7FYrQMNsFiu3hgEYOI0SCXRIUrB8JhEZtgs5gEg1GMFk02m82oGI02m+9xezCOczv/uwv3fvAwc/PzfXOzcdqzWdaBDdiGPdiHdjE+DS3RNDuCfsn8idQ/g3OH3BdwKf0e96/gumTfYcncLdzBPTzAo+RZ+f0Cr/AG7/AJX4738x1wtz9FO5PX/50n6UXMNdfg/0lERERERERERERERETpdedHBvDRql4nq0cXtW9af98qdRby0Vvp8K4W0V+C5Xw0t4J2bfjeBp3cnEu1brnnCTYNa7eKdz91XP7WO9Lb4GqRb7cY6xbtAdqeVOsY/QGcevw/tb6OT85YhvfKYEx9CMuxKsKnrs+eJtVInVvHJ0eVYVvTZk2siFVLOCjb61PTZX3MdVWEyP7fjzpmMxdzTyq2Ebue6x61nXRGnzndWpf1an7dXmGYE4Y1ptqqKsK1nu26Ju0ty+maV2Rpvk+qnDZjKUIobUiesdAQE/jmCTmHmsskpFZsVYbtmXRcaoSGUPomunW2derQhDPFjtT1Q/eb8vnm990fq35oHVt11bU9m89c7DNI8Qs=" };
+  }
+});
+
+// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/inCB.json
+var require_inCB = __commonJS({
+  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/inCB.json"(exports2, module2) {
+    module2.exports = { data: "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" };
+  }
+});
+
+// node_modules/.pnpm/tiny-inflate@1.0.3/node_modules/tiny-inflate/index.js
+var require_tiny_inflate = __commonJS({
+  "node_modules/.pnpm/tiny-inflate@1.0.3/node_modules/tiny-inflate/index.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    var TINF_OK = 0;
+    var TINF_DATA_ERROR = -3;
+    function Tree() {
+      this.table = new Uint16Array(16);
+      this.trans = new Uint16Array(288);
+    }
+    function Data(source, dest) {
+      this.source = source;
+      this.sourceIndex = 0;
+      this.tag = 0;
+      this.bitcount = 0;
+      this.dest = dest;
+      this.destLen = 0;
+      this.ltree = new Tree();
+      this.dtree = new Tree();
+    }
+    var sltree = new Tree();
+    var sdtree = new Tree();
+    var length_bits = new Uint8Array(30);
+    var length_base = new Uint16Array(30);
+    var dist_bits = new Uint8Array(30);
+    var dist_base = new Uint16Array(30);
+    var clcidx = new Uint8Array([
+      16,
+      17,
+      18,
+      0,
+      8,
+      7,
+      9,
+      6,
+      10,
+      5,
+      11,
+      4,
+      12,
+      3,
+      13,
+      2,
+      14,
+      1,
+      15
+    ]);
+    var code_tree = new Tree();
+    var lengths = new Uint8Array(288 + 32);
+    function tinf_build_bits_base(bits, base, delta, first) {
+      var i2, sum;
+      for (i2 = 0; i2 < delta; ++i2) bits[i2] = 0;
+      for (i2 = 0; i2 < 30 - delta; ++i2) bits[i2 + delta] = i2 / delta | 0;
+      for (sum = first, i2 = 0; i2 < 30; ++i2) {
+        base[i2] = sum;
+        sum += 1 << bits[i2];
+      }
+    }
+    function tinf_build_fixed_trees(lt, dt) {
+      var i2;
+      for (i2 = 0; i2 < 7; ++i2) lt.table[i2] = 0;
+      lt.table[7] = 24;
+      lt.table[8] = 152;
+      lt.table[9] = 112;
+      for (i2 = 0; i2 < 24; ++i2) lt.trans[i2] = 256 + i2;
+      for (i2 = 0; i2 < 144; ++i2) lt.trans[24 + i2] = i2;
+      for (i2 = 0; i2 < 8; ++i2) lt.trans[24 + 144 + i2] = 280 + i2;
+      for (i2 = 0; i2 < 112; ++i2) lt.trans[24 + 144 + 8 + i2] = 144 + i2;
+      for (i2 = 0; i2 < 5; ++i2) dt.table[i2] = 0;
+      dt.table[5] = 32;
+      for (i2 = 0; i2 < 32; ++i2) dt.trans[i2] = i2;
+    }
+    var offs = new Uint16Array(16);
+    function tinf_build_tree(t2, lengths2, off, num) {
+      var i2, sum;
+      for (i2 = 0; i2 < 16; ++i2) t2.table[i2] = 0;
+      for (i2 = 0; i2 < num; ++i2) t2.table[lengths2[off + i2]]++;
+      t2.table[0] = 0;
+      for (sum = 0, i2 = 0; i2 < 16; ++i2) {
+        offs[i2] = sum;
+        sum += t2.table[i2];
+      }
+      for (i2 = 0; i2 < num; ++i2) {
+        if (lengths2[off + i2]) t2.trans[offs[lengths2[off + i2]]++] = i2;
+      }
+    }
+    function tinf_getbit(d2) {
+      if (!d2.bitcount--) {
+        d2.tag = d2.source[d2.sourceIndex++];
+        d2.bitcount = 7;
+      }
+      var bit = d2.tag & 1;
+      d2.tag >>>= 1;
+      return bit;
+    }
+    function tinf_read_bits(d2, num, base) {
+      if (!num)
+        return base;
+      while (d2.bitcount < 24) {
+        d2.tag |= d2.source[d2.sourceIndex++] << d2.bitcount;
+        d2.bitcount += 8;
+      }
+      var val = d2.tag & 65535 >>> 16 - num;
+      d2.tag >>>= num;
+      d2.bitcount -= num;
+      return val + base;
+    }
+    function tinf_decode_symbol(d2, t2) {
+      while (d2.bitcount < 24) {
+        d2.tag |= d2.source[d2.sourceIndex++] << d2.bitcount;
+        d2.bitcount += 8;
+      }
+      var sum = 0, cur = 0, len = 0;
+      var tag = d2.tag;
+      do {
+        cur = 2 * cur + (tag & 1);
+        tag >>>= 1;
+        ++len;
+        sum += t2.table[len];
+        cur -= t2.table[len];
+      } while (cur >= 0);
+      d2.tag = tag;
+      d2.bitcount -= len;
+      return t2.trans[sum + cur];
+    }
+    function tinf_decode_trees(d2, lt, dt) {
+      var hlit, hdist, hclen;
+      var i2, num, length;
+      hlit = tinf_read_bits(d2, 5, 257);
+      hdist = tinf_read_bits(d2, 5, 1);
+      hclen = tinf_read_bits(d2, 4, 4);
+      for (i2 = 0; i2 < 19; ++i2) lengths[i2] = 0;
+      for (i2 = 0; i2 < hclen; ++i2) {
+        var clen = tinf_read_bits(d2, 3, 0);
+        lengths[clcidx[i2]] = clen;
+      }
+      tinf_build_tree(code_tree, lengths, 0, 19);
+      for (num = 0; num < hlit + hdist; ) {
+        var sym = tinf_decode_symbol(d2, code_tree);
+        switch (sym) {
+          case 16:
+            var prev = lengths[num - 1];
+            for (length = tinf_read_bits(d2, 2, 3); length; --length) {
+              lengths[num++] = prev;
+            }
+            break;
+          case 17:
+            for (length = tinf_read_bits(d2, 3, 3); length; --length) {
+              lengths[num++] = 0;
+            }
+            break;
+          case 18:
+            for (length = tinf_read_bits(d2, 7, 11); length; --length) {
+              lengths[num++] = 0;
+            }
+            break;
+          default:
+            lengths[num++] = sym;
+            break;
+        }
+      }
+      tinf_build_tree(lt, lengths, 0, hlit);
+      tinf_build_tree(dt, lengths, hlit, hdist);
+    }
+    function tinf_inflate_block_data(d2, lt, dt) {
+      while (1) {
+        var sym = tinf_decode_symbol(d2, lt);
+        if (sym === 256) {
+          return TINF_OK;
+        }
+        if (sym < 256) {
+          d2.dest[d2.destLen++] = sym;
+        } else {
+          var length, dist, offs2;
+          var i2;
+          sym -= 257;
+          length = tinf_read_bits(d2, length_bits[sym], length_base[sym]);
+          dist = tinf_decode_symbol(d2, dt);
+          offs2 = d2.destLen - tinf_read_bits(d2, dist_bits[dist], dist_base[dist]);
+          for (i2 = offs2; i2 < offs2 + length; ++i2) {
+            d2.dest[d2.destLen++] = d2.dest[i2];
+          }
+        }
+      }
+    }
+    function tinf_inflate_uncompressed_block(d2) {
+      var length, invlength;
+      var i2;
+      while (d2.bitcount > 8) {
+        d2.sourceIndex--;
+        d2.bitcount -= 8;
+      }
+      length = d2.source[d2.sourceIndex + 1];
+      length = 256 * length + d2.source[d2.sourceIndex];
+      invlength = d2.source[d2.sourceIndex + 3];
+      invlength = 256 * invlength + d2.source[d2.sourceIndex + 2];
+      if (length !== (~invlength & 65535))
+        return TINF_DATA_ERROR;
+      d2.sourceIndex += 4;
+      for (i2 = length; i2; --i2)
+        d2.dest[d2.destLen++] = d2.source[d2.sourceIndex++];
+      d2.bitcount = 0;
+      return TINF_OK;
+    }
+    function tinf_uncompress(source, dest) {
+      var d2 = new Data(source, dest);
+      var bfinal, btype, res;
+      do {
+        bfinal = tinf_getbit(d2);
+        btype = tinf_read_bits(d2, 2, 0);
+        switch (btype) {
+          case 0:
+            res = tinf_inflate_uncompressed_block(d2);
+            break;
+          case 1:
+            res = tinf_inflate_block_data(d2, sltree, sdtree);
+            break;
+          case 2:
+            tinf_decode_trees(d2, d2.ltree, d2.dtree);
+            res = tinf_inflate_block_data(d2, d2.ltree, d2.dtree);
+            break;
+          default:
+            res = TINF_DATA_ERROR;
+        }
+        if (res !== TINF_OK)
+          throw new Error("Data error");
+      } while (!bfinal);
+      if (d2.destLen < d2.dest.length) {
+        if (typeof d2.dest.slice === "function")
+          return d2.dest.slice(0, d2.destLen);
+        else
+          return d2.dest.subarray(0, d2.destLen);
+      }
+      return d2.dest;
+    }
+    tinf_build_fixed_trees(sltree, sdtree);
+    tinf_build_bits_base(length_bits, length_base, 4, 3);
+    tinf_build_bits_base(dist_bits, dist_base, 2, 1);
+    length_bits[28] = 0;
+    length_base[28] = 258;
+    module2.exports = tinf_uncompress;
+  }
+});
+
+// node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/swap.js
+var require_swap = __commonJS({
+  "node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/swap.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    var isBigEndian = new Uint8Array(new Uint32Array([305419896]).buffer)[0] === 18;
+    var swap = (b2, n2, m2) => {
+      let i2 = b2[n2];
+      b2[n2] = b2[m2];
+      b2[m2] = i2;
+    };
+    var swap32 = (array) => {
+      const len = array.length;
+      for (let i2 = 0; i2 < len; i2 += 4) {
+        swap(array, i2, i2 + 3);
+        swap(array, i2 + 1, i2 + 2);
+      }
+    };
+    var swap32LE = (array) => {
+      if (isBigEndian) {
+        swap32(array);
+      }
+    };
+    module2.exports = {
+      swap32LE
+    };
+  }
+});
+
+// node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/index.js
+var require_unicode_trie = __commonJS({
+  "node_modules/.pnpm/unicode-trie@2.0.0/node_modules/unicode-trie/index.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    var inflate = require_tiny_inflate();
+    var { swap32LE } = require_swap();
+    var SHIFT_1 = 6 + 5;
+    var SHIFT_2 = 5;
+    var SHIFT_1_2 = SHIFT_1 - SHIFT_2;
+    var OMITTED_BMP_INDEX_1_LENGTH = 65536 >> SHIFT_1;
+    var INDEX_2_BLOCK_LENGTH = 1 << SHIFT_1_2;
+    var INDEX_2_MASK = INDEX_2_BLOCK_LENGTH - 1;
+    var INDEX_SHIFT = 2;
+    var DATA_BLOCK_LENGTH = 1 << SHIFT_2;
+    var DATA_MASK = DATA_BLOCK_LENGTH - 1;
+    var LSCP_INDEX_2_OFFSET = 65536 >> SHIFT_2;
+    var LSCP_INDEX_2_LENGTH = 1024 >> SHIFT_2;
+    var INDEX_2_BMP_LENGTH = LSCP_INDEX_2_OFFSET + LSCP_INDEX_2_LENGTH;
+    var UTF8_2B_INDEX_2_OFFSET = INDEX_2_BMP_LENGTH;
+    var UTF8_2B_INDEX_2_LENGTH = 2048 >> 6;
+    var INDEX_1_OFFSET = UTF8_2B_INDEX_2_OFFSET + UTF8_2B_INDEX_2_LENGTH;
+    var DATA_GRANULARITY = 1 << INDEX_SHIFT;
+    var UnicodeTrie = class {
+      constructor(data) {
+        const isBuffer = typeof data.readUInt32BE === "function" && typeof data.slice === "function";
+        if (isBuffer || data instanceof Uint8Array) {
+          let uncompressedLength;
+          if (isBuffer) {
+            this.highStart = data.readUInt32LE(0);
+            this.errorValue = data.readUInt32LE(4);
+            uncompressedLength = data.readUInt32LE(8);
+            data = data.slice(12);
+          } else {
+            const view = new DataView(data.buffer);
+            this.highStart = view.getUint32(0, true);
+            this.errorValue = view.getUint32(4, true);
+            uncompressedLength = view.getUint32(8, true);
+            data = data.subarray(12);
+          }
+          data = inflate(data, new Uint8Array(uncompressedLength));
+          data = inflate(data, new Uint8Array(uncompressedLength));
+          swap32LE(data);
+          this.data = new Uint32Array(data.buffer);
+        } else {
+          ({ data: this.data, highStart: this.highStart, errorValue: this.errorValue } = data);
+        }
+      }
+      get(codePoint) {
+        let index;
+        if (codePoint < 0 || codePoint > 1114111) {
+          return this.errorValue;
+        }
+        if (codePoint < 55296 || codePoint > 56319 && codePoint <= 65535) {
+          index = (this.data[codePoint >> SHIFT_2] << INDEX_SHIFT) + (codePoint & DATA_MASK);
+          return this.data[index];
+        }
+        if (codePoint <= 65535) {
+          index = (this.data[LSCP_INDEX_2_OFFSET + (codePoint - 55296 >> SHIFT_2)] << INDEX_SHIFT) + (codePoint & DATA_MASK);
+          return this.data[index];
+        }
+        if (codePoint < this.highStart) {
+          index = this.data[INDEX_1_OFFSET - OMITTED_BMP_INDEX_1_LENGTH + (codePoint >> SHIFT_1)];
+          index = this.data[index + (codePoint >> SHIFT_2 & INDEX_2_MASK)];
+          index = (index << INDEX_SHIFT) + (codePoint & DATA_MASK);
+          return this.data[index];
+        }
+        return this.data[this.data.length - DATA_GRANULARITY];
+      }
+    };
+    module2.exports = UnicodeTrie;
+  }
+});
+
+// node_modules/.pnpm/js-base64@3.7.8/node_modules/js-base64/base64.js
+var require_base64 = __commonJS({
+  "node_modules/.pnpm/js-base64@3.7.8/node_modules/js-base64/base64.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    (function(global2, factory) {
+      typeof exports2 === "object" && typeof module2 !== "undefined" ? module2.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (
+        // cf. https://github.com/dankogai/js-base64/issues/119
+        (function() {
+          var _Base64 = global2.Base64;
+          var gBase64 = factory();
+          gBase64.noConflict = function() {
+            global2.Base64 = _Base64;
+            return gBase64;
+          };
+          if (global2.Meteor) {
+            Base64 = gBase64;
+          }
+          global2.Base64 = gBase64;
+        })()
+      );
+    })(typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : exports2, function() {
+      "use strict";
+      var version = "3.7.8";
+      var VERSION10 = version;
+      var _hasBuffer = typeof Buffer === "function";
+      var _TD = typeof TextDecoder === "function" ? new TextDecoder() : void 0;
+      var _TE = typeof TextEncoder === "function" ? new TextEncoder() : void 0;
+      var b64ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      var b64chs = Array.prototype.slice.call(b64ch);
+      var b64tab = (function(a2) {
+        var tab = {};
+        a2.forEach(function(c3, i2) {
+          return tab[c3] = i2;
+        });
+        return tab;
+      })(b64chs);
+      var b64re = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
+      var _fromCC = String.fromCharCode.bind(String);
+      var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : function(it) {
+        return new Uint8Array(Array.prototype.slice.call(it, 0));
+      };
+      var _mkUriSafe = function(src2) {
+        return src2.replace(/=/g, "").replace(/[+\/]/g, function(m0) {
+          return m0 == "+" ? "-" : "_";
+        });
+      };
+      var _tidyB64 = function(s2) {
+        return s2.replace(/[^A-Za-z0-9\+\/]/g, "");
+      };
+      var btoaPolyfill = function(bin) {
+        var u32, c0, c1, c22, asc = "";
+        var pad = bin.length % 3;
+        for (var i2 = 0; i2 < bin.length; ) {
+          if ((c0 = bin.charCodeAt(i2++)) > 255 || (c1 = bin.charCodeAt(i2++)) > 255 || (c22 = bin.charCodeAt(i2++)) > 255)
+            throw new TypeError("invalid character found");
+          u32 = c0 << 16 | c1 << 8 | c22;
+          asc += b64chs[u32 >> 18 & 63] + b64chs[u32 >> 12 & 63] + b64chs[u32 >> 6 & 63] + b64chs[u32 & 63];
+        }
+        return pad ? asc.slice(0, pad - 3) + "===".substring(pad) : asc;
+      };
+      var _btoa = typeof btoa === "function" ? function(bin) {
+        return btoa(bin);
+      } : _hasBuffer ? function(bin) {
+        return Buffer.from(bin, "binary").toString("base64");
+      } : btoaPolyfill;
+      var _fromUint8Array = _hasBuffer ? function(u8a) {
+        return Buffer.from(u8a).toString("base64");
+      } : function(u8a) {
+        var maxargs = 4096;
+        var strs = [];
+        for (var i2 = 0, l2 = u8a.length; i2 < l2; i2 += maxargs) {
+          strs.push(_fromCC.apply(null, u8a.subarray(i2, i2 + maxargs)));
+        }
+        return _btoa(strs.join(""));
+      };
+      var fromUint8Array = function(u8a, urlsafe) {
+        if (urlsafe === void 0) {
+          urlsafe = false;
+        }
+        return urlsafe ? _mkUriSafe(_fromUint8Array(u8a)) : _fromUint8Array(u8a);
+      };
+      var cb_utob = function(c3) {
+        if (c3.length < 2) {
+          var cc = c3.charCodeAt(0);
+          return cc < 128 ? c3 : cc < 2048 ? _fromCC(192 | cc >>> 6) + _fromCC(128 | cc & 63) : _fromCC(224 | cc >>> 12 & 15) + _fromCC(128 | cc >>> 6 & 63) + _fromCC(128 | cc & 63);
+        } else {
+          var cc = 65536 + (c3.charCodeAt(0) - 55296) * 1024 + (c3.charCodeAt(1) - 56320);
+          return _fromCC(240 | cc >>> 18 & 7) + _fromCC(128 | cc >>> 12 & 63) + _fromCC(128 | cc >>> 6 & 63) + _fromCC(128 | cc & 63);
+        }
+      };
+      var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+      var utob = function(u3) {
+        return u3.replace(re_utob, cb_utob);
+      };
+      var _encode = _hasBuffer ? function(s2) {
+        return Buffer.from(s2, "utf8").toString("base64");
+      } : _TE ? function(s2) {
+        return _fromUint8Array(_TE.encode(s2));
+      } : function(s2) {
+        return _btoa(utob(s2));
+      };
+      var encode = function(src2, urlsafe) {
+        if (urlsafe === void 0) {
+          urlsafe = false;
+        }
+        return urlsafe ? _mkUriSafe(_encode(src2)) : _encode(src2);
+      };
+      var encodeURI2 = function(src2) {
+        return encode(src2, true);
+      };
+      var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+      var cb_btou = function(cccc) {
+        switch (cccc.length) {
+          case 4:
+            var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3), offset = cp - 65536;
+            return _fromCC((offset >>> 10) + 55296) + _fromCC((offset & 1023) + 56320);
+          case 3:
+            return _fromCC((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
+          default:
+            return _fromCC((31 & cccc.charCodeAt(0)) << 6 | 63 & cccc.charCodeAt(1));
+        }
+      };
+      var btou = function(b2) {
+        return b2.replace(re_btou, cb_btou);
+      };
+      var atobPolyfill = function(asc) {
+        asc = asc.replace(/\s+/g, "");
+        if (!b64re.test(asc))
+          throw new TypeError("malformed base64.");
+        asc += "==".slice(2 - (asc.length & 3));
+        var u24, r1, r22;
+        var binArray = [];
+        for (var i2 = 0; i2 < asc.length; ) {
+          u24 = b64tab[asc.charAt(i2++)] << 18 | b64tab[asc.charAt(i2++)] << 12 | (r1 = b64tab[asc.charAt(i2++)]) << 6 | (r22 = b64tab[asc.charAt(i2++)]);
+          if (r1 === 64) {
+            binArray.push(_fromCC(u24 >> 16 & 255));
+          } else if (r22 === 64) {
+            binArray.push(_fromCC(u24 >> 16 & 255, u24 >> 8 & 255));
+          } else {
+            binArray.push(_fromCC(u24 >> 16 & 255, u24 >> 8 & 255, u24 & 255));
+          }
+        }
+        return binArray.join("");
+      };
+      var _atob = typeof atob === "function" ? function(asc) {
+        return atob(_tidyB64(asc));
+      } : _hasBuffer ? function(asc) {
+        return Buffer.from(asc, "base64").toString("binary");
+      } : atobPolyfill;
+      var _toUint8Array = _hasBuffer ? function(a2) {
+        return _U8Afrom(Buffer.from(a2, "base64"));
+      } : function(a2) {
+        return _U8Afrom(_atob(a2).split("").map(function(c3) {
+          return c3.charCodeAt(0);
+        }));
+      };
+      var toUint8Array = function(a2) {
+        return _toUint8Array(_unURI(a2));
+      };
+      var _decode = _hasBuffer ? function(a2) {
+        return Buffer.from(a2, "base64").toString("utf8");
+      } : _TD ? function(a2) {
+        return _TD.decode(_toUint8Array(a2));
+      } : function(a2) {
+        return btou(_atob(a2));
+      };
+      var _unURI = function(a2) {
+        return _tidyB64(a2.replace(/[-_]/g, function(m0) {
+          return m0 == "-" ? "+" : "/";
+        }));
+      };
+      var decode = function(src2) {
+        return _decode(_unURI(src2));
+      };
+      var isValid2 = function(src2) {
+        if (typeof src2 !== "string")
+          return false;
+        var s2 = src2.replace(/\s+/g, "").replace(/={0,2}$/, "");
+        return !/[^\s0-9a-zA-Z\+/]/.test(s2) || !/[^\s0-9a-zA-Z\-_]/.test(s2);
+      };
+      var _noEnum = function(v2) {
+        return {
+          value: v2,
+          enumerable: false,
+          writable: true,
+          configurable: true
+        };
+      };
+      var extendString = function() {
+        var _add = function(name, body) {
+          return Object.defineProperty(String.prototype, name, _noEnum(body));
+        };
+        _add("fromBase64", function() {
+          return decode(this);
+        });
+        _add("toBase64", function(urlsafe) {
+          return encode(this, urlsafe);
+        });
+        _add("toBase64URI", function() {
+          return encode(this, true);
+        });
+        _add("toBase64URL", function() {
+          return encode(this, true);
+        });
+        _add("toUint8Array", function() {
+          return toUint8Array(this);
+        });
+      };
+      var extendUint8Array = function() {
+        var _add = function(name, body) {
+          return Object.defineProperty(Uint8Array.prototype, name, _noEnum(body));
+        };
+        _add("toBase64", function(urlsafe) {
+          return fromUint8Array(this, urlsafe);
+        });
+        _add("toBase64URI", function() {
+          return fromUint8Array(this, true);
+        });
+        _add("toBase64URL", function() {
+          return fromUint8Array(this, true);
+        });
+      };
+      var extendBuiltins = function() {
+        extendString();
+        extendUint8Array();
+      };
+      var gBase64 = {
+        version,
+        VERSION: VERSION10,
+        atob: _atob,
+        atobPolyfill,
+        btoa: _btoa,
+        btoaPolyfill,
+        fromBase64: decode,
+        toBase64: encode,
+        encode,
+        encodeURI: encodeURI2,
+        encodeURL: encodeURI2,
+        utob,
+        btou,
+        decode,
+        isValid: isValid2,
+        fromUint8Array,
+        toUint8Array,
+        extendString,
+        extendUint8Array,
+        extendBuiltins
+      };
+      gBase64.Base64 = {};
+      Object.keys(gBase64).forEach(function(k2) {
+        return gBase64.Base64[k2] = gBase64[k2];
+      });
+      return gBase64;
+    });
+  }
+});
+
+// node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/index.js
+var require_graphemesplit = __commonJS({
+  "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/index.js"(exports2, module2) {
+    "use strict";
+    init_cjs_shims();
+    var types = require_types();
+    var typeTrieData = require_typeTrie().data;
+    var extPictData = require_extPict().data;
+    var inCBData = require_inCB().data;
+    var UnicodeTrie = require_unicode_trie();
+    var Base642 = require_base64().Base64;
+    var typeTrie = new UnicodeTrie(Base642.toUint8Array(typeTrieData));
+    var extPict = new UnicodeTrie(Base642.toUint8Array(extPictData));
+    var inCB = new UnicodeTrie(Base642.toUint8Array(inCBData));
+    function is(type, bit) {
+      return (type & bit) !== 0;
+    }
+    function nextGraphemeClusterSize(s2, ts, start) {
+      const L3 = ts.length;
+      for (let i2 = start; i2 + 1 < L3; i2++) {
+        const curr = ts[i2 + 0];
+        const next = ts[i2 + 1];
+        switch (s2.gb9c) {
+          case 0:
+            if (is(curr, types.InCB_Consonant)) s2.gb9c = 1;
+            break;
+          case 1:
+            if (is(curr, types.InCB_Extend)) s2.gb9c = 1;
+            else if (is(curr, types.InCB_Linker)) s2.gb9c = 2;
+            else s2.gb9c = is(curr, types.InCB_Consonant) ? 1 : 0;
+            break;
+          case 2:
+            if (is(curr, types.InCB_Extend | types.InCB_Linker)) s2.gb9c = 2;
+            else s2.gb9c = is(curr, types.InCB_Consonant) ? 1 : 0;
+            break;
+        }
+        switch (s2.gb11) {
+          case 0:
+            if (is(curr, types.Extended_Pictographic)) s2.gb11 = 1;
+            break;
+          case 1:
+            if (is(curr, types.Extend)) s2.gb11 = 1;
+            else if (is(curr, types.ZWJ)) s2.gb11 = 2;
+            else s2.gb11 = is(curr, types.Extended_Pictographic) ? 1 : 0;
+            break;
+          case 2:
+            s2.gb11 = is(curr, types.Extended_Pictographic) ? 1 : 0;
+            break;
+        }
+        switch (s2.gb12) {
+          case 0:
+            if (is(curr, types.Regional_Indicator)) s2.gb12 = 1;
+            else s2.gb12 = -1;
+            break;
+          case 1:
+            if (is(curr, types.Regional_Indicator)) s2.gb12 = 0;
+            else s2.gb12 = -1;
+            break;
+        }
+        switch (s2.gb13) {
+          case 0:
+            if (!is(curr, types.Regional_Indicator)) s2.gb13 = 1;
+            break;
+          case 1:
+            if (is(curr, types.Regional_Indicator)) s2.gb13 = 2;
+            else s2.gb13 = 1;
+            break;
+          case 2:
+            s2.gb13 = 1;
+            break;
+        }
+        if (is(curr, types.CR) && is(next, types.LF)) {
+          continue;
+        }
+        if (is(curr, types.Control | types.CR | types.LF)) {
+          return i2 + 1 - start;
+        }
+        if (is(next, types.Control | types.CR | types.LF)) {
+          return i2 + 1 - start;
+        }
+        if (is(curr, types.L) && is(next, types.L | types.V | types.LV | types.LVT)) {
+          continue;
+        }
+        if (is(curr, types.LV | types.V) && is(next, types.V | types.T)) {
+          continue;
+        }
+        if (is(curr, types.LVT | types.T) && is(next, types.T)) {
+          continue;
+        }
+        if (is(next, types.Extend | types.ZWJ)) {
+          continue;
+        }
+        if (is(next, types.SpacingMark)) {
+          continue;
+        }
+        if (is(curr, types.Prepend)) {
+          continue;
+        }
+        if (is(next, types.InCB_Consonant) && s2.gb9c === 2) {
+          continue;
+        }
+        if (is(next, types.Extended_Pictographic) && s2.gb11 === 2) {
+          continue;
+        }
+        if (is(next, types.Regional_Indicator) && s2.gb12 === 1) {
+          continue;
+        }
+        if (is(next, types.Regional_Indicator) && s2.gb13 === 2) {
+          continue;
+        }
+        return i2 + 1 - start;
+      }
+      return L3 - start;
+    }
+    module2.exports = function split2(str) {
+      const graphemeClusters = [];
+      const map = [0];
+      const ts = [];
+      for (let i2 = 0; i2 < str.length; ) {
+        const code = str.codePointAt(i2);
+        ts.push(typeTrie.get(code) | extPict.get(code) | inCB.get(code));
+        i2 += code > 65535 ? 2 : 1;
+        map.push(i2);
+      }
+      const s2 = {
+        gb9c: 0,
+        gb11: 0,
+        gb12: 0,
+        gb13: 0
+      };
+      for (let offset = 0; offset < ts.length; ) {
+        const size = nextGraphemeClusterSize(s2, ts, offset);
+        const start = map[offset];
+        const end = map[offset + size];
+        graphemeClusters.push(str.slice(start, end));
+        offset += size;
+      }
+      return graphemeClusters;
+    };
+  }
+});
+
 // src/core/schema/snapshot.ts
 var snapshot_exports = {};
 __export(snapshot_exports, {
@@ -5891,7 +6021,7 @@ var init_snapshot = __esm({
 
 // src/cli.ts
 init_cjs_shims();
-var import_promises7 = require("fs/promises");
+var import_promises9 = require("fs/promises");
 
 // node_modules/.pnpm/citty@0.1.6/node_modules/citty/dist/index.mjs
 init_cjs_shims();
@@ -7684,7 +7814,7 @@ function checkHighlightLimits(markdown, maxHighlightLines = 2, maxHighlightsPerP
   let inHighlight = false;
   for (const rawLine of lines) {
     const line = rawLine;
-    if (line.startsWith("## ")) {
+    if (line.startsWith("## ") || line.startsWith("### ")) {
       if (inHighlight && highlightLineCount > maxHighlightLines) {
         violations.push({
           section: currentSection,
@@ -7697,7 +7827,7 @@ function checkHighlightLimits(markdown, maxHighlightLines = 2, maxHighlightsPerP
           issue: `too many highlights (${highlightCount}, max ${maxHighlightsPerProject})`
         });
       }
-      currentSection = line.slice(3).trim();
+      currentSection = line.replace(/^#{2,3}\s+/, "").trim();
       highlightCount = 0;
       inHighlight = false;
       highlightLineCount = 0;
@@ -7745,6 +7875,8 @@ function checkHighlightLimits(markdown, maxHighlightLines = 2, maxHighlightsPerP
 
 // src/core/pipeline.ts
 init_cjs_shims();
+var import_promises8 = require("fs/promises");
+var import_node_path10 = require("path");
 
 // src/core/collector/denoise.ts
 init_cjs_shims();
@@ -11675,6 +11807,1752 @@ async function collectIssuesViaRest(login, token, since) {
   return events;
 }
 
+// src/core/agent/capability.ts
+init_cjs_shims();
+var CAPABILITY_CATEGORIES = [
+  {
+    name: "AI/LLM Engineering",
+    keywords: [
+      "llm",
+      "openai",
+      "anthropic",
+      "agent",
+      "rag",
+      "langchain",
+      "embedding",
+      "gpt",
+      "claude",
+      "chatgpt",
+      "ai",
+      "ml",
+      "vector",
+      "semantic",
+      "copilot",
+      "huggingface",
+      "transformers",
+      "inference",
+      "prompt",
+      "fine-tuning"
+    ]
+  },
+  {
+    name: "Full-Stack Development",
+    keywords: [
+      "react",
+      "nextjs",
+      "next.js",
+      "vue",
+      "nuxt",
+      "svelte",
+      "angular",
+      "typescript",
+      "javascript",
+      "nodejs",
+      "node.js",
+      "express",
+      "fastify",
+      "hono",
+      "tailwind",
+      "html",
+      "css",
+      "frontend",
+      "backend",
+      "web",
+      "shadcn",
+      "radix",
+      "vite",
+      "webpack"
+    ]
+  },
+  {
+    name: "Data Engineering",
+    keywords: [
+      "postgresql",
+      "postgres",
+      "mysql",
+      "sqlite",
+      "mongodb",
+      "redis",
+      "prisma",
+      "drizzle",
+      "sql",
+      "database",
+      "elasticsearch",
+      "kafka",
+      "clickhouse",
+      "supabase",
+      "planetscale"
+    ]
+  },
+  {
+    name: "DevOps / Infrastructure",
+    keywords: [
+      "docker",
+      "kubernetes",
+      "k8s",
+      "ci/cd",
+      "github-actions",
+      "deploy",
+      "aws",
+      "gcp",
+      "azure",
+      "vercel",
+      "cloudflare",
+      "nginx",
+      "linux",
+      "terraform",
+      "ansible",
+      "monitoring",
+      "observability"
+    ]
+  },
+  {
+    name: "CLI / Developer Tooling",
+    keywords: [
+      "cli",
+      "tooling",
+      "plugin",
+      "extension",
+      "sdk",
+      "library",
+      "package",
+      "npm",
+      "pnpm",
+      "build-tool",
+      "compiler",
+      "linter",
+      "formatter",
+      "dx",
+      "devtools"
+    ]
+  },
+  {
+    name: "Open Source / Community",
+    keywords: [
+      "open-source",
+      "oss",
+      "community",
+      "contribution",
+      "release",
+      "documentation",
+      "tutorial",
+      "blog"
+    ]
+  }
+];
+function normalise(s2) {
+  return s2.toLowerCase().replace(/[-_.]/g, "");
+}
+function countHits(tokens, keywords) {
+  let hits = 0;
+  for (const kw of keywords) {
+    if (tokens.has(normalise(kw))) hits++;
+  }
+  return hits;
+}
+function classifyRepo(stack, tags) {
+  const tokens = new Set([...stack, ...tags].map(normalise));
+  let bestCategory = "General Engineering";
+  let bestHits = 0;
+  for (const cat of CAPABILITY_CATEGORIES) {
+    const hits = countHits(tokens, cat.keywords);
+    if (hits > bestHits) {
+      bestHits = hits;
+      bestCategory = cat.name;
+    }
+  }
+  return bestCategory;
+}
+function buildCapabilityClaims(projects) {
+  const accum = /* @__PURE__ */ new Map();
+  for (const cat of CAPABILITY_CATEGORIES) {
+    accum.set(cat.name, { techSet: /* @__PURE__ */ new Set(), projectIds: /* @__PURE__ */ new Set(), totalHits: 0 });
+  }
+  let globalMaxHits = 0;
+  for (const project of projects) {
+    const tokens = new Set([...project.stack, ...project.tags].map(normalise));
+    for (const cat of CAPABILITY_CATEGORIES) {
+      const hits = countHits(tokens, cat.keywords);
+      if (hits === 0) continue;
+      const entry = accum.get(cat.name);
+      if (!entry) continue;
+      entry.totalHits += hits;
+      entry.projectIds.add(project.id);
+      for (const tech of project.stack) {
+        const nt = normalise(tech);
+        if (cat.keywords.some((kw) => normalise(kw) === nt || nt.includes(normalise(kw)))) {
+          entry.techSet.add(tech);
+        }
+      }
+      if (entry.totalHits > globalMaxHits) globalMaxHits = entry.totalHits;
+    }
+  }
+  const claims = [];
+  for (const cat of CAPABILITY_CATEGORIES) {
+    const entry = accum.get(cat.name);
+    if (!entry || entry.projectIds.size === 0) continue;
+    const confidence = globalMaxHits > 0 ? Math.min(entry.totalHits / globalMaxHits, 1) : 0;
+    claims.push({
+      claim: cat.name,
+      category: cat.name,
+      technologies: [...entry.techSet].sort(),
+      confidence,
+      projectIds: [...entry.projectIds],
+      resumeUse: confidence >= 0.15 || entry.projectIds.size >= 2
+    });
+  }
+  return claims.sort((a2, b2) => b2.confidence - a2.confidence);
+}
+
+// src/core/agent/compose.ts
+init_cjs_shims();
+init_zod();
+
+// src/core/llm.ts
+init_cjs_shims();
+var RateLimitError = class extends Error {
+  constructor() {
+    super(
+      "LLM API rate limit exceeded after all retries. Run the command again to resume from the last checkpoint."
+    );
+    this.name = "RateLimitError";
+  }
+};
+var ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1";
+var DEFAULT_OPENAI_BASE_URL = "https://api.deepseek.com/v1";
+var DEFAULT_MAX_TOKENS = 4096;
+async function callApi(config, messages, system, jsonMode) {
+  const apiKey = config.apiKey ?? process.env.LLM_API_KEY ?? "";
+  if (!apiKey) {
+    throw new Error(
+      "LLM API key is not set. Provide it in config.json (llm.apiKey) or as LLM_API_KEY env var."
+    );
+  }
+  const maxRetries = config.maxRetries ?? 2;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    let res;
+    try {
+      if (config.provider === "anthropic") {
+        res = await fetch(`${ANTHROPIC_BASE_URL}/messages`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01"
+          },
+          body: JSON.stringify({
+            model: config.model,
+            max_tokens: DEFAULT_MAX_TOKENS,
+            system,
+            messages
+          })
+        });
+      } else {
+        const body = {
+          model: config.model,
+          messages: [{ role: "system", content: system }, ...messages]
+        };
+        if (jsonMode) body.response_format = { type: "json_object" };
+        res = await fetch(`${config.baseUrl ?? DEFAULT_OPENAI_BASE_URL}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${apiKey}`
+          },
+          body: JSON.stringify(body)
+        });
+      }
+    } catch (networkErr) {
+      if (attempt < maxRetries) {
+        await new Promise((r3) => setTimeout(r3, 2 ** attempt * 1e3));
+        continue;
+      }
+      throw new RateLimitError();
+    }
+    if (res.status === 429) {
+      const headerVal = res.headers.get("retry-after");
+      const retryAfter = headerVal !== null && !Number.isNaN(Number(headerVal)) ? Number(headerVal) : 2 ** attempt;
+      await new Promise((r3) => setTimeout(r3, retryAfter * 1e3));
+      continue;
+    }
+    if (!res.ok) {
+      const body = await res.text();
+      process.stderr.write(`LLM API error body: ${body}
+`);
+      throw new Error(
+        `LLM API error ${res.status} from ${config.provider} \u2014 see stderr for details`
+      );
+    }
+    if (config.provider === "anthropic") {
+      const data2 = await res.json();
+      const text2 = data2.content.find((c3) => c3.type === "text")?.text ?? "";
+      return {
+        text: text2,
+        promptTokens: data2.usage.input_tokens,
+        completionTokens: data2.usage.output_tokens
+      };
+    }
+    const data = await res.json();
+    const text = data.choices[0]?.message.content ?? "";
+    return {
+      text,
+      promptTokens: data.usage.prompt_tokens,
+      completionTokens: data.usage.completion_tokens
+    };
+  }
+  throw new RateLimitError();
+}
+async function generateObject(config, schema, system, user) {
+  const schemaInstruction = "\n\nRespond with ONLY valid JSON (no markdown fences, no commentary) matching the schema described above.";
+  const messages = [
+    { role: "user", content: user + schemaInstruction }
+  ];
+  const maxRetries = config.maxRetries ?? 2;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const { text } = await callApi(config, messages, system, true);
+    try {
+      const raw = JSON.parse(stripJsonFences(text));
+      return schema.parse(raw);
+    } catch (err) {
+      if (attempt === maxRetries) throw new Error(`LLM schema validation failed: ${err}`);
+      messages.push({ role: "assistant", content: text });
+      messages.push({
+        role: "user",
+        content: `The previous response failed schema validation: ${err}. Please fix and return valid JSON only.`
+      });
+    }
+  }
+  throw new Error("generateObject: exceeded retry limit");
+}
+async function generateText(config, system, user) {
+  const { text } = await callApi(config, [{ role: "user", content: user }], system, false);
+  return text;
+}
+function stripJsonFences(text) {
+  return text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
+}
+
+// src/core/prompts.ts
+init_cjs_shims();
+var import_promises5 = require("fs/promises");
+var import_node_path7 = require("path");
+async function loadPrompt(name, lang) {
+  const filename = `${name}.${lang}.md`;
+  const userOverride = (0, import_node_path7.join)(process.cwd(), "prompts", filename);
+  try {
+    return await (0, import_promises5.readFile)(userOverride, "utf8");
+  } catch {
+  }
+  return loadAsset((0, import_node_path7.join)("prompts", filename));
+}
+
+// src/core/agent/compose.ts
+init_agent();
+var ComposeLlmOutputSchema = external_exports.object({
+  headline: external_exports.string().min(1),
+  summary: external_exports.string().min(1),
+  skills: external_exports.array(SkillGroupSchema),
+  selectedProjects: external_exports.array(ProjectSectionSchema),
+  otherExperience: external_exports.array(external_exports.string())
+});
+var OUTPUT_SCHEMA_DESCRIPTION = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "headline": "string \u2014 one-line candidate positioning (\u2264 25 words)",
+  "summary": "string \u2014 3-4 sentence narrative paragraph",
+  "skills": [
+    { "category": "string", "items": ["string"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "string",
+      "title": "string",
+      "period": { "from": "ISO date string", "to": "ISO date string" },
+      "bullets": ["string \u2014 starts with strong action verb"],
+      "stack": ["string"]
+    }
+  ],
+  "otherExperience": ["string \u2014 one-line description per minor project"]
+}
+Constraints:
+- selectedProjects: 2\u20133 bullets each, maximum 3 bullets.
+- skills: group by capability area, each group has 3\u20138 items.
+- All text content in the requested language.
+- Do not invent projects, technologies, or metrics not present in the input.
+`;
+function formatProjectForPrompt(p) {
+  return {
+    id: p.id,
+    repo: p.repo,
+    title: p.title,
+    period: `${p.period.from.slice(0, 7)} ~ ${p.period.to.slice(0, 7)}`,
+    activeMonths: p.activeMonths,
+    category: p.category,
+    importance: p.importance,
+    highlights: p.highlights.slice(0, 6).map((h2) => h2.text),
+    stack: p.stack.slice(0, 10)
+  };
+}
+function formatClaimForPrompt(c3) {
+  return {
+    category: c3.category,
+    technologies: c3.technologies.slice(0, 8),
+    confidence: Math.round(c3.confidence * 100) / 100
+  };
+}
+function buildUserPrompt(login, topProjects, otherProjects, claims, options) {
+  const input = {
+    candidate: login,
+    language: options.lang,
+    targetRole: options.targetRole ?? null,
+    topProjects: topProjects.map(formatProjectForPrompt),
+    otherProjects: otherProjects.map((p) => ({
+      id: p.id,
+      repo: p.repo,
+      title: p.title,
+      period: `${p.period.from.slice(0, 7)} ~ ${p.period.to.slice(0, 7)}`,
+      category: p.category
+    })),
+    capabilityClaims: claims.filter((c3) => c3.resumeUse).map(formatClaimForPrompt)
+  };
+  return JSON.stringify(input, null, 2);
+}
+async function composeDraft(llmConfig, login, curateResult, options) {
+  const topN = options.topN ?? 6;
+  const topProjects = curateResult.projects.slice(0, topN);
+  const otherProjects = curateResult.projects.slice(topN);
+  const systemPromptBase = await loadPrompt("compose", options.lang);
+  const system = `${systemPromptBase}
+
+${OUTPUT_SCHEMA_DESCRIPTION}`;
+  const user = buildUserPrompt(login, topProjects, otherProjects, curateResult.claims, options);
+  const llmOutput = await generateObject(llmConfig, ComposeLlmOutputSchema, system, user);
+  const draft = {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    login,
+    ...llmOutput,
+    evidenceMap: Object.fromEntries(
+      llmOutput.selectedProjects.map((sp) => {
+        const project = curateResult.projects.find((p) => p.id === sp.projectId);
+        return [sp.projectId, project?.evidenceEntryIds ?? []];
+      })
+    )
+  };
+  return draft;
+}
+
+// src/core/agent/critique.ts
+init_cjs_shims();
+init_zod();
+init_agent();
+var CritiqueLlmOutputSchema = external_exports.object({
+  overallScore: external_exports.number().min(0).max(10),
+  summary: external_exports.string().min(1),
+  issues: external_exports.array(
+    external_exports.object({
+      severity: CritiqueIssueSeveritySchema,
+      category: CritiqueIssueCategorySchema,
+      description: external_exports.string(),
+      location: external_exports.string().optional(),
+      suggestion: external_exports.string()
+    })
+  ),
+  passedChecks: external_exports.array(external_exports.string())
+});
+var OUTPUT_SCHEMA_DESCRIPTION2 = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "overallScore": number (0-10),
+  "summary": "string \u2014 2-3 sentence overall assessment",
+  "issues": [
+    {
+      "severity": "error" | "warning" | "suggestion",
+      "category": "structure" | "content" | "language" | "positioning" | "length",
+      "description": "string \u2014 specific problem found",
+      "location": "string \u2014 optional, which section/project is affected",
+      "suggestion": "string \u2014 concrete actionable fix"
+    }
+  ],
+  "passedChecks": ["string \u2014 things the resume does well"]
+}
+Constraints:
+- Be specific: name the exact project or section in description/location.
+- Issues must have actionable suggestions, not vague advice.
+- passedChecks should acknowledge genuine strengths.
+`;
+function formatDraftForCritique(draft) {
+  return JSON.stringify(
+    {
+      headline: draft.headline,
+      summary: draft.summary,
+      skills: draft.skills,
+      selectedProjects: draft.selectedProjects.map((p) => ({
+        title: p.title,
+        period: `${p.period.from.slice(0, 7)} ~ ${p.period.to.slice(0, 7)}`,
+        bullets: p.bullets,
+        stack: p.stack
+      })),
+      otherExperience: draft.otherExperience
+    },
+    null,
+    2
+  );
+}
+async function critiqueDraft(llmConfig, draft, draftSlug, lang) {
+  const systemPromptBase = await loadPrompt("critique", lang);
+  const system = `${systemPromptBase}
+
+${OUTPUT_SCHEMA_DESCRIPTION2}`;
+  const user = `Please critique this resume draft:
+
+${formatDraftForCritique(draft)}`;
+  const llmOutput = await generateObject(llmConfig, CritiqueLlmOutputSchema, system, user);
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    draftSlug,
+    ...llmOutput
+  };
+}
+
+// src/core/agent/jd-parse.ts
+init_cjs_shims();
+init_zod();
+init_agent();
+var JdParseOutputSchema = external_exports.object({
+  jobTitle: external_exports.string(),
+  seniority: JdSenioritySchema,
+  requiredSkills: external_exports.array(external_exports.string()),
+  niceToHaveSkills: external_exports.array(external_exports.string()),
+  keyResponsibilities: external_exports.array(external_exports.string()),
+  targetProfile: external_exports.string()
+});
+function makeJdSlug(jobTitle) {
+  return "jd-" + jobTitle.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 40);
+}
+async function parseJdProfile(llmConfig, jdText, lang) {
+  const systemPrompt = await loadPrompt("jd-parse", lang);
+  const parsed = await generateObject(
+    llmConfig,
+    JdParseOutputSchema,
+    systemPrompt,
+    `Job description to parse:
+
+${jdText}`
+  );
+  const slug = makeJdSlug(parsed.jobTitle);
+  return {
+    version: 1,
+    parsedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    slug,
+    ...parsed
+  };
+}
+
+// src/core/agent/jd-score.ts
+init_cjs_shims();
+function scoreProjectForJd(project, jd) {
+  const projectText = [
+    ...project.stack,
+    ...project.tags,
+    project.category,
+    ...project.highlights.map((h2) => h2.text)
+  ].join(" ").toLowerCase();
+  const countMatches = (skills) => skills.filter((s2) => projectText.includes(s2.toLowerCase())).length;
+  const reqScore = jd.requiredSkills.length > 0 ? countMatches(jd.requiredSkills) / jd.requiredSkills.length : 0;
+  const niceScore = jd.niceToHaveSkills.length > 0 ? countMatches(jd.niceToHaveSkills) / jd.niceToHaveSkills.length : 0;
+  return reqScore * 0.7 + niceScore * 0.3;
+}
+function scoreProjectsForJd(projects, jd) {
+  return projects.map((p) => ({
+    project: p,
+    combined: p.signalScore * 0.4 + scoreProjectForJd(p, jd) * 0.6
+  })).sort((a2, b2) => b2.combined - a2.combined).map((s2) => s2.project);
+}
+function scoreClaimsForJd(claims, jd) {
+  return claims.map((c3) => {
+    const claimText = [c3.claim, c3.category, ...c3.technologies].join(" ").toLowerCase();
+    const reqMatches = jd.requiredSkills.filter(
+      (s2) => claimText.includes(s2.toLowerCase())
+    ).length;
+    const niceMatches = jd.niceToHaveSkills.filter(
+      (s2) => claimText.includes(s2.toLowerCase())
+    ).length;
+    return { claim: c3, score: reqMatches * 2 + niceMatches };
+  }).sort((a2, b2) => b2.score - a2.score).map((s2) => s2.claim);
+}
+
+// src/core/agent/merger.ts
+init_cjs_shims();
+
+// src/core/agent/signal.ts
+init_cjs_shims();
+var WEAK_TITLE_PATTERNS = [
+  /^chore[:(]/i,
+  /^deps[:(]/i,
+  /^build[:(]/i,
+  /^ci[:(]/i,
+  /\bbump\b/i,
+  /\bupgrade\b.*\bdependenc/i,
+  /\bupdate\b.*\bdependenc/i,
+  /\brenovate\b/i,
+  /\btypo\b/i,
+  /\bfix lint\b/i,
+  /\bfix format\b/i,
+  /\bprettier\b/i,
+  /\beslint\b/i,
+  /\badd\.gitignore\b/i,
+  /^initial commit/i,
+  /^init(ial)? repo/i,
+  /\bupdate readme\b/i,
+  /\badd readme\b/i
+];
+var STRONG_TITLE_PATTERNS = [
+  /^feat[:(]/i,
+  /^feature[:(]/i,
+  /^refactor[:(]/i,
+  /^perf[:(]/i,
+  /\bimplement\b/i,
+  /\barchitect\b/i,
+  /\bmigrat\b/i,
+  /\bintegrat\b/i,
+  /\boptimiz\b/i,
+  /\bscale\b/i,
+  /\bdeploy\b/i,
+  /\blaunch\b/i,
+  /\bship\b/i
+];
+var STRONG_TAGS = /* @__PURE__ */ new Set([
+  "architecture",
+  "refactor",
+  "performance",
+  "api",
+  "feature",
+  "system-design",
+  "migration",
+  "integration",
+  "deploy",
+  "testing",
+  "security",
+  "ai",
+  "llm",
+  "agent",
+  "open-source"
+]);
+function classifyHighlight(highlight) {
+  const text = highlight.text.toLowerCase();
+  for (const pattern of WEAK_TITLE_PATTERNS) {
+    if (pattern.test(text)) {
+      return { isWeak: true, isStrong: false, reason: `matches weak pattern: ${pattern.source}` };
+    }
+  }
+  const hasStrongTag = highlight.tags.some((t2) => STRONG_TAGS.has(t2.toLowerCase()));
+  if (hasStrongTag) {
+    return { isWeak: false, isStrong: true, reason: "has strong capability tag" };
+  }
+  for (const pattern of STRONG_TITLE_PATTERNS) {
+    if (pattern.test(text)) {
+      return { isWeak: false, isStrong: true, reason: `matches strong pattern: ${pattern.source}` };
+    }
+  }
+  return { isWeak: false, isStrong: false, reason: "neutral" };
+}
+function analyseEntrySignals(entry) {
+  let strongCount = 0;
+  let weakCount = 0;
+  let neutralCount = 0;
+  const strongHighlights = [];
+  const weakTexts = [];
+  for (const h2 of entry.highlights) {
+    const result = classifyHighlight(h2);
+    if (result.isWeak) {
+      weakCount++;
+      weakTexts.push(h2.text);
+    } else if (result.isStrong) {
+      strongCount++;
+      strongHighlights.push(h2);
+    } else {
+      neutralCount++;
+      strongHighlights.push(h2);
+    }
+  }
+  const total = entry.highlights.length;
+  const signalScore = total === 0 ? 0 : (strongCount + neutralCount * 0.5) / total;
+  return { strongCount, weakCount, neutralCount, signalScore, strongHighlights, weakTexts };
+}
+function computeProjectSignalScore(entries) {
+  if (entries.length === 0) return 0;
+  const scores = entries.map((e2) => analyseEntrySignals(e2).signalScore);
+  return scores.reduce((a2, b2) => a2 + b2, 0) / scores.length;
+}
+
+// src/core/agent/merger.ts
+function mergeEntriesForRepo(repo, entries) {
+  if (entries.length === 0) {
+    throw new Error(`mergeEntriesForRepo called with empty entries for repo "${repo}"`);
+  }
+  const sorted = [...entries].sort((a2, b2) => a2.period.from.localeCompare(b2.period.from));
+  const periodFrom = sorted[0]?.period.from ?? "";
+  const periodTo = sorted.reduce(
+    (max, e2) => e2.period.to > max ? e2.period.to : max,
+    sorted[0]?.period.to ?? ""
+  );
+  const seenHighlights = /* @__PURE__ */ new Set();
+  const mergedHighlights = [];
+  const weakTexts = [];
+  for (const entry of sorted) {
+    const { strongHighlights, weakTexts: wt } = analyseEntrySignals(entry);
+    for (const h2 of strongHighlights) {
+      const key = h2.text.trim().toLowerCase();
+      if (!seenHighlights.has(key)) {
+        seenHighlights.add(key);
+        mergedHighlights.push(h2);
+      }
+    }
+    for (const w2 of wt) {
+      weakTexts.push(w2);
+    }
+  }
+  const stackSet = /* @__PURE__ */ new Set();
+  const tagSet = /* @__PURE__ */ new Set();
+  for (const entry of entries) {
+    for (const s2 of entry.stack) stackSet.add(s2);
+    for (const t2 of entry.tags) tagSet.add(t2);
+  }
+  const bestEntry = [...entries].sort(
+    (a2, b2) => b2.highlights.length - a2.highlights.length
+  )[0];
+  const signalScore = computeProjectSignalScore(entries);
+  const stack = [...stackSet].sort();
+  const tags = [...tagSet].sort();
+  const category = classifyRepo(stack, tags);
+  return {
+    id: repo.replace("/", "_"),
+    repo,
+    title: bestEntry.title,
+    period: { from: periodFrom, to: periodTo },
+    activeMonths: entries.length,
+    category,
+    signalScore,
+    highlights: mergedHighlights,
+    weakSignals: weakTexts,
+    stack,
+    tags,
+    evidenceEntryIds: entries.map((e2) => e2.id)
+  };
+}
+function mergeExperienceEntries(entries) {
+  const byRepo = /* @__PURE__ */ new Map();
+  for (const entry of entries) {
+    const group = byRepo.get(entry.repo);
+    if (group) {
+      group.push(entry);
+    } else {
+      byRepo.set(entry.repo, [entry]);
+    }
+  }
+  const results = [];
+  for (const [repo, repoEntries] of byRepo) {
+    results.push(mergeEntriesForRepo(repo, repoEntries));
+  }
+  return results;
+}
+
+// src/core/agent/revise.ts
+init_cjs_shims();
+var import_promises6 = require("fs/promises");
+var import_node_path8 = require("path");
+init_agent();
+init_zod();
+var ReviseLlmOutputSchema = external_exports.object({
+  headline: external_exports.string().min(1),
+  summary: external_exports.string().min(1),
+  skills: external_exports.array(SkillGroupSchema),
+  selectedProjects: external_exports.array(ProjectSectionSchema),
+  otherExperience: external_exports.array(external_exports.string())
+});
+var OUTPUT_SCHEMA_DESCRIPTION3 = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "headline": "string",
+  "summary": "string",
+  "skills": [{ "category": "string", "items": ["string"] }],
+  "selectedProjects": [
+    {
+      "projectId": "string",
+      "title": "string",
+      "period": { "from": "ISO date string", "to": "ISO date string" },
+      "bullets": ["string"],
+      "stack": ["string"]
+    }
+  ],
+  "otherExperience": ["string"]
+}
+Return the COMPLETE revised resume. Do not omit any field.
+All projectId values must exactly match those in the input draft.
+`;
+function formatDraftForRevise(draft) {
+  return JSON.stringify(
+    {
+      headline: draft.headline,
+      summary: draft.summary,
+      skills: draft.skills,
+      selectedProjects: draft.selectedProjects,
+      otherExperience: draft.otherExperience
+    },
+    null,
+    2
+  );
+}
+function stripRevSuffix(slug) {
+  return slug.replace(/-rev(-\d+|-[\w-]+)?$/, "").replace(/-rev-.*$/, "");
+}
+async function makeRevisionSlug(dataDir, baseSlug) {
+  const originalBase = stripRevSuffix(baseSlug);
+  let files = [];
+  try {
+    files = await (0, import_promises6.readdir)((0, import_node_path8.join)(dataDir, "resumes"));
+  } catch {
+  }
+  const pattern = new RegExp(`^${originalBase}-rev-(\\d+)\\.(html|md|json)$`);
+  let maxN = 0;
+  for (const f3 of files) {
+    const m2 = pattern.exec(f3);
+    if (m2) maxN = Math.max(maxN, Number(m2[1]));
+  }
+  return `${originalBase}-rev-${maxN + 1}`;
+}
+async function reviseDraft(llmConfig, draft, draftSlug, instruction, lang, dataDir = "data") {
+  const systemPromptBase = await loadPrompt("revise", lang);
+  const system = `${systemPromptBase}
+
+${OUTPUT_SCHEMA_DESCRIPTION3}`;
+  const user = `Current resume draft:
+
+${formatDraftForRevise(draft)}
+
+Revision instruction: ${instruction}`;
+  const llmOutput = await generateObject(llmConfig, ReviseLlmOutputSchema, system, user);
+  const newSlug = await makeRevisionSlug(dataDir, draftSlug);
+  const newDraft = {
+    version: (draft.version ?? 1) + 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    login: draft.login,
+    ...llmOutput,
+    evidenceMap: draft.evidenceMap,
+    ...draft.styleNotes ? { styleNotes: draft.styleNotes } : {}
+  };
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    slug: newSlug,
+    instruction,
+    previousDraftSlug: draftSlug,
+    draft: newDraft
+  };
+}
+
+// src/core/agent/scorer.ts
+init_cjs_shims();
+var DEFAULT_WEIGHTS = {
+  depth: 0.3,
+  duration: 0.2,
+  signal: 0.25,
+  recency: 0.15,
+  collaboration: 0.1
+};
+var COLLABORATION_TAGS = /* @__PURE__ */ new Set([
+  "code-review",
+  "review",
+  "open-source",
+  "community",
+  "mentoring"
+]);
+function monthsAgo(isoDate) {
+  const then = new Date(isoDate);
+  const now = /* @__PURE__ */ new Date();
+  return (now.getFullYear() - then.getFullYear()) * 12 + (now.getMonth() - then.getMonth());
+}
+function recencyScore(lastActiveIso) {
+  const months = monthsAgo(lastActiveIso);
+  return Math.exp(-Math.log(2) * months / 12);
+}
+function collaborationScore(project) {
+  const hasCommunityTag = project.tags.some((t2) => COLLABORATION_TAGS.has(t2.toLowerCase()));
+  const hasReviewHighlight = project.highlights.some(
+    (h2) => h2.tags.some((t2) => COLLABORATION_TAGS.has(t2.toLowerCase()))
+  );
+  return hasCommunityTag || hasReviewHighlight ? 1 : 0;
+}
+function scoreProjects(drafts, weights = DEFAULT_WEIGHTS) {
+  if (drafts.length === 0) return [];
+  const maxActiveMonths = Math.max(...drafts.map((p) => p.activeMonths));
+  const maxHighlights = Math.max(...drafts.map((p) => p.highlights.length));
+  const scored = drafts.map((project) => {
+    const depth = maxHighlights > 0 ? project.highlights.length / maxHighlights : 0;
+    const duration = Math.min(project.activeMonths / Math.max(maxActiveMonths, 1), 1);
+    const signal = project.signalScore;
+    const recency = recencyScore(project.period.to);
+    const collaboration = collaborationScore(project);
+    const importance = depth * weights.depth + duration * weights.duration + signal * weights.signal + recency * weights.recency + collaboration * weights.collaboration;
+    return { ...project, importance: Math.round(importance * 1e3) / 1e3 };
+  });
+  return scored.sort((a2, b2) => b2.importance - a2.importance);
+}
+
+// src/core/render/html-agent.ts
+init_cjs_shims();
+
+// src/core/render/validate.ts
+init_cjs_shims();
+function validateGeneratedHtml(html, draft) {
+  const errors = [];
+  const warnings = [];
+  if (!html.includes("<!DOCTYPE html") && !html.includes("<!doctype html")) {
+    errors.push("Missing <!DOCTYPE html> declaration.");
+  }
+  if (!html.includes("<style")) {
+    errors.push("No <style> tag found \u2014 HTML is not self-contained.");
+  }
+  if (/<link[^>]+rel=["']stylesheet["']/i.test(html)) {
+    errors.push("External stylesheet <link> detected \u2014 HTML must be self-contained.");
+  }
+  if (/src=["']https?:\/\//i.test(html)) {
+    errors.push("External script or asset src detected \u2014 no remote assets allowed.");
+  }
+  if (/fonts\.googleapis\.com/i.test(html)) {
+    warnings.push("Google Fonts URL detected \u2014 should use system font stacks only.");
+  }
+  if (!html.includes("@media print")) {
+    errors.push("Missing @media print CSS.");
+  }
+  if (!html.includes("@media")) {
+    warnings.push("No @media query detected \u2014 responsive layout may be missing.");
+  } else if (!/@media\s*\([^)]*max-width/i.test(html)) {
+    warnings.push("No max-width media query found \u2014 mobile layout may be missing.");
+  }
+  const headlineWords = draft.headline.split(/\s+/).slice(0, 4).join(" ");
+  const headlineWordsEscaped = headlineWords.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  if (!html.includes(draft.login)) {
+    errors.push(`Login "${draft.login}" not found in HTML output.`);
+  }
+  if (!html.includes(headlineWords) && !html.includes(headlineWordsEscaped)) {
+    errors.push(`Headline content ("${headlineWords}\u2026") not found in HTML output.`);
+  }
+  for (const project of draft.selectedProjects) {
+    const titleWords = project.title.split(/\s+/).slice(0, 3).join(" ");
+    if (!html.includes(titleWords)) {
+      errors.push(`Project title "${project.title}" not found in HTML output.`);
+    }
+    for (const bullet of project.bullets) {
+      const fragment = bullet.slice(0, 30);
+      if (!html.includes(fragment)) {
+        warnings.push(`Project bullet not found in output: "${fragment}\u2026"`);
+      }
+    }
+  }
+  if (draft.otherExperience.length > 0) {
+    const firstItem = draft.otherExperience[0];
+    if (firstItem) {
+      const fragment = firstItem.slice(0, 20);
+      if (!html.includes(fragment)) {
+        warnings.push(`otherExperience content may be missing: "${fragment}\u2026"`);
+      }
+    }
+  }
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings
+  };
+}
+function stripMarkdownFences(raw) {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^```(?:html)?\s*\n([\s\S]*?)\n```\s*$/i);
+  if (match?.[1]) return match[1].trim();
+  return trimmed;
+}
+
+// src/core/render/html-agent.ts
+function formatDraftForRender(draft) {
+  return JSON.stringify(
+    {
+      login: draft.login,
+      headline: draft.headline,
+      summary: draft.summary,
+      skills: draft.skills,
+      selectedProjects: draft.selectedProjects.map((p) => ({
+        title: p.title,
+        period: `${p.period.from.slice(0, 7)} \u2013 ${p.period.to.slice(0, 7)}`,
+        stack: p.stack,
+        bullets: p.bullets
+      })),
+      otherExperience: draft.otherExperience
+    },
+    null,
+    2
+  );
+}
+async function renderResumeDraftHtmlAgent(llmConfig, draft, instruction, lang) {
+  const systemPromptBase = await loadPrompt("render-agent", lang);
+  const system = systemPromptBase;
+  const user = `Resume data:
+
+${formatDraftForRender(draft)}
+
+Design instruction: ${instruction}`;
+  const raw = await generateText(llmConfig, system, user);
+  return stripMarkdownFences(raw);
+}
+
+// src/core/render/markdown-v2.ts
+init_cjs_shims();
+function formatPeriod(from, to) {
+  const f3 = from.slice(0, 7);
+  const t2 = to.slice(0, 7);
+  return f3 === t2 ? f3 : `${f3} ~ ${t2}`;
+}
+function renderResumeDraftMarkdown(draft) {
+  const lines = [];
+  lines.push(`# ${draft.login}`);
+  lines.push("");
+  lines.push(`**${draft.headline}**`);
+  lines.push("");
+  lines.push("## Summary");
+  lines.push("");
+  lines.push(draft.summary);
+  lines.push("");
+  if (draft.skills.length > 0) {
+    lines.push("## Skills");
+    lines.push("");
+    for (const group of draft.skills) {
+      lines.push(`**${group.category}**: ${group.items.join(", ")}`);
+      lines.push("");
+    }
+  }
+  if (draft.selectedProjects.length > 0) {
+    lines.push("## Projects");
+    lines.push("");
+    for (const project of draft.selectedProjects) {
+      const period = formatPeriod(project.period.from, project.period.to);
+      lines.push(`### ${project.title}`);
+      lines.push("");
+      lines.push(`\`${period}\` \xB7 ${project.stack.slice(0, 5).join(", ")}`);
+      lines.push("");
+      for (const bullet of project.bullets) {
+        lines.push(`- ${bullet}`);
+      }
+      lines.push("");
+    }
+  }
+  if (draft.otherExperience.length > 0) {
+    lines.push("## Other Experience");
+    lines.push("");
+    for (const item of draft.otherExperience) {
+      lines.push(`- ${item}`);
+    }
+    lines.push("");
+  }
+  lines.push(`---`);
+  lines.push(`*Generated by Delta CV \xB7 ${draft.generatedAt.slice(0, 10)}*`);
+  lines.push("");
+  return lines.join("\n");
+}
+
+// src/core/render/styles.ts
+init_cjs_shims();
+
+// src/core/render/html-clean.ts
+init_cjs_shims();
+function esc(s2) {
+  return s2.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function formatPeriod2(from, to) {
+  const f3 = from.slice(0, 7);
+  const t2 = to.slice(0, 7);
+  return f3 === t2 ? f3 : `${f3} \u2013 ${t2}`;
+}
+var CSS = `
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --border: #d0d0d0;
+    --accent: #2563eb;
+    --bg: #fff;
+    --section-gap: 1.6rem;
+    --font: "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.4rem 2rem;
+  }
+
+  /* \u2500\u2500 Header \u2500\u2500 */
+  .resume-header { margin-bottom: var(--section-gap); }
+  .resume-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .headline {
+    font-size: 1rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .meta { font-size: 0.82rem; color: var(--muted); }
+
+  /* \u2500\u2500 Sections \u2500\u2500 */
+  section { margin-bottom: var(--section-gap); }
+  section h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.9rem;
+  }
+
+  /* \u2500\u2500 Summary \u2500\u2500 */
+  .summary { font-size: 0.92rem; color: #333; max-width: 68ch; }
+
+  /* \u2500\u2500 Skills \u2500\u2500 */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.5rem 1.5rem;
+  }
+  .skill-group { font-size: 0.85rem; }
+  .skill-group .cat { font-weight: 600; color: var(--text); }
+  .skill-group .items { color: var(--muted); }
+
+  /* \u2500\u2500 Projects \u2500\u2500 */
+  .project { margin-bottom: 1.2rem; }
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  .project-title { font-size: 0.95rem; font-weight: 600; }
+  .project-meta { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+  .project-stack {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 0.2rem 0 0.45rem;
+  }
+  .project ul { padding-left: 1.1rem; }
+  .project li {
+    font-size: 0.87rem;
+    margin-bottom: 0.22rem;
+    line-height: 1.5;
+  }
+
+  /* \u2500\u2500 Other Experience \u2500\u2500 */
+  .other-list { list-style: disc; padding-left: 1.1rem; }
+  .other-list li { font-size: 0.85rem; margin-bottom: 0.2rem; color: #333; }
+
+  /* \u2500\u2500 Footer \u2500\u2500 */
+  .resume-footer {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #aaa;
+    text-align: right;
+    border-top: 1px solid var(--border);
+    padding-top: 0.6rem;
+  }
+
+  /* \u2500\u2500 Print \u2500\u2500 */
+  @media print {
+    body { padding: 0; max-width: 100%; font-size: 11pt; }
+    .resume-footer { display: none; }
+    section { break-inside: avoid; }
+    .project { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1.2rem 1rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .project-header { flex-direction: column; }
+  }
+`.trim();
+function renderSkills(draft) {
+  if (draft.skills.length === 0) return "";
+  const rows = draft.skills.map(
+    (g3) => `<div class="skill-group"><span class="cat">${esc(g3.category)}: </span><span class="items">${esc(g3.items.join(", "))}</span></div>`
+  ).join("\n      ");
+  return `
+  <section>
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      ${rows}
+    </div>
+  </section>`;
+}
+function renderProjects(draft) {
+  if (draft.selectedProjects.length === 0) return "";
+  const blocks = draft.selectedProjects.map((p) => {
+    const period = formatPeriod2(p.period.from, p.period.to);
+    const bullets = p.bullets.map((b2) => `<li>${esc(b2)}</li>`).join("\n        ");
+    const stack = p.stack.slice(0, 6).map(esc).join(" \xB7 ");
+    return `<div class="project">
+      <div class="project-header">
+        <span class="project-title">${esc(p.title)}</span>
+        <span class="project-meta">${esc(period)}</span>
+      </div>
+      <div class="project-stack">${stack}</div>
+      <ul>${bullets}</ul>
+    </div>`;
+  }).join("\n    ");
+  return `
+  <section>
+    <h2>Projects</h2>
+    ${blocks}
+  </section>`;
+}
+function renderOtherExperience(draft) {
+  if (draft.otherExperience.length === 0) return "";
+  const items = draft.otherExperience.map((e2) => `<li>${esc(e2)}</li>`).join("\n      ");
+  return `
+  <section>
+    <h2>Other Experience</h2>
+    <ul class="other-list">
+      ${items}
+    </ul>
+  </section>`;
+}
+function renderResumeDraftHtml(draft) {
+  const date = draft.generatedAt.slice(0, 10);
+  return `<!DOCTYPE html>
+<html lang="${draft.login ? "zh" : "en"}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc(draft.login)} \u2014 Resume</title>
+  <style>${CSS}</style>
+</head>
+<body>
+  <header class="resume-header">
+    <h1>${esc(draft.login)}</h1>
+    <div class="headline">${esc(draft.headline)}</div>
+    <div class="meta">GitHub: @${esc(draft.login)}</div>
+  </header>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">${esc(draft.summary)}</p>
+  </section>
+${renderSkills(draft)}
+${renderProjects(draft)}
+${renderOtherExperience(draft)}
+
+  <footer class="resume-footer">Generated by Delta CV \xB7 ${esc(date)}</footer>
+</body>
+</html>`;
+}
+
+// src/core/render/html-compact.ts
+init_cjs_shims();
+
+// src/core/render/utils.ts
+init_cjs_shims();
+function esc2(s2) {
+  return s2.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function formatPeriod3(from, to) {
+  const f3 = from.slice(0, 7);
+  const t2 = to.slice(0, 7);
+  return f3 === t2 ? f3 : `${f3} \u2013 ${t2}`;
+}
+
+// src/core/render/html-compact.ts
+var CSS2 = `
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --text: #111;
+    --muted: #555;
+    --border: #ccc;
+    --accent: #1d4ed8;
+    --bg: #fff;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 10.5pt;
+    line-height: 1.38;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1.8rem 1.6rem 1rem;
+  }
+
+  /* \u2500\u2500 Header \u2500\u2500 */
+  .resume-header {
+    text-align: center;
+    border-bottom: 1.5px solid var(--text);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.7rem;
+  }
+  .resume-header h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+  }
+  .headline {
+    font-size: 0.82rem;
+    color: #333;
+    font-style: italic;
+    margin-bottom: 0.15rem;
+  }
+  .meta { font-size: 0.76rem; color: var(--muted); }
+
+  /* \u2500\u2500 Sections \u2500\u2500 */
+  section { margin-bottom: 0.65rem; }
+  section h2 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 0.75px solid var(--text);
+    padding-bottom: 0.1rem;
+    margin-bottom: 0.45rem;
+  }
+
+  /* \u2500\u2500 Summary \u2500\u2500 */
+  .summary { font-size: 0.83rem; line-height: 1.45; }
+
+  /* \u2500\u2500 Skills \u2500\u2500 */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.1rem 1.5rem;
+  }
+  .skill-row { font-size: 0.78rem; display: flex; gap: 0.3rem; }
+  .skill-cat { font-weight: 700; flex-shrink: 0; }
+  .skill-cat::after { content: ":"; }
+  .skill-items { color: #333; }
+
+  /* \u2500\u2500 Projects \u2500\u2500 */
+  .project { margin-bottom: 0.7rem; }
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+  .project-title { font-size: 0.83rem; font-weight: 700; }
+  .project-period { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+  .project-stack { font-size: 0.74rem; color: var(--muted); margin: 0.1rem 0 0.25rem; }
+  .project ul { padding-left: 1rem; }
+  .project li { font-size: 0.79rem; margin-bottom: 0.1rem; line-height: 1.4; }
+
+  /* \u2500\u2500 Other Experience \u2500\u2500 */
+  .other-list { padding-left: 1rem; list-style: disc; }
+  .other-list li { font-size: 0.77rem; margin-bottom: 0.08rem; }
+
+  /* \u2500\u2500 Print \u2500\u2500 */
+  @media print {
+    body { padding: 0.8cm 1.2cm 0.6cm; max-width: 100%; }
+    section { break-inside: avoid; }
+    .project { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 0.8rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .project-header { flex-direction: column; }
+  }
+`.trim();
+function renderSkills2(draft) {
+  if (draft.skills.length === 0) return "";
+  const rows = draft.skills.map(
+    (g3) => `<div class="skill-row">
+      <span class="skill-cat">${esc2(g3.category)}</span>
+      <span class="skill-items">${esc2(g3.items.join(", "))}</span>
+    </div>`
+  ).join("\n    ");
+  return `
+  <section>
+    <h2>Technical Skills</h2>
+    <div class="skills-grid">
+    ${rows}
+    </div>
+  </section>`;
+}
+function renderProjects2(draft) {
+  if (draft.selectedProjects.length === 0) return "";
+  const blocks = draft.selectedProjects.map((p) => {
+    const period = formatPeriod3(p.period.from, p.period.to);
+    const bullets = p.bullets.map((b2) => `<li>${esc2(b2)}</li>`).join("\n        ");
+    const stack = p.stack.slice(0, 5).map(esc2).join(", ");
+    return `<div class="project">
+      <div class="project-header">
+        <span class="project-title">${esc2(p.title)}</span>
+        <span class="project-period">${esc2(period)}</span>
+      </div>
+      <div class="project-stack">${stack}</div>
+      <ul>${bullets}</ul>
+    </div>`;
+  }).join("\n    ");
+  return `
+  <section>
+    <h2>Selected Projects</h2>
+    ${blocks}
+  </section>`;
+}
+function renderOtherExperience2(draft) {
+  if (draft.otherExperience.length === 0) return "";
+  const items = draft.otherExperience.slice(0, 4).map((e2) => `<li>${esc2(e2)}</li>`).join("\n      ");
+  return `
+  <section>
+    <h2>Additional</h2>
+    <ul class="other-list">
+      ${items}
+    </ul>
+  </section>`;
+}
+function renderResumeDraftHtmlCompact(draft) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc2(draft.login)} \u2014 Resume</title>
+  <style>${CSS2}</style>
+</head>
+<body>
+  <header class="resume-header">
+    <h1>${esc2(draft.login)}</h1>
+    <div class="headline">${esc2(draft.headline)}</div>
+    <div class="meta">github.com/${esc2(draft.login)}</div>
+  </header>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">${esc2(draft.summary)}</p>
+  </section>
+${renderSkills2(draft)}
+${renderProjects2(draft)}
+${renderOtherExperience2(draft)}
+</body>
+</html>`;
+}
+
+// src/core/render/html-developer.ts
+init_cjs_shims();
+var CSS3 = `
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e2e8f0;
+    --accent: #0ea5e9;
+    --accent-dim: #e0f2fe;
+    --green: #10b981;
+    --bg: #fff;
+    --bg-code: #f8fafc;
+    --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+    --section-gap: 1.5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 2.2rem;
+  }
+
+  /* \u2500\u2500 Header \u2500\u2500 */
+  .resume-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: calc(var(--section-gap) + 0.4rem);
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .header-left {}
+  .resume-header h1 {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #0f172a;
+    margin-bottom: 0.2rem;
+  }
+  .header-prompt {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .header-prompt::before { content: "$ "; color: var(--green); }
+  .headline {
+    font-size: 0.93rem;
+    color: #334155;
+    font-weight: 500;
+    max-width: 55ch;
+  }
+  .meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+
+  /* \u2500\u2500 Sections \u2500\u2500 */
+  section { margin-bottom: var(--section-gap); }
+  section h2 {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  /* \u2500\u2500 Summary \u2500\u2500 */
+  .summary {
+    font-size: 0.91rem;
+    color: #334155;
+    max-width: 70ch;
+    line-height: 1.65;
+  }
+
+  /* \u2500\u2500 Skills \u2500\u2500 */
+  .skills-list { display: flex; flex-direction: column; gap: 0.45rem; }
+  .skill-row { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .skill-cat {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 14ch;
+    flex-shrink: 0;
+  }
+  .skill-cat::after { content: ":"; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.1rem 0.4rem;
+    color: #0f172a;
+  }
+
+  /* \u2500\u2500 Projects \u2500\u2500 */
+  .project { margin-bottom: 1.3rem; padding-left: 0.75rem; border-left: 2px solid var(--border); }
+  .project:hover { border-left-color: var(--accent); }
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.15rem;
+  }
+  .project-title {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .project-title::before { content: "./"; color: var(--green); }
+  .project-period {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0.3rem 0 0.5rem; }
+  .project ul { padding-left: 1rem; }
+  .project li {
+    font-size: 0.86rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.55;
+    color: #334155;
+  }
+
+  /* \u2500\u2500 Other Experience \u2500\u2500 */
+  .other-list { list-style: none; padding: 0; }
+  .other-list li {
+    font-size: 0.83rem;
+    margin-bottom: 0.25rem;
+    color: var(--muted);
+    padding-left: 1rem;
+    position: relative;
+  }
+  .other-list li::before { content: "\u25B8"; position: absolute; left: 0; color: var(--accent); }
+
+  /* \u2500\u2500 Footer \u2500\u2500 */
+  .resume-footer {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: #cbd5e1;
+    text-align: right;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* \u2500\u2500 Print \u2500\u2500 */
+  @media print {
+    body { padding: 0.5cm 1cm; max-width: 100%; font-size: 10.5pt; }
+    .resume-footer { display: none; }
+    .project { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+    .project:hover { border-left-color: var(--border); }
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .resume-header { flex-direction: column; }
+    .skill-cat { min-width: auto; }
+  }
+`.trim();
+function renderSkills3(draft) {
+  if (draft.skills.length === 0) return "";
+  const rows = draft.skills.map((g3) => {
+    const tags = g3.items.slice(0, 10).map((t2) => `<span class="tag">${esc2(t2)}</span>`).join("");
+    return `<div class="skill-row">
+      <span class="skill-cat">${esc2(g3.category)}</span>
+      <div class="skill-tags">${tags}</div>
+    </div>`;
+  }).join("\n    ");
+  return `
+  <section>
+    <h2>Skills</h2>
+    <div class="skills-list">
+    ${rows}
+    </div>
+  </section>`;
+}
+function renderProjects3(draft) {
+  if (draft.selectedProjects.length === 0) return "";
+  const blocks = draft.selectedProjects.map((p) => {
+    const period = formatPeriod3(p.period.from, p.period.to);
+    const bullets = p.bullets.map((b2) => `<li>${esc2(b2)}</li>`).join("\n        ");
+    const tags = p.stack.slice(0, 6).map((t2) => `<span class="tag">${esc2(t2)}</span>`).join("");
+    return `<div class="project">
+      <div class="project-header">
+        <span class="project-title">${esc2(p.title)}</span>
+        <span class="project-period">${esc2(period)}</span>
+      </div>
+      <div class="project-stack">${tags}</div>
+      <ul>${bullets}</ul>
+    </div>`;
+  }).join("\n    ");
+  return `
+  <section>
+    <h2>Projects</h2>
+    ${blocks}
+  </section>`;
+}
+function renderOtherExperience3(draft) {
+  if (draft.otherExperience.length === 0) return "";
+  const items = draft.otherExperience.map((e2) => `<li>${esc2(e2)}</li>`).join("\n      ");
+  return `
+  <section>
+    <h2>Other Experience</h2>
+    <ul class="other-list">
+      ${items}
+    </ul>
+  </section>`;
+}
+function renderResumeDraftHtmlDeveloper(draft) {
+  const date = draft.generatedAt.slice(0, 10);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc2(draft.login)} \u2014 Resume</title>
+  <style>${CSS3}</style>
+</head>
+<body>
+  <header class="resume-header">
+    <div class="header-left">
+      <h1>${esc2(draft.login)}</h1>
+      <div class="header-prompt">${esc2(draft.headline)}</div>
+      <div class="meta">github.com/${esc2(draft.login)}</div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">${esc2(draft.summary)}</p>
+  </section>
+${renderSkills3(draft)}
+${renderProjects3(draft)}
+${renderOtherExperience3(draft)}
+
+  <footer class="resume-footer">// generated by delta-cv \xB7 ${esc2(date)}</footer>
+</body>
+</html>`;
+}
+
+// src/core/render/styles.ts
+var HTML_STYLES = {
+  clean: {
+    name: "clean",
+    description: "Dense, ATS-friendly, restrained visual style. Good default.",
+    renderer: renderResumeDraftHtml
+  },
+  developer: {
+    name: "developer",
+    description: "Monospace accents, badge tags, left-border cards. Technical aesthetic.",
+    renderer: renderResumeDraftHtmlDeveloper
+  },
+  compact: {
+    name: "compact",
+    description: "Serif font, tight spacing, two-column skills. Print-optimised single page.",
+    renderer: renderResumeDraftHtmlCompact
+  },
+  agent: {
+    name: "agent",
+    description: "LLM-generated custom style. Requires --instruction. E.g. --instruction '\u6DF1\u8272\u6781\u7B80\u98CE\u683C'."
+  }
+};
+var HTML_STYLE_NAMES = Object.keys(HTML_STYLES);
+function isHtmlStyle(s2) {
+  return s2 in HTML_STYLES;
+}
+function renderWithStyle(draft, style) {
+  const meta = HTML_STYLES[style];
+  if (!meta.renderer) {
+    throw new Error(`Style "${style}" has no static renderer.`);
+  }
+  return meta.renderer(draft);
+}
+
 // src/core/engine/cluster.ts
 init_cjs_shims();
 function clusterEvents(events) {
@@ -12227,126 +14105,7 @@ function tagEvents(events) {
 
 // src/core/engine/translate.ts
 init_cjs_shims();
-
-// src/core/llm.ts
-init_cjs_shims();
-var ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1";
-var DEFAULT_OPENAI_BASE_URL = "https://api.deepseek.com/v1";
-var DEFAULT_MAX_TOKENS = 4096;
-async function callApi(config, messages, system, jsonMode) {
-  const apiKey = config.apiKey ?? process.env.LLM_API_KEY ?? "";
-  if (!apiKey) {
-    throw new Error(
-      "LLM API key is not set. Provide it in config.json (llm.apiKey) or as LLM_API_KEY env var."
-    );
-  }
-  const maxRetries = config.maxRetries ?? 2;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    let res;
-    if (config.provider === "anthropic") {
-      res = await fetch(`${ANTHROPIC_BASE_URL}/messages`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01"
-        },
-        body: JSON.stringify({
-          model: config.model,
-          max_tokens: DEFAULT_MAX_TOKENS,
-          system,
-          messages
-        })
-      });
-    } else {
-      const body = {
-        model: config.model,
-        messages: [{ role: "system", content: system }, ...messages]
-      };
-      if (jsonMode) body.response_format = { type: "json_object" };
-      res = await fetch(`${config.baseUrl ?? DEFAULT_OPENAI_BASE_URL}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${apiKey}`
-        },
-        body: JSON.stringify(body)
-      });
-    }
-    if (res.status === 429) {
-      const headerVal = res.headers.get("retry-after");
-      const retryAfter = headerVal !== null && !Number.isNaN(Number(headerVal)) ? Number(headerVal) : 2 ** attempt;
-      await new Promise((r3) => setTimeout(r3, retryAfter * 1e3));
-      continue;
-    }
-    if (!res.ok) {
-      const body = await res.text();
-      process.stderr.write(`LLM API error body: ${body}
-`);
-      throw new Error(
-        `LLM API error ${res.status} from ${config.provider} \u2014 see stderr for details`
-      );
-    }
-    if (config.provider === "anthropic") {
-      const data2 = await res.json();
-      const text2 = data2.content.find((c3) => c3.type === "text")?.text ?? "";
-      return {
-        text: text2,
-        promptTokens: data2.usage.input_tokens,
-        completionTokens: data2.usage.output_tokens
-      };
-    }
-    const data = await res.json();
-    const text = data.choices[0]?.message.content ?? "";
-    return {
-      text,
-      promptTokens: data.usage.prompt_tokens,
-      completionTokens: data.usage.completion_tokens
-    };
-  }
-  throw new Error("LLM API: exceeded retry limit on rate limit");
-}
-async function generateObject(config, schema, system, user) {
-  const schemaInstruction = "\n\nRespond with ONLY valid JSON (no markdown fences, no commentary) matching the schema described above.";
-  const messages = [
-    { role: "user", content: user + schemaInstruction }
-  ];
-  const maxRetries = config.maxRetries ?? 2;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    const { text } = await callApi(config, messages, system, true);
-    try {
-      const raw = JSON.parse(stripJsonFences(text));
-      return schema.parse(raw);
-    } catch (err) {
-      if (attempt === maxRetries) throw new Error(`LLM schema validation failed: ${err}`);
-      messages.push({ role: "assistant", content: text });
-      messages.push({
-        role: "user",
-        content: `The previous response failed schema validation: ${err}. Please fix and return valid JSON only.`
-      });
-    }
-  }
-  throw new Error("generateObject: exceeded retry limit");
-}
-function stripJsonFences(text) {
-  return text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
-}
-
-// src/core/prompts.ts
-init_cjs_shims();
-var import_promises5 = require("fs/promises");
-var import_node_path7 = require("path");
-async function loadPrompt(name, lang) {
-  const filename = `${name}.${lang}.md`;
-  const userOverride = (0, import_node_path7.join)(process.cwd(), "prompts", filename);
-  try {
-    return await (0, import_promises5.readFile)(userOverride, "utf8");
-  } catch {
-  }
-  return loadAsset((0, import_node_path7.join)("prompts", filename));
-}
-
-// src/core/engine/translate.ts
+init_zod();
 init_experience();
 var SYSTEM_SCHEMA = `
 Output ONLY valid JSON (no markdown fences) matching this exact schema:
@@ -12387,6 +14146,49 @@ function formatEvents(cluster, allTags, maxEvents) {
 Technology hints: ${[...hintTagSet].join(", ")}`);
   return lines.join("\n");
 }
+var BATCH_SYSTEM_SCHEMA = `
+Output ONLY a valid JSON array (no markdown fences).
+Each element of the array must match this exact schema:
+{
+  "id": "string (e.g. 'owner_repo_2026-05')",
+  "repo": "string",
+  "period": { "from": "ISO date string", "to": "ISO date string" },
+  "title": "string (2\u20138 words describing the work focus)",
+  "highlights": [
+    { "text": "string (one bullet point)", "tags": ["string"], "evidence": ["string"] }
+  ],
+  "stack": ["string (specific technologies)"],
+  "tags": ["string (capability tags)"]
+}
+Constraints: 3\u20136 highlights per entry maximum. Each highlight must start with a strong action verb.
+Avoid: "worked on", "was responsible for", "participated in", "assisted with".
+The array must contain exactly N entries in the same order as the clusters provided.
+`;
+function formatBatchClusters(clusters, allTags, maxEvents) {
+  const parts = clusters.map((cluster, i2) => {
+    const block = formatEvents(cluster, allTags, maxEvents);
+    return `--- Cluster ${i2 + 1}/${clusters.length}: ${cluster.repo} ${cluster.period.from.slice(0, 7)} ---
+${block}`;
+  });
+  return parts.join("\n\n") + `
+
+Return a JSON array with exactly ${clusters.length} entries, one per cluster, in the same order.`;
+}
+async function generateEntryBatch(config, clusters, allTags, lang, maxEvents = 40) {
+  if (clusters.length === 1) {
+    const entry = await generateEntry(config, clusters[0], allTags, lang, maxEvents);
+    return [entry];
+  }
+  const systemPromptBase = await loadPrompt("evolve", lang);
+  const system = `${systemPromptBase}
+${BATCH_SYSTEM_SCHEMA}`;
+  const user = formatBatchClusters(clusters, allTags, maxEvents);
+  const entries = await generateObject(config, external_exports.array(ExperienceEntrySchema), system, user);
+  return entries.map((entry, i2) => {
+    const cluster = clusters[i2];
+    return { ...entry, id: cluster.id, repo: cluster.repo, period: cluster.period };
+  });
+}
 async function generateEntry(config, cluster, allTags, lang, maxEvents = 40) {
   const systemPromptBase = await loadPrompt("evolve", lang);
   const system = `${systemPromptBase}
@@ -12398,8 +14200,8 @@ ${SYSTEM_SCHEMA}`;
 
 // src/core/io/data.ts
 init_cjs_shims();
-var import_promises6 = require("fs/promises");
-var import_node_path8 = require("path");
+var import_promises7 = require("fs/promises");
+var import_node_path9 = require("path");
 function getISOWeekKey(isoDate) {
   const d2 = new Date(isoDate);
   const dayOfWeek = d2.getUTCDay();
@@ -12419,8 +14221,8 @@ function eventIdentity(event) {
 }
 async function appendEvents(dataDir, events) {
   if (events.length === 0) return;
-  const eventsDir = (0, import_node_path8.join)(dataDir, "events");
-  await (0, import_promises6.mkdir)(eventsDir, { recursive: true });
+  const eventsDir = (0, import_node_path9.join)(dataDir, "events");
+  await (0, import_promises7.mkdir)(eventsDir, { recursive: true });
   const byWeek = /* @__PURE__ */ new Map();
   for (const event of events) {
     const key = getISOWeekKey(event.ts);
@@ -12432,10 +14234,10 @@ async function appendEvents(dataDir, events) {
     }
   }
   for (const [weekKey, weekEvents] of byWeek) {
-    const filePath = (0, import_node_path8.join)(eventsDir, `${weekKey}.jsonl`);
+    const filePath = (0, import_node_path9.join)(eventsDir, `${weekKey}.jsonl`);
     const existingIds = /* @__PURE__ */ new Set();
     try {
-      const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+      const raw = await (0, import_promises7.readFile)(filePath, "utf8");
       for (const line of raw.split("\n")) {
         if (line.trim() === "") continue;
         try {
@@ -12453,14 +14255,14 @@ async function appendEvents(dataDir, events) {
     if (newEvents.length === 0) continue;
     const lines = `${newEvents.map((e2) => JSON.stringify(e2)).join("\n")}
 `;
-    await (0, import_promises6.appendFile)(filePath, lines, "utf8");
+    await (0, import_promises7.appendFile)(filePath, lines, "utf8");
   }
 }
 async function readEventsSince(dataDir, since) {
-  const eventsDir = (0, import_node_path8.join)(dataDir, "events");
+  const eventsDir = (0, import_node_path9.join)(dataDir, "events");
   let files;
   try {
-    files = await (0, import_promises6.readdir)(eventsDir);
+    files = await (0, import_promises7.readdir)(eventsDir);
   } catch (err) {
     if (err instanceof Error && "code" in err && err.code === "ENOENT") {
       return [];
@@ -12471,7 +14273,7 @@ async function readEventsSince(dataDir, since) {
   const jsonlFiles = files.filter((f3) => f3.endsWith(".jsonl") && f3 >= `${sinceWeek}.jsonl`).sort();
   const events = [];
   for (const file of jsonlFiles) {
-    const raw = await (0, import_promises6.readFile)((0, import_node_path8.join)(eventsDir, file), "utf8");
+    const raw = await (0, import_promises7.readFile)((0, import_node_path9.join)(eventsDir, file), "utf8");
     for (const line of raw.split("\n")) {
       if (line.trim() === "") continue;
       try {
@@ -12487,14 +14289,14 @@ async function readEventsSince(dataDir, since) {
   return events;
 }
 async function writeExperienceLog(dataDir, log) {
-  const metaDir = (0, import_node_path8.join)(dataDir, "_meta");
-  await (0, import_promises6.mkdir)(metaDir, { recursive: true });
-  await (0, import_promises6.writeFile)((0, import_node_path8.join)(metaDir, "experience.json"), JSON.stringify(log, null, 2), "utf8");
+  const metaDir = (0, import_node_path9.join)(dataDir, "_meta");
+  await (0, import_promises7.mkdir)(metaDir, { recursive: true });
+  await (0, import_promises7.writeFile)((0, import_node_path9.join)(metaDir, "experience.json"), JSON.stringify(log, null, 2), "utf8");
 }
 async function readExperienceLog(dataDir) {
-  const path2 = (0, import_node_path8.join)(dataDir, "_meta", "experience.json");
+  const path2 = (0, import_node_path9.join)(dataDir, "_meta", "experience.json");
   try {
-    const raw = await (0, import_promises6.readFile)(path2, "utf8");
+    const raw = await (0, import_promises7.readFile)(path2, "utf8");
     const { ExperienceLogSchema: ExperienceLogSchema2 } = await Promise.resolve().then(() => (init_experience(), experience_exports));
     return ExperienceLogSchema2.parse(JSON.parse(raw));
   } catch (err) {
@@ -12504,20 +14306,40 @@ async function readExperienceLog(dataDir) {
     throw err;
   }
 }
+var CHECKPOINT_PATH = (dataDir) => (0, import_node_path9.join)(dataDir, "_meta", "evolve-checkpoint.json");
+async function readEvolveCheckpoint(dataDir) {
+  try {
+    const raw = await (0, import_promises7.readFile)(CHECKPOINT_PATH(dataDir), "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+async function writeEvolveCheckpoint(dataDir, checkpoint) {
+  const metaDir = (0, import_node_path9.join)(dataDir, "_meta");
+  await (0, import_promises7.mkdir)(metaDir, { recursive: true });
+  await (0, import_promises7.writeFile)(CHECKPOINT_PATH(dataDir), JSON.stringify(checkpoint, null, 2), "utf8");
+}
+async function clearEvolveCheckpoint(dataDir) {
+  try {
+    await (0, import_promises7.unlink)(CHECKPOINT_PATH(dataDir));
+  } catch {
+  }
+}
 async function writeSnapshot(dataDir, snapshot) {
-  const snapshotsDir = (0, import_node_path8.join)(dataDir, "snapshots");
-  await (0, import_promises6.mkdir)(snapshotsDir, { recursive: true });
-  await (0, import_promises6.writeFile)(
-    (0, import_node_path8.join)(snapshotsDir, `${snapshot.date}.json`),
+  const snapshotsDir = (0, import_node_path9.join)(dataDir, "snapshots");
+  await (0, import_promises7.mkdir)(snapshotsDir, { recursive: true });
+  await (0, import_promises7.writeFile)(
+    (0, import_node_path9.join)(snapshotsDir, `${snapshot.date}.json`),
     JSON.stringify(snapshot, null, 2),
     "utf8"
   );
 }
 async function readLatestSnapshot(dataDir) {
-  const snapshotsDir = (0, import_node_path8.join)(dataDir, "snapshots");
+  const snapshotsDir = (0, import_node_path9.join)(dataDir, "snapshots");
   let files;
   try {
-    files = await (0, import_promises6.readdir)(snapshotsDir);
+    files = await (0, import_promises7.readdir)(snapshotsDir);
   } catch (err) {
     if (err instanceof Error && "code" in err && err.code === "ENOENT") {
       return null;
@@ -12528,7 +14350,7 @@ async function readLatestSnapshot(dataDir) {
   const latest = jsonFiles[jsonFiles.length - 1];
   if (!latest) return null;
   try {
-    const raw = await (0, import_promises6.readFile)((0, import_node_path8.join)(snapshotsDir, latest), "utf8");
+    const raw = await (0, import_promises7.readFile)((0, import_node_path9.join)(snapshotsDir, latest), "utf8");
     const { SnapshotSchema: SnapshotSchema2 } = await Promise.resolve().then(() => (init_snapshot(), snapshot_exports));
     return SnapshotSchema2.parse(JSON.parse(raw));
   } catch {
@@ -12536,10 +14358,83 @@ async function readLatestSnapshot(dataDir) {
   }
 }
 async function writeTailoredResume(dataDir, slug, markdown) {
-  const tailoredDir = (0, import_node_path8.join)(dataDir, "tailored");
-  await (0, import_promises6.mkdir)(tailoredDir, { recursive: true });
-  const filePath = (0, import_node_path8.join)(tailoredDir, `${slug}.md`);
-  await (0, import_promises6.writeFile)(filePath, markdown, "utf8");
+  const tailoredDir = (0, import_node_path9.join)(dataDir, "tailored");
+  await (0, import_promises7.mkdir)(tailoredDir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(tailoredDir, `${slug}.md`);
+  await (0, import_promises7.writeFile)(filePath, markdown, "utf8");
+  return filePath;
+}
+async function writeProjects(dataDir, projects) {
+  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
+  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "projects.json"), JSON.stringify(projects, null, 2), "utf8");
+}
+async function writeClaims(dataDir, claims) {
+  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
+  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "claims.json"), JSON.stringify(claims, null, 2), "utf8");
+}
+async function writeCurateResult(dataDir, result) {
+  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
+  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "curate.json"), JSON.stringify(result, null, 2), "utf8");
+}
+async function writeResumeDraft(dataDir, slug, draft) {
+  const draftsDir = (0, import_node_path9.join)(dataDir, "agent", "drafts");
+  await (0, import_promises7.mkdir)(draftsDir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(draftsDir, `${slug}.resume.json`);
+  await (0, import_promises7.writeFile)(filePath, JSON.stringify(draft, null, 2), "utf8");
+  return filePath;
+}
+async function readResumeDraft(dataDir, slug) {
+  const filePath = (0, import_node_path9.join)(dataDir, "agent", "drafts", `${slug}.resume.json`);
+  try {
+    const raw = await (0, import_promises7.readFile)(filePath, "utf8");
+    const { ResumeDraftSchema: ResumeDraftSchema3 } = await Promise.resolve().then(() => (init_agent(), agent_exports));
+    return ResumeDraftSchema3.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writeResumeHtml(dataDir, slug, html) {
+  const resumesDir = (0, import_node_path9.join)(dataDir, "resumes");
+  await (0, import_promises7.mkdir)(resumesDir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(resumesDir, `${slug}.html`);
+  await (0, import_promises7.writeFile)(filePath, html, "utf8");
+  return filePath;
+}
+async function writeResumeMd(dataDir, slug, markdown) {
+  const resumesDir = (0, import_node_path9.join)(dataDir, "resumes");
+  await (0, import_promises7.mkdir)(resumesDir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(resumesDir, `${slug}.md`);
+  await (0, import_promises7.writeFile)(filePath, markdown, "utf8");
+  return filePath;
+}
+async function writeCritique(dataDir, slug, critique2) {
+  const critiquesDir = (0, import_node_path9.join)(dataDir, "agent", "critiques");
+  await (0, import_promises7.mkdir)(critiquesDir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(critiquesDir, `${slug}.json`);
+  await (0, import_promises7.writeFile)(filePath, JSON.stringify(critique2, null, 2), "utf8");
+  return filePath;
+}
+async function writeRevision(dataDir, record) {
+  const draftsDir = (0, import_node_path9.join)(dataDir, "agent", "drafts");
+  await (0, import_promises7.mkdir)(draftsDir, { recursive: true });
+  const draftPath = (0, import_node_path9.join)(draftsDir, `${record.slug}.resume.json`);
+  await (0, import_promises7.writeFile)(draftPath, JSON.stringify(record.draft, null, 2), "utf8");
+  const recordPath = (0, import_node_path9.join)(draftsDir, `${record.slug}.revision.json`);
+  const recordWithoutDraft = { ...record, draft: void 0 };
+  await (0, import_promises7.writeFile)(recordPath, JSON.stringify(recordWithoutDraft, null, 2), "utf8");
+  return { draftPath, recordPath };
+}
+async function writeJdProfile(dataDir, profile) {
+  const dir = (0, import_node_path9.join)(dataDir, "agent", "jd-profiles");
+  await (0, import_promises7.mkdir)(dir, { recursive: true });
+  const filePath = (0, import_node_path9.join)(dir, `${profile.slug}.json`);
+  await (0, import_promises7.writeFile)(filePath, JSON.stringify(profile, null, 2), "utf8");
   return filePath;
 }
 
@@ -13371,19 +15266,87 @@ async function evolve(config, dataDir, since = EPOCH) {
   const {
     maxEventsPerCluster = 40,
     trendThreshold = 0.04,
-    topTagsLimit = 20
+    topTagsLimit = 20,
+    concurrency = 3
   } = config.engine ?? {};
-  console.log(`[evolve] ${clusters.length} clusters to translate`);
-  const entries = [];
-  let clusterIdx = 0;
-  for (const cluster of clusters) {
-    clusterIdx += 1;
-    console.log(
-      `[evolve] translating cluster ${clusterIdx}/${clusters.length}: ${cluster.repo} ${cluster.period.from.slice(0, 7)}`
-    );
-    const entry = await generateEntry(llmConfig, cluster, eventTags, lang, maxEventsPerCluster);
-    entries.push(entry);
+  console.log(`[evolve] ${clusters.length} clusters to translate (concurrency: ${concurrency})`);
+  const checkpoint = await readEvolveCheckpoint(dataDir);
+  const doneIds = new Set(checkpoint?.processedIds ?? []);
+  const resumedEntries = checkpoint?.entries ?? [];
+  if (doneIds.size > 0) {
+    console.log(`[evolve] resuming \u2014 ${doneIds.size}/${clusters.length} clusters already done`);
   }
+  const pendingClusters = clusters.filter((c3) => !doneIds.has(c3.id));
+  const SOLO_THRESHOLD = 8;
+  const BATCH_SIZE = 5;
+  const batches = [];
+  let smallBatch = [];
+  for (const cluster of pendingClusters) {
+    if (cluster.events.length > SOLO_THRESHOLD) {
+      if (smallBatch.length > 0) {
+        batches.push(smallBatch);
+        smallBatch = [];
+      }
+      batches.push([cluster]);
+    } else {
+      smallBatch.push(cluster);
+      if (smallBatch.length >= BATCH_SIZE) {
+        batches.push(smallBatch);
+        smallBatch = [];
+      }
+    }
+  }
+  if (smallBatch.length > 0) batches.push(smallBatch);
+  const allEntries = [...resumedEntries];
+  let processed = doneIds.size;
+  let rateLimitHit = false;
+  let batchCursor = 0;
+  async function worker() {
+    while (batchCursor < batches.length) {
+      if (rateLimitHit) return;
+      const myIdx = batchCursor++;
+      const batch = batches[myIdx];
+      const batchLabel = batch.length === 1 ? `${batch[0].repo} ${batch[0].period.from.slice(0, 7)}` : `${batch.length} clusters (${batch[0].repo} \u2026 ${batch[batch.length - 1].repo})`;
+      const startNum = processed + 1;
+      processed += batch.length;
+      console.log(
+        `[evolve] translating ${startNum}\u2013${processed}/${clusters.length}: ${batchLabel}`
+      );
+      try {
+        const newEntries = await generateEntryBatch(
+          llmConfig,
+          batch,
+          eventTags,
+          lang,
+          maxEventsPerCluster
+        );
+        allEntries.push(...newEntries);
+        for (const c3 of batch) doneIds.add(c3.id);
+        await writeEvolveCheckpoint(dataDir, {
+          processedIds: [...doneIds],
+          entries: allEntries,
+          totalClusters: clusters.length,
+          lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+        });
+      } catch (err) {
+        if (err instanceof RateLimitError) {
+          rateLimitHit = true;
+          return;
+        }
+        throw err;
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: concurrency }, () => worker()));
+  if (rateLimitHit) {
+    console.warn(
+      `[evolve] rate limit hit after ${doneIds.size}/${clusters.length} clusters. Checkpoint saved \u2014 run 'delta evolve' again to continue.`
+    );
+    process.exit(0);
+  }
+  const { ExperienceEntrySchema: ExperienceEntrySchema2 } = await Promise.resolve().then(() => (init_experience(), experience_exports));
+  const entries = allEntries.map((e2) => ExperienceEntrySchema2.parse(e2));
+  await clearEvolveCheckpoint(dataDir);
   const log = {
     version: 1,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
@@ -13400,6 +15363,195 @@ async function evolve(config, dataDir, since = EPOCH) {
   await writeSnapshot(dataDir, snapshot);
   console.log(`[evolve] wrote experience log (${entries.length} entries) and snapshot ${today}`);
   return { log, diff };
+}
+async function curate(dataDir, topN = 6) {
+  const log = await readExperienceLog(dataDir);
+  if (!log) {
+    throw new Error("No experience log found. Run 'delta evolve' first.");
+  }
+  const drafts = mergeExperienceEntries(log.entries);
+  const scored = scoreProjects(drafts);
+  const top = scored.slice(0, topN);
+  const claims = buildCapabilityClaims(scored);
+  const result = {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    projects: scored,
+    claims
+  };
+  await writeProjects(dataDir, scored);
+  await writeClaims(dataDir, claims);
+  await writeCurateResult(dataDir, result);
+  console.log(
+    `[curate] ${scored.length} projects scored, top ${top.length} selected, ${claims.length} capability claims`
+  );
+  return result;
+}
+async function compose(config, dataDir, options = { lang: "zh" }) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const log = await readExperienceLog(dataDir);
+  if (!log) {
+    throw new Error("No experience log found. Run 'delta evolve' first.");
+  }
+  const topN = options.topN ?? 6;
+  const drafts = mergeExperienceEntries(log.entries);
+  const scored = scoreProjects(drafts);
+  const claims = buildCapabilityClaims(scored);
+  const lang = config.language === "bilingual" ? "zh" : config.language;
+  let jdProfile = null;
+  let jdProfilePath = null;
+  let finalProjects = scored;
+  let finalClaims = claims;
+  if (options.jd) {
+    jdProfile = await parseJdProfile(llmConfig, options.jd, lang);
+    jdProfilePath = await writeJdProfile(dataDir, jdProfile);
+    finalProjects = scoreProjectsForJd(scored, jdProfile);
+    finalClaims = scoreClaimsForJd(claims, jdProfile);
+    console.log(
+      `[compose] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) \u2014 ${jdProfile.requiredSkills.length} required skills`
+    );
+  }
+  const curateResult = {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    projects: finalProjects,
+    claims: finalClaims
+  };
+  const composeOpts = { lang, topN };
+  if (options.targetRole) {
+    composeOpts.targetRole = options.targetRole;
+  } else if (jdProfile) {
+    composeOpts.targetRole = jdProfile.jobTitle;
+  }
+  if (options.jd) composeOpts.jd = options.jd;
+  const draft = await composeDraft(llmConfig, config.login, curateResult, composeOpts);
+  const slug = options.slug ?? (jdProfile ? jdProfile.slug : "default");
+  const draftPath = await writeResumeDraft(dataDir, slug, draft);
+  const format = options.format ?? "both";
+  const style = options.style ?? "clean";
+  let htmlPath = null;
+  let mdPath = null;
+  if (format === "html" || format === "both") {
+    const html = renderWithStyle(draft, style);
+    htmlPath = await writeResumeHtml(dataDir, slug, html);
+  }
+  if (format === "md" || format === "both") {
+    const md = renderResumeDraftMarkdown(draft);
+    mdPath = await writeResumeMd(dataDir, slug, md);
+  }
+  return { draft, draftPath, htmlPath, mdPath, jdProfile, jdProfilePath };
+}
+async function critique(config, dataDir, slug = "default") {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const draft = await readResumeDraft(dataDir, slug);
+  if (!draft) {
+    throw new Error(
+      `No resume draft found for slug "${slug}". Run 'delta compose' first.`
+    );
+  }
+  const lang = config.language === "bilingual" ? "zh" : config.language;
+  const critiqueResult = await critiqueDraft(llmConfig, draft, slug, lang);
+  const critiquePath = await writeCritique(dataDir, slug, critiqueResult);
+  return { critique: critiqueResult, critiquePath };
+}
+async function revise(config, dataDir, instruction, options = {}) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const slug = options.slug ?? "default";
+  const draft = await readResumeDraft(dataDir, slug);
+  if (!draft) {
+    throw new Error(
+      `No resume draft found for slug "${slug}". Run 'delta compose' first.`
+    );
+  }
+  const lang = config.language === "bilingual" ? "zh" : config.language;
+  const record = await reviseDraft(llmConfig, draft, slug, instruction, lang, dataDir);
+  const { draftPath } = await writeRevision(dataDir, record);
+  const format = options.format ?? "both";
+  let htmlPath = null;
+  let mdPath = null;
+  if (format === "html" || format === "both") {
+    const html = renderWithStyle(record.draft, "clean");
+    htmlPath = await writeResumeHtml(dataDir, record.slug, html);
+  }
+  if (format === "md" || format === "both") {
+    const md = renderResumeDraftMarkdown(record.draft);
+    mdPath = await writeResumeMd(dataDir, record.slug, md);
+  }
+  return { record, draftPath, htmlPath, mdPath };
+}
+async function render2(dataDir, options = {}) {
+  const slug = options.slug ?? "default";
+  const format = options.format ?? "both";
+  const styleArg = options.style ?? "clean";
+  if (!isHtmlStyle(styleArg)) {
+    throw new Error(
+      `Unknown style "${styleArg}". Available: ${["clean", "developer", "compact", "agent"].join(", ")}`
+    );
+  }
+  const style = styleArg;
+  if (style === "agent") {
+    if (!options.instruction) {
+      throw new Error(
+        `--style agent requires --instruction. E.g. --instruction "\u6DF1\u8272\u6781\u7B80\u98CE\u683C\uFF0C\u9002\u5408 AI \u5DE5\u7A0B\u5E08"`
+      );
+    }
+    if (!options.config) {
+      throw new Error(`--style agent requires LLM config. Pass config to render().`);
+    }
+    const apiKey = options.config.llm.apiKey ?? process.env.LLM_API_KEY;
+    if (!apiKey) {
+      throw new Error("LLM_API_KEY is required for --style agent.");
+    }
+  }
+  const draft = await readResumeDraft(dataDir, slug);
+  if (!draft) {
+    throw new Error(`No resume draft found for slug "${slug}". Run 'delta compose' first.`);
+  }
+  let htmlPath = null;
+  let mdPath = null;
+  let validationWarnings;
+  if (format === "html" || format === "both") {
+    let html;
+    if (style === "agent") {
+      const cfg = options.config;
+      const apiKey = cfg.llm.apiKey ?? process.env.LLM_API_KEY ?? "";
+      const llmConfig = { ...cfg.llm, apiKey };
+      const lang = cfg.language === "bilingual" ? "zh" : cfg.language;
+      html = await renderResumeDraftHtmlAgent(llmConfig, draft, options.instruction, lang);
+      const validation = validateGeneratedHtml(html, draft);
+      if (!validation.valid) {
+        console.warn(`[render] agent HTML validation errors:
+  ${validation.errors.join("\n  ")}`);
+      }
+      if (validation.warnings.length > 0) {
+        console.warn(
+          `[render] agent HTML validation warnings:
+  ${validation.warnings.join("\n  ")}`
+        );
+      }
+      validationWarnings = [...validation.errors, ...validation.warnings];
+    } else {
+      html = renderWithStyle(draft, style);
+    }
+    htmlPath = await writeResumeHtml(dataDir, `${slug}-${style}`, html);
+  }
+  if (format === "md" || format === "both") {
+    const md = renderResumeDraftMarkdown(draft);
+    mdPath = await writeResumeMd(dataDir, slug, md);
+  }
+  return { style, format, htmlPath, mdPath, ...validationWarnings ? { validationWarnings } : {} };
 }
 async function tailor(config, dataDir, jdText) {
   const log = await readExperienceLog(dataDir);
@@ -13424,6 +15576,36 @@ async function tailor(config, dataDir, jdText) {
   console.log(`[tailor] wrote resume \u2192 ${outputPath}`);
   return { outputPath, jdSlug };
 }
+async function cleanRevisions(dataDir, options) {
+  const { slug, keep, dryRun = false } = options;
+  const base = stripRevSuffix(slug);
+  const revPattern = new RegExp(`^${base}-rev-[\\w-]+\\.(html|md)$`);
+  const draftPattern = new RegExp(`^${base}-rev-[\\w-]+\\.(resume|revision)\\.json$`);
+  const deleted = [];
+  const kept = [];
+  async function sweepDir(dir, pattern) {
+    let files = [];
+    try {
+      files = await (0, import_promises8.readdir)(dir);
+    } catch {
+      return;
+    }
+    for (const f3 of files) {
+      if (!pattern.test(f3)) continue;
+      const stemMatch = f3.match(/^(.+?)\.(html|md|resume\.json|revision\.json)$/);
+      const fileStem = stemMatch?.[1] ?? f3;
+      if (keep && (fileStem === keep || f3.startsWith(keep + "."))) {
+        kept.push((0, import_node_path10.join)(dir, f3));
+        continue;
+      }
+      if (!dryRun) await (0, import_promises8.unlink)((0, import_node_path10.join)(dir, f3));
+      deleted.push((0, import_node_path10.join)(dir, f3));
+    }
+  }
+  await sweepDir((0, import_node_path10.join)(dataDir, "resumes"), revPattern);
+  await sweepDir((0, import_node_path10.join)(dataDir, "agent", "drafts"), draftPattern);
+  return { deleted, kept };
+}
 
 // src/core/schema/config.ts
 init_cjs_shims();
@@ -13444,7 +15626,9 @@ var EngineConfigSchema = external_exports.object({
   /** Normalised score delta required to classify a tag trend as rising/declining. */
   trendThreshold: external_exports.number().min(0).max(1).default(0.04),
   /** Maximum number of tags stored in the topTags list of a snapshot. */
-  topTagsLimit: external_exports.number().int().positive().default(20)
+  topTagsLimit: external_exports.number().int().positive().default(20),
+  /** Number of LLM batch requests to run concurrently during evolve. */
+  concurrency: external_exports.number().int().min(1).max(10).default(3)
 });
 var ConfigSchema = external_exports.object({
   /** GitHub login of the target user. */
@@ -13491,7 +15675,7 @@ var observeCmd = defineCommand({
   },
   async run({ args }) {
     await loadLocalEnv();
-    const configRaw = await (0, import_promises7.readFile)(args["config-path"], "utf8");
+    const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
     const config = ConfigSchema.parse(JSON.parse(configRaw));
     if (args.since) {
       const sinceDate = new Date(args.since);
@@ -13532,7 +15716,7 @@ var evolveCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises7.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -13577,7 +15761,7 @@ var tailorCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises7.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -13587,7 +15771,7 @@ var tailorCmd = defineCommand({
     let jdText;
     if (args.jd) {
       try {
-        jdText = await (0, import_promises7.readFile)(args.jd, "utf8");
+        jdText = await (0, import_promises9.readFile)(args.jd, "utf8");
       } catch (err) {
         const hint = err instanceof Error ? err.message : String(err);
         console.error(`[tailor] Failed to read JD file "${args.jd}": ${hint}`);
@@ -13596,6 +15780,326 @@ var tailorCmd = defineCommand({
     }
     const result = await tailor(config, args["data-dir"], jdText);
     console.log(`[tailor] resume written to ${result.outputPath}`);
+  }
+});
+var composeCmd = defineCommand({
+  meta: {
+    name: "compose",
+    description: "Generate a polished resume draft via LLM from curated project data."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json"
+    },
+    format: {
+      type: "string",
+      description: "Output format: html, md, or both (default: both)",
+      default: "both"
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)"
+    },
+    role: {
+      type: "string",
+      description: "Target role hint, e.g. 'AI \u5DE5\u7A0B\u5E08' or 'Full-Stack Engineer'"
+    },
+    "top-n": {
+      type: "string",
+      description: "Number of top projects to include (default: 6)",
+      default: "6"
+    },
+    jd: {
+      type: "string",
+      description: "Path to a job description file for targeted resume"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[compose] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+    const format = args.format;
+    if (!["html", "md", "both"].includes(format)) {
+      console.error(`[compose] --format must be one of: html, md, both`);
+      process.exit(1);
+    }
+    const topN = Number.parseInt(args["top-n"], 10);
+    if (Number.isNaN(topN) || topN < 1) {
+      console.error("[compose] --top-n must be a positive integer");
+      process.exit(1);
+    }
+    let slug = "default";
+    let targetRole;
+    if (args.role) targetRole = args.role;
+    let jdText;
+    if (args.jd) {
+      try {
+        jdText = await (0, import_promises9.readFile)(args.jd, "utf8");
+        const firstLine = jdText.trim().split("\n")[0] ?? "jd";
+        slug = firstLine.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").slice(0, 40);
+        if (!targetRole) targetRole = firstLine.slice(0, 80);
+      } catch (err) {
+        const hint = err instanceof Error ? err.message : String(err);
+        console.error(`[compose] Failed to read JD file "${args.jd}": ${hint}`);
+        process.exit(1);
+      }
+    }
+    const langOverride = args.lang;
+    const effectiveLang = langOverride === "zh" || langOverride === "en" ? langOverride : config.language === "bilingual" ? "zh" : config.language;
+    console.log(`[compose] running \u2014 lang: ${effectiveLang}, format: ${format}, top-n: ${topN}`);
+    if (targetRole) console.log(`[compose] target role: ${targetRole}`);
+    const result = await compose(config, args["data-dir"], {
+      lang: effectiveLang,
+      format,
+      slug,
+      topN,
+      ...targetRole ? { targetRole } : {}
+    });
+    console.log(`[compose] draft \u2192 ${result.draftPath}`);
+    if (result.htmlPath) console.log(`[compose] HTML  \u2192 ${result.htmlPath}`);
+    if (result.mdPath) console.log(`[compose] MD    \u2192 ${result.mdPath}`);
+    console.log(`
+Headline: ${result.draft.headline}`);
+  }
+});
+var critiqueCmd = defineCommand({
+  meta: {
+    name: "critique",
+    description: "Critique an existing resume draft and report issues with improvement suggestions."
+  },
+  args: {
+    "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
+    "config-path": { type: "string", description: "Path to config.json", default: "config.json" },
+    slug: {
+      type: "string",
+      description: "Resume draft slug to critique (default: default)",
+      default: "default"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[critique] Failed to load config: ${hint}`);
+      process.exit(1);
+    }
+    const result = await critique(config, args["data-dir"], args.slug);
+    const { critique: cr } = result;
+    console.log(`
+[critique] Overall score: ${cr.overallScore}/10`);
+    console.log(`[critique] ${cr.summary}
+`);
+    if (cr.issues.length > 0) {
+      console.log("Issues:");
+      for (const issue of cr.issues) {
+        const icon = issue.severity === "error" ? "\u2717" : issue.severity === "warning" ? "\u26A0" : "\u2139";
+        const loc = issue.location ? ` [${issue.location}]` : "";
+        console.log(`  ${icon} [${issue.category}]${loc} ${issue.description}`);
+        console.log(`    \u2192 ${issue.suggestion}`);
+      }
+    }
+    if (cr.passedChecks.length > 0) {
+      console.log("\nPassed checks:");
+      for (const check of cr.passedChecks) {
+        console.log(`  \u2713 ${check}`);
+      }
+    }
+    console.log(`
+[critique] saved \u2192 ${result.critiquePath}`);
+  }
+});
+var reviseCmd = defineCommand({
+  meta: {
+    name: "revise",
+    description: "Revise a resume draft with a natural-language instruction."
+  },
+  args: {
+    "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
+    "config-path": { type: "string", description: "Path to config.json", default: "config.json" },
+    slug: {
+      type: "string",
+      description: "Source draft slug (default: default)",
+      default: "default"
+    },
+    instruction: {
+      type: "string",
+      description: "Revision instruction, e.g. '\u66F4\u504F AI \u5DE5\u7A0B\u5E08' or 'compress to one page'",
+      required: true
+    },
+    format: {
+      type: "string",
+      description: "Output format: html, md, or both (default: both)",
+      default: "both"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[revise] Failed to load config: ${hint}`);
+      process.exit(1);
+    }
+    const format = args.format;
+    if (!["html", "md", "both"].includes(format)) {
+      console.error(`[revise] --format must be one of: html, md, both`);
+      process.exit(1);
+    }
+    console.log(`[revise] instruction: "${args.instruction}"`);
+    const result = await revise(config, args["data-dir"], args.instruction, {
+      slug: args.slug,
+      format
+    });
+    console.log(`[revise] new draft  \u2192 ${result.draftPath}`);
+    if (result.htmlPath) console.log(`[revise] HTML       \u2192 ${result.htmlPath}`);
+    if (result.mdPath) console.log(`[revise] MD         \u2192 ${result.mdPath}`);
+    console.log(`
+New headline: ${result.record.draft.headline}`);
+  }
+});
+var renderCmd = defineCommand({
+  meta: {
+    name: "render",
+    description: "Render an existing resume draft to HTML and/or Markdown with a chosen style."
+  },
+  args: {
+    "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
+    "config-path": { type: "string", description: "Path to config.json", default: "config.json" },
+    slug: {
+      type: "string",
+      description: "Resume draft slug to render (default: default)",
+      default: "default"
+    },
+    style: {
+      type: "string",
+      description: `HTML style: ${HTML_STYLE_NAMES.join(", ")} (default: clean)`,
+      default: "clean"
+    },
+    format: {
+      type: "string",
+      description: "Output format: html, md, or both (default: html)",
+      default: "html"
+    },
+    instruction: {
+      type: "string",
+      description: "Design instruction for --style agent. E.g. '\u6DF1\u8272\u6781\u7B80\u98CE\u683C\uFF0C\u9002\u5408 AI \u5DE5\u7A0B\u5E08'"
+    }
+  },
+  async run({ args }) {
+    const format = args.format;
+    if (!["html", "md", "both"].includes(format)) {
+      console.error(`[render] --format must be one of: html, md, both`);
+      process.exit(1);
+    }
+    let config;
+    if (args.style === "agent") {
+      await loadLocalEnv();
+      try {
+        const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+        config = ConfigSchema.parse(JSON.parse(configRaw));
+      } catch (err) {
+        const hint = err instanceof Error ? err.message : String(err);
+        console.error(`[render] Failed to load config: ${hint}`);
+        process.exit(1);
+      }
+      if (!args.instruction) {
+        console.error(`[render] --style agent requires --instruction`);
+        process.exit(1);
+      }
+    }
+    const result = await render2(args["data-dir"], {
+      slug: args.slug,
+      style: args.style,
+      format,
+      ...args.instruction ? { instruction: args.instruction } : {},
+      ...config ? { config } : {}
+    });
+    if (result.htmlPath) console.log(`[render] HTML \u2192 ${result.htmlPath}`);
+    if (result.mdPath) console.log(`[render] MD   \u2192 ${result.mdPath}`);
+    if (result.validationWarnings?.length) {
+      console.log(`
+[render] validation notices:`);
+      for (const w2 of result.validationWarnings) {
+        console.log(`  \u26A0 ${w2}`);
+      }
+    }
+  }
+});
+var stylesCmd = defineCommand({
+  meta: {
+    name: "styles",
+    description: "List available HTML resume styles."
+  },
+  args: {},
+  async run() {
+    console.log("\nAvailable HTML styles:\n");
+    for (const name of HTML_STYLE_NAMES) {
+      const meta = HTML_STYLES[name];
+      console.log(`  ${name.padEnd(12)} ${meta.description}`);
+    }
+    console.log(`
+Usage: delta render --style <name>`);
+  }
+});
+var curateCmd = defineCommand({
+  meta: {
+    name: "curate",
+    description: "Analyse experience log: merge projects, score importance, extract capability claims."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    },
+    "top-n": {
+      type: "string",
+      description: "Maximum number of top projects to highlight (default: 6)",
+      default: "6"
+    }
+  },
+  async run({ args }) {
+    const topN = Number.parseInt(args["top-n"], 10);
+    if (Number.isNaN(topN) || topN < 1) {
+      console.error("[curate] --top-n must be a positive integer");
+      process.exit(1);
+    }
+    const result = await curate(args["data-dir"], topN);
+    const top = result.projects.slice(0, topN);
+    console.log(`
+Top ${topN} projects:`);
+    for (const p of top) {
+      console.log(`  [${p.importance.toFixed(3)}] ${p.repo}  (${p.category}, ${p.activeMonths}mo)`);
+    }
+    const usable = result.claims.filter((c3) => c3.resumeUse);
+    console.log(`
+Capability claims (resume-use):`);
+    for (const c3 of usable) {
+      console.log(`  ${c3.claim}  [conf: ${c3.confidence.toFixed(2)}]  \u2014 ${c3.technologies.slice(0, 5).join(", ")}`);
+    }
+    console.log(`
+[curate] written to ${args["data-dir"]}/agent/`);
   }
 });
 var lintCmd = defineCommand({
@@ -13616,7 +16120,7 @@ var lintCmd = defineCommand({
     }
   },
   async run({ args }) {
-    const markdown = await (0, import_promises7.readFile)(args.file, "utf8");
+    const markdown = await (0, import_promises9.readFile)(args.file, "utf8");
     const lang = args.lang;
     const bannedWords = await loadBannedWords(lang);
     const wordViolations = checkBannedWords(markdown, bannedWords);
@@ -13658,9 +16162,10 @@ var initCmd = defineCommand({
   },
   args: {
     dir: {
-      type: "string",
+      type: "positional",
       description: "Target directory (default: current directory)",
-      default: "."
+      default: ".",
+      required: false
     }
   },
   async run({ args }) {
@@ -13681,6 +16186,56 @@ var initCmd = defineCommand({
     console.log("  5. Optional later: create a private GitHub repo and push this resume repo");
   }
 });
+var cleanCmd = defineCommand({
+  meta: {
+    name: "clean",
+    description: "Remove intermediate revision files for a given base slug."
+  },
+  args: {
+    slug: {
+      type: "string",
+      description: "Base resume slug to clean revisions for (e.g. 'default')",
+      default: "default"
+    },
+    keep: {
+      type: "string",
+      description: "Revision slug to keep (e.g. 'default-rev-3'); others are deleted"
+    },
+    "data-dir": {
+      type: "string",
+      description: "Data directory",
+      default: "data"
+    },
+    "dry-run": {
+      type: "boolean",
+      description: "Print what would be deleted without actually deleting",
+      default: false
+    }
+  },
+  async run({ args }) {
+    const dataDir = args["data-dir"];
+    const dryRun = args["dry-run"];
+    const result = await cleanRevisions(dataDir, {
+      slug: args.slug,
+      keep: args.keep,
+      dryRun
+    });
+    if (result.deleted.length === 0 && result.kept.length === 0) {
+      console.log(`[clean] no revision files found for slug "${args.slug}"`);
+      return;
+    }
+    if (dryRun) {
+      console.log(`[clean] dry-run \u2014 would delete ${result.deleted.length} file(s):`);
+    } else {
+      console.log(`[clean] deleted ${result.deleted.length} file(s):`);
+    }
+    for (const f3 of result.deleted) console.log(`  - ${f3}`);
+    if (result.kept.length > 0) {
+      console.log(`[clean] kept ${result.kept.length} file(s):`);
+      for (const f3 of result.kept) console.log(`  + ${f3}`);
+    }
+  }
+});
 var main = defineCommand({
   meta: {
     name: "delta",
@@ -13690,9 +16245,16 @@ var main = defineCommand({
   subCommands: {
     observe: observeCmd,
     evolve: evolveCmd,
+    curate: curateCmd,
+    compose: composeCmd,
+    critique: critiqueCmd,
+    revise: reviseCmd,
+    render: renderCmd,
+    styles: stylesCmd,
     tailor: tailorCmd,
     lint: lintCmd,
-    init: initCmd
+    init: initCmd,
+    clean: cleanCmd
   }
 });
 runMain(main);

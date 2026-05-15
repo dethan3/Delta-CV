@@ -21,6 +21,8 @@ export const EngineConfigSchema = z.object({
   trendThreshold: z.number().min(0).max(1).default(0.04),
   /** Maximum number of tags stored in the topTags list of a snapshot. */
   topTagsLimit: z.number().int().positive().default(20),
+  /** Number of LLM batch requests to run concurrently during evolve. */
+  concurrency: z.number().int().min(1).max(10).default(3),
 });
 export type EngineConfig = z.infer<typeof EngineConfigSchema>;
 

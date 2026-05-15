@@ -11,8 +11,11 @@ branding:
 inputs:
   mode:
     description: >
-      Pipeline mode: "bootstrap" performs a full re-scan of the past three years,
-      "incremental" only processes events since the last run (default).
+      Pipeline mode.
+      "incremental" (default): observe + evolve + tailor (legacy renderer).
+      "bootstrap": same as incremental but scans the past three years.
+      "compose": observe + evolve + compose + render HTML & Markdown (agent pipeline).
+      "compose-bootstrap": same as compose but scans the past three years.
     required: false
     default: incremental
 
@@ -44,6 +47,21 @@ inputs:
       built-in GITHUB_TOKEN; override for cross-repo access.
     required: false
     default: ${{ github.token }}
+
+  style:
+    description: >
+      HTML style to use when mode is "compose" or "compose-bootstrap".
+      One of "clean" (default), "developer", or "compact".
+      The "agent" style is not supported in Action mode (requires interactive instruction).
+    required: false
+    default: clean
+
+  lang:
+    description: >
+      Language override for compose mode ("zh" or "en").
+      Defaults to the language field in config.json.
+    required: false
+    default: ""
 
 runs:
   using: node20

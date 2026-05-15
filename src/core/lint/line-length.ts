@@ -38,8 +38,8 @@ export function checkHighlightLimits(
   for (const rawLine of lines) {
     const line = rawLine;
 
-    // Detect section headers (## Project Name)
-    if (line.startsWith("## ")) {
+    // Detect section headers (## Section or ### Sub-section)
+    if (line.startsWith("## ") || line.startsWith("### ")) {
       // Close previous section
       if (inHighlight && highlightLineCount > maxHighlightLines) {
         violations.push({
@@ -53,7 +53,7 @@ export function checkHighlightLimits(
           issue: `too many highlights (${highlightCount}, max ${maxHighlightsPerProject})`,
         });
       }
-      currentSection = line.slice(3).trim();
+      currentSection = line.replace(/^#{2,3}\s+/, "").trim();
       highlightCount = 0;
       inHighlight = false;
       highlightLineCount = 0;

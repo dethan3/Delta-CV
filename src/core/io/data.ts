@@ -1,5 +1,14 @@
-import { appendFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import type {
+  CapabilityClaim,
+  CritiqueResult,
+  CurateResult,
+  JdProfile,
+  ProjectMemory,
+  ResumeDraft,
+  RevisionRecord,
+} from "../schema/agent.ts";
 import type { EventEnvelope } from "../schema/event.ts";
 import type { ExperienceLog } from "../schema/experience.ts";
 import type { Snapshot } from "../schema/snapshot.ts";
@@ -141,6 +150,43 @@ export async function readExperienceLog(dataDir: string): Promise<ExperienceLog 
   }
 }
 
+// ── Evolve checkpoint ─────────────────────────────────────────────────────────
+
+export interface EvolveCheckpoint {
+  processedIds: string[];
+  entries: unknown[];
+  totalClusters: number;
+  lastUpdated: string;
+}
+
+const CHECKPOINT_PATH = (dataDir: string) => join(dataDir, "_meta", "evolve-checkpoint.json");
+
+export async function readEvolveCheckpoint(dataDir: string): Promise<EvolveCheckpoint | null> {
+  try {
+    const raw = await readFile(CHECKPOINT_PATH(dataDir), "utf8");
+    return JSON.parse(raw) as EvolveCheckpoint;
+  } catch {
+    return null;
+  }
+}
+
+export async function writeEvolveCheckpoint(
+  dataDir: string,
+  checkpoint: EvolveCheckpoint,
+): Promise<void> {
+  const metaDir = join(dataDir, "_meta");
+  await mkdir(metaDir, { recursive: true });
+  await writeFile(CHECKPOINT_PATH(dataDir), JSON.stringify(checkpoint, null, 2), "utf8");
+}
+
+export async function clearEvolveCheckpoint(dataDir: string): Promise<void> {
+  try {
+    await unlink(CHECKPOINT_PATH(dataDir));
+  } catch {
+    // already gone, that's fine
+  }
+}
+
 /** Persist a snapshot to data/snapshots/<date>.json. */
 export async function writeSnapshot(dataDir: string, snapshot: Snapshot): Promise<void> {
   const snapshotsDir = join(dataDir, "snapshots");
@@ -187,4 +233,165 @@ export async function writeTailoredResume(
   const filePath = join(tailoredDir, `${slug}.md`);
   await writeFile(filePath, markdown, "utf8");
   return filePath;
+}
+
+/** Write curated projects to data/agent/projects.json. */
+export async function writeProjects(dataDir: string, projects: ProjectMemory[]): Promise<void> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  await writeFile(join(agentDir, "projects.json"), JSON.stringify(projects, null, 2), "utf8");
+}
+
+/** Read curated projects from data/agent/projects.json. Returns null if not found. */
+export async function readProjects(dataDir: string): Promise<ProjectMemory[] | null> {
+  const path = join(dataDir, "agent", "projects.json");
+  try {
+    const raw = await readFile(path, "utf8");
+    const { ProjectMemorySchema } = await import("../schema/agent.ts");
+    const parsed = JSON.parse(raw) as unknown[];
+    return parsed.map((item) => ProjectMemorySchema.parse(item));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write capability claims to data/agent/claims.json. */
+export async function writeClaims(dataDir: string, claims: CapabilityClaim[]): Promise<void> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  await writeFile(join(agentDir, "claims.json"), JSON.stringify(claims, null, 2), "utf8");
+}
+
+/** Write the full curate result to data/agent/curate.json. */
+export async function writeCurateResult(dataDir: string, result: CurateResult): Promise<void> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  await writeFile(join(agentDir, "curate.json"), JSON.stringify(result, null, 2), "utf8");
+}
+
+/** Write a ResumeDraft to data/agent/drafts/<slug>.resume.json. */
+export async function writeResumeDraft(
+  dataDir: string,
+  slug: string,
+  draft: ResumeDraft,
+): Promise<string> {
+  const draftsDir = join(dataDir, "agent", "drafts");
+  await mkdir(draftsDir, { recursive: true });
+  const filePath = join(draftsDir, `${slug}.resume.json`);
+  await writeFile(filePath, JSON.stringify(draft, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a ResumeDraft from data/agent/drafts/<slug>.resume.json. Returns null if not found. */
+export async function readResumeDraft(dataDir: string, slug: string): Promise<ResumeDraft | null> {
+  const filePath = join(dataDir, "agent", "drafts", `${slug}.resume.json`);
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { ResumeDraftSchema } = await import("../schema/agent.ts");
+    return ResumeDraftSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write rendered HTML to data/resumes/<slug>.html. */
+export async function writeResumeHtml(
+  dataDir: string,
+  slug: string,
+  html: string,
+): Promise<string> {
+  const resumesDir = join(dataDir, "resumes");
+  await mkdir(resumesDir, { recursive: true });
+  const filePath = join(resumesDir, `${slug}.html`);
+  await writeFile(filePath, html, "utf8");
+  return filePath;
+}
+
+/** Write rendered Markdown to data/resumes/<slug>.md. */
+export async function writeResumeMd(
+  dataDir: string,
+  slug: string,
+  markdown: string,
+): Promise<string> {
+  const resumesDir = join(dataDir, "resumes");
+  await mkdir(resumesDir, { recursive: true });
+  const filePath = join(resumesDir, `${slug}.md`);
+  await writeFile(filePath, markdown, "utf8");
+  return filePath;
+}
+
+/** Write a CritiqueResult to data/agent/critiques/<slug>.json. */
+export async function writeCritique(
+  dataDir: string,
+  slug: string,
+  critique: CritiqueResult,
+): Promise<string> {
+  const critiquesDir = join(dataDir, "agent", "critiques");
+  await mkdir(critiquesDir, { recursive: true });
+  const filePath = join(critiquesDir, `${slug}.json`);
+  await writeFile(filePath, JSON.stringify(critique, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a CritiqueResult from data/agent/critiques/<slug>.json. Returns null if not found. */
+export async function readCritique(dataDir: string, slug: string): Promise<CritiqueResult | null> {
+  const filePath = join(dataDir, "agent", "critiques", `${slug}.json`);
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { CritiqueResultSchema } = await import("../schema/agent.ts");
+    return CritiqueResultSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write a RevisionRecord to data/agent/drafts/<slug>.revision.json and the updated draft. */
+export async function writeRevision(
+  dataDir: string,
+  record: RevisionRecord,
+): Promise<{ draftPath: string; recordPath: string }> {
+  const draftsDir = join(dataDir, "agent", "drafts");
+  await mkdir(draftsDir, { recursive: true });
+
+  const draftPath = join(draftsDir, `${record.slug}.resume.json`);
+  await writeFile(draftPath, JSON.stringify(record.draft, null, 2), "utf8");
+
+  const recordPath = join(draftsDir, `${record.slug}.revision.json`);
+  const recordWithoutDraft = { ...record, draft: undefined };
+  await writeFile(recordPath, JSON.stringify(recordWithoutDraft, null, 2), "utf8");
+
+  return { draftPath, recordPath };
+}
+
+/** Write a JdProfile to data/agent/jd-profiles/<slug>.json. */
+export async function writeJdProfile(dataDir: string, profile: JdProfile): Promise<string> {
+  const dir = join(dataDir, "agent", "jd-profiles");
+  await mkdir(dir, { recursive: true });
+  const filePath = join(dir, `${profile.slug}.json`);
+  await writeFile(filePath, JSON.stringify(profile, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a JdProfile from data/agent/jd-profiles/<slug>.json. Returns null if not found. */
+export async function readJdProfile(dataDir: string, slug: string): Promise<JdProfile | null> {
+  const filePath = join(dataDir, "agent", "jd-profiles", `${slug}.json`);
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { JdProfileSchema } = await import("../schema/agent.ts");
+    return JdProfileSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
 }

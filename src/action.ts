@@ -3,7 +3,7 @@ import { Octokit } from "@octokit/rest";
 import { writeCursor } from "./core/collector/cursor.ts";
 import { collectChangedFiles, createErrorIssue, createOrUpdatePr } from "./core/github/pr.ts";
 import { loadLocalEnv } from "./core/io/env.ts";
-import { evolve, observe, tailor } from "./core/pipeline.ts";
+import { compose, evolve, observe, tailor } from "./core/pipeline.ts";
 import { ConfigSchema } from "./core/schema/config.ts";
 import { VERSION } from "./version.ts";
 
@@ -22,6 +22,9 @@ async function run(): Promise<void> {
   const dataDir = getInput("data-dir") || "data";
   const configPath = getInput("config-path") || "config.json";
   const githubToken = getInput("github-token") || process.env.GITHUB_TOKEN || "";
+  // Agent pipeline inputs (only used when mode includes "compose")
+  const agentStyle = (getInput("style") || "clean") as "clean" | "developer" | "compact";
+  const agentLang = getInput("lang") as "zh" | "en" | "" || "";
 
   if (!githubToken) {
     throw new Error(
@@ -64,28 +67,62 @@ async function run(): Promise<void> {
   const evolveResult = await evolve(config, dataDir);
   console.log(`[action] ${evolveResult.log.entries.length} experience entries`);
 
-  console.log("[action] stage 3/3: tailor");
-  const tailorResult = await tailor(config, dataDir);
-  console.log(`[action] resume → ${tailorResult.outputPath}`);
-
-  // Collect changed files for PR
+  // Stage 3: render resume
+  // - mode "compose" (or "compose-bootstrap") → agent pipeline: compose → render HTML + MD
+  // - all other modes → legacy tailor pipeline
   const repoRoot = process.env.GITHUB_WORKSPACE ?? process.cwd();
   const changedFiles = await collectChangedFiles(dataDir, repoRoot);
 
-  // Also include the resume file
-  try {
-    const resumeContent = await readFile(tailorResult.outputPath, "utf8");
-    const resumeRel = tailorResult.outputPath.startsWith(repoRoot)
-      ? tailorResult.outputPath.slice(repoRoot.length + 1)
-      : `data/tailored/${tailorResult.jdSlug}.md`;
-    changedFiles.set(resumeRel, resumeContent);
-  } catch {
-    // Resume file might be in the dataDir already
+  let resumeSummary: string;
+
+  if (mode === "compose" || mode === "compose-bootstrap") {
+    console.log("[action] stage 3/3: compose (agent pipeline)");
+    const lang =
+      agentLang || (config.language === "bilingual" ? "zh" : config.language);
+    const composeResult = await compose(config, dataDir, {
+      lang,
+      format: "both",
+      style: agentStyle,
+      topN: 6,
+    });
+    console.log(`[action] draft → ${composeResult.draftPath}`);
+    if (composeResult.htmlPath) console.log(`[action] html  → ${composeResult.htmlPath}`);
+    if (composeResult.mdPath) console.log(`[action] md    → ${composeResult.mdPath}`);
+
+    // Add rendered outputs to PR
+    for (const filePath of [composeResult.htmlPath, composeResult.mdPath, composeResult.draftPath]) {
+      if (!filePath) continue;
+      try {
+        const content = await readFile(filePath, "utf8");
+        const rel = filePath.startsWith(repoRoot)
+          ? filePath.slice(repoRoot.length + 1)
+          : filePath.replace(/^.*\/(data\/)/, "$1");
+        changedFiles.set(rel, content);
+      } catch {
+        // file already tracked by collectChangedFiles
+      }
+    }
+    resumeSummary = `Agent pipeline: compose (style=${agentStyle}) → ${evolveResult.log.entries.length} entries → draft + HTML + Markdown.`;
+  } else {
+    console.log("[action] stage 3/3: tailor (legacy)");
+    const tailorResult = await tailor(config, dataDir);
+    console.log(`[action] resume → ${tailorResult.outputPath}`);
+
+    try {
+      const resumeContent = await readFile(tailorResult.outputPath, "utf8");
+      const resumeRel = tailorResult.outputPath.startsWith(repoRoot)
+        ? tailorResult.outputPath.slice(repoRoot.length + 1)
+        : `data/tailored/${tailorResult.jdSlug}.md`;
+      changedFiles.set(resumeRel, resumeContent);
+    } catch {
+      // file already in dataDir
+    }
+    resumeSummary = `Legacy tailor → ${tailorResult.outputPath}`;
   }
 
   // Build PR body
   const prBody = {
-    summary: `Processed ${observeResult.eventsCollected} events → ${evolveResult.log.entries.length} experience entries → resume updated.`,
+    summary: `Processed ${observeResult.eventsCollected} events → ${evolveResult.log.entries.length} experience entries. ${resumeSummary}`,
     newCapabilities: evolveResult.diff?.newCapabilities,
     risingTags: evolveResult.diff?.risingTags,
     decliningTags: evolveResult.diff?.decliningTags,
@@ -102,7 +139,7 @@ async function run(): Promise<void> {
   const octokit = new Octokit({ auth: githubToken });
 
   const prTitle =
-    mode === "bootstrap"
+    mode === "bootstrap" || mode === "compose-bootstrap"
       ? "chore: initial resume from Delta CV"
       : "chore: weekly resume update (Delta CV)";
 
