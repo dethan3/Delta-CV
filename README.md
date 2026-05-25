@@ -1,5 +1,7 @@
 # Delta CV
 
+[中文 README](#READ)
+
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 
 Turn your real GitHub engineering activity into a precisely crafted, evidence-backed resume — no manual editing, no AI fluff.

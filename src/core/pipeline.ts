@@ -7,6 +7,9 @@ import { collectIssuesViaRest } from "./collector/github-rest.ts";
 import { buildCapabilityClaims } from "./agent/capability.ts";
 import { composeDraft, type ComposeOptions } from "./agent/compose.ts";
 import { critiqueDraft } from "./agent/critique.ts";
+import { buildEvidenceBundlesFromEntries } from "./agent/evidence.ts";
+import { interpretBundles } from "./agent/interpret.ts";
+import { buildResumePlan } from "./agent/select.ts";
 import { parseJdProfile } from "./agent/jd-parse.ts";
 import { scoreClaimsForJd, scoreProjectsForJd } from "./agent/jd-score.ts";
 import { mergeExperienceEntries } from "./agent/merger.ts";
@@ -25,16 +28,21 @@ import { RateLimitError } from "./llm.ts";
 import {
   appendEvents,
   clearEvolveCheckpoint,
+  readEvidence,
   readEvolveCheckpoint,
   readEventsSince,
   readExperienceLog,
   readLatestSnapshot,
+  readNarratives,
   readResumeDraft,
   writeClaims,
   writeCritique,
   writeCurateResult,
   writeEvolveCheckpoint,
   writeExperienceLog,
+  writeEvidence,
+  writeNarratives,
+  writePlan,
   writeJdProfile,
   writeProjects,
   writeResumeHtml,
@@ -52,7 +60,10 @@ import type {
   ResumeDraft,
   RevisionRecord,
 } from "./schema/agent.ts";
+import type { EvidenceLog } from "./schema/evidence.ts";
 import type { ExperienceLog } from "./schema/experience.ts";
+import type { NarrativeLog } from "./schema/narrative.ts";
+import type { ResumePlan } from "./schema/plan.ts";
 import type { SnapshotDiff } from "./schema/snapshot.ts";
 import { rerankByJd, slugifyJd } from "./tailor/jd-rerank.ts";
 import { renderResume } from "./tailor/render.ts";
@@ -277,6 +288,191 @@ export async function evolve(
 
   console.log(`[evolve] wrote experience log (${entries.length} entries) and snapshot ${today}`);
   return { log, diff };
+}
+
+export interface EvidenceResult {
+  log: EvidenceLog;
+  evidencePath: string;
+}
+
+/**
+ * Evidence: turn the existing ExperienceLog into an EvidenceLog (PR1-A bridge).
+ *
+ * This is a deliberately mechanical conversion with no LLM call. Its only
+ * purpose is to land the new intermediate file format so the rest of the new
+ * pipeline (interpret → select → compose) can be built and exercised before
+ * we rewrite `evolve` to emit EvidenceBundle natively.
+ *
+ * Acceptance:
+ * - Reading `data/_meta/experience.json` must produce `data/agent/evidence.json`
+ *   with one EvidenceBundle per ExperienceEntry.
+ * - Existing `curate`, `compose`, `tailor` commands continue to work unchanged.
+ */
+export async function evidence(dataDir: string): Promise<EvidenceResult> {
+  const expLog = await readExperienceLog(dataDir);
+  if (!expLog) {
+    throw new Error("No experience log found. Run 'delta evolve' first.");
+  }
+  const log = buildEvidenceBundlesFromEntries(expLog.entries);
+  const evidencePath = await writeEvidence(dataDir, log);
+  console.log(
+    `[evidence] wrote ${log.bundles.length} bundle${log.bundles.length === 1 ? "" : "s"} → ${evidencePath}`,
+  );
+  return { log, evidencePath };
+}
+
+export interface InterpretResult {
+  log: NarrativeLog;
+  narrativesPath: string;
+}
+
+export interface InterpretRunOptions {
+  lang?: "zh" | "en";
+  maxNarratives?: number;
+}
+
+/**
+ * Interpret: AI-driven step that turns EvidenceBundle[] into ProjectNarrative[].
+ *
+ * This is the first stage where the LLM is allowed to:
+ * - split one repo into multiple narratives (via workstreamHints)
+ * - merge multi-repo bundles into a single narrative
+ * - drop maintenance-only noise via riskFlags + low resumeWorthiness
+ *
+ * Reads `data/agent/evidence.json` (run `delta evidence` first) and writes
+ * `data/agent/narratives.json`. Does not touch the legacy curate/compose path.
+ */
+export async function interpret(
+  config: Config,
+  dataDir: string,
+  options: InterpretRunOptions = {},
+): Promise<InterpretResult> {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+
+  const evLog = await readEvidence(dataDir);
+  if (!evLog) {
+    throw new Error("No evidence log found. Run 'delta evidence' first.");
+  }
+  if (evLog.bundles.length === 0) {
+    throw new Error("Evidence log contains zero bundles. Re-run 'delta evolve' then 'delta evidence'.");
+  }
+
+  const lang: "zh" | "en" =
+    options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+
+  console.log(
+    `[interpret] interpreting ${evLog.bundles.length} bundle${evLog.bundles.length === 1 ? "" : "s"} (lang: ${lang})`,
+  );
+
+  const interpretOptions: { lang: "zh" | "en"; maxNarratives?: number } = { lang };
+  if (options.maxNarratives !== undefined) interpretOptions.maxNarratives = options.maxNarratives;
+
+  const log = await interpretBundles(llmConfig, evLog.bundles, interpretOptions);
+  const narrativesPath = await writeNarratives(dataDir, log);
+
+  console.log(
+    `[interpret] produced ${log.narratives.length} narrative${log.narratives.length === 1 ? "" : "s"} → ${narrativesPath}`,
+  );
+  if (log.narratives.length > 0) {
+    for (const n of log.narratives) {
+      console.log(
+        `  [${n.resumeWorthiness.toFixed(2)}] ${n.title} (${n.repos.join(", ")})  ${n.candidateRole}`,
+      );
+    }
+  }
+
+  return { log, narrativesPath };
+}
+
+export interface SelectResult {
+  plan: ResumePlan;
+  planPath: string;
+  prefilterDroppedCount: number;
+}
+
+export interface SelectRunOptions {
+  lang?: "zh" | "en";
+  topN?: number;
+  targetRole?: string;
+  userHints?: string[];
+  minWorthiness?: number;
+}
+
+/**
+ * Select: LLM step that turns ProjectNarrative[] into a ResumePlan.
+ *
+ * - Reads `data/agent/narratives.json` (run `delta interpret` first).
+ * - Pre-filters maintenance-only and below-floor worthiness deterministically.
+ * - Lets the LLM pick selectedProjectIds, write selectionRationale, derive
+ *   skillEmphasis. Defensive normalization clamps ids to known projectKeys.
+ * - Writes `data/agent/plan.json`.
+ *
+ * Not connected to JD in this PR. compose() still uses the legacy curate
+ * output until PR2-C wires it to consume ResumePlan + ProjectNarrative[].
+ */
+export async function select(
+  config: Config,
+  dataDir: string,
+  options: SelectRunOptions = {},
+): Promise<SelectResult> {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Re-run 'delta interpret'.");
+  }
+
+  const lang: "zh" | "en" =
+    options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+
+  // Pre-filter visibility (the same logic runs again inside buildResumePlan;
+  // here we just count for the log).
+  const { preFilterNarratives } = await import("./agent/select.ts");
+  const preMinW: { minWorthiness?: number } =
+    options.minWorthiness !== undefined ? { minWorthiness: options.minWorthiness } : {};
+  const { dropped } = preFilterNarratives(narLog.narratives, preMinW);
+
+  console.log(
+    `[select] ${narLog.narratives.length} narrative(s); pre-filter dropped ${dropped.length}; topN=${options.topN ?? 6} (lang: ${lang})`,
+  );
+  for (const d of dropped) {
+    const flags = (d.riskFlags ?? []).map((f) => f.kind).join(",") || "low-worthiness";
+    console.log(`  - dropped: ${d.title} [${flags}] worthiness=${d.resumeWorthiness.toFixed(2)}`);
+  }
+
+  const selectOptions: Parameters<typeof buildResumePlan>[2] = { lang };
+  if (options.topN !== undefined) selectOptions.topN = options.topN;
+  if (options.targetRole) selectOptions.targetRole = options.targetRole;
+  if (options.userHints && options.userHints.length > 0)
+    selectOptions.userHints = options.userHints;
+  if (options.minWorthiness !== undefined) selectOptions.minWorthiness = options.minWorthiness;
+
+  const plan = await buildResumePlan(llmConfig, narLog.narratives, selectOptions);
+  const planPath = await writePlan(dataDir, plan);
+
+  console.log(
+    `[select] selected ${plan.selectedProjectIds.length}, deprioritized ${plan.deprioritizedProjectIds.length} → ${planPath}`,
+  );
+  console.log(`  positioning: ${plan.positioning}`);
+  plan.selectedProjectIds.forEach((id, i) => {
+    console.log(`  ${i + 1}. ${id}`);
+  });
+  if (plan.skillEmphasis.length > 0) {
+    console.log(`  skillEmphasis: ${plan.skillEmphasis.map((s) => s.name).join(", ")}`);
+  }
+
+  return { plan, planPath, prefilterDroppedCount: dropped.length };
 }
 
 /**

@@ -10,7 +10,10 @@ import type {
   RevisionRecord,
 } from "../schema/agent.ts";
 import type { EventEnvelope } from "../schema/event.ts";
+import type { EvidenceLog } from "../schema/evidence.ts";
 import type { ExperienceLog } from "../schema/experience.ts";
+import type { NarrativeLog } from "../schema/narrative.ts";
+import type { ResumePlan } from "../schema/plan.ts";
 import type { Snapshot } from "../schema/snapshot.ts";
 
 /** Compute ISO 8601 week key in "yyyy-Www" format (e.g. "2026-W18"). */
@@ -388,6 +391,78 @@ export async function readJdProfile(dataDir: string, slug: string): Promise<JdPr
     const raw = await readFile(filePath, "utf8");
     const { JdProfileSchema } = await import("../schema/agent.ts");
     return JdProfileSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write an EvidenceLog to data/agent/evidence.json. */
+export async function writeEvidence(dataDir: string, log: EvidenceLog): Promise<string> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  const filePath = join(agentDir, "evidence.json");
+  await writeFile(filePath, JSON.stringify(log, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read an EvidenceLog from data/agent/evidence.json. Returns null if not found. */
+export async function readEvidence(dataDir: string): Promise<EvidenceLog | null> {
+  const filePath = join(dataDir, "agent", "evidence.json");
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { EvidenceLogSchema } = await import("../schema/evidence.ts");
+    return EvidenceLogSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write a NarrativeLog to data/agent/narratives.json. */
+export async function writeNarratives(dataDir: string, log: NarrativeLog): Promise<string> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  const filePath = join(agentDir, "narratives.json");
+  await writeFile(filePath, JSON.stringify(log, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a NarrativeLog from data/agent/narratives.json. Returns null if not found. */
+export async function readNarratives(dataDir: string): Promise<NarrativeLog | null> {
+  const filePath = join(dataDir, "agent", "narratives.json");
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { NarrativeLogSchema } = await import("../schema/narrative.ts");
+    return NarrativeLogSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write a ResumePlan to data/agent/plan.json. */
+export async function writePlan(dataDir: string, plan: ResumePlan): Promise<string> {
+  const agentDir = join(dataDir, "agent");
+  await mkdir(agentDir, { recursive: true });
+  const filePath = join(agentDir, "plan.json");
+  await writeFile(filePath, JSON.stringify(plan, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a ResumePlan from data/agent/plan.json. Returns null if not found. */
+export async function readPlan(dataDir: string): Promise<ResumePlan | null> {
+  const filePath = join(dataDir, "agent", "plan.json");
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { ResumePlanSchema } = await import("../schema/plan.ts");
+    return ResumePlanSchema.parse(JSON.parse(raw));
   } catch (err: unknown) {
     if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
       return null;

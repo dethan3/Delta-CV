@@ -6,7 +6,7 @@ import { loadBannedWords } from "./core/io/assets.ts";
 import { loadLocalEnv } from "./core/io/env.ts";
 import { checkBannedWords } from "./core/lint/banned-words.ts";
 import { checkHighlightLimits, checkLineLength } from "./core/lint/line-length.ts";
-import { cleanRevisions, compose, critique, curate, evolve, observe, render, revise, tailor } from "./core/pipeline.ts";
+import { cleanRevisions, compose, critique, curate, evidence, evolve, interpret, observe, render, revise, select, tailor } from "./core/pipeline.ts";
 import { HTML_STYLES, HTML_STYLE_NAMES } from "./core/render/styles.ts";
 import { ConfigSchema } from "./core/schema/config.ts";
 import { VERSION } from "./version.ts";
@@ -463,6 +463,165 @@ const stylesCmd = defineCommand({
   },
 });
 
+const evidenceCmd = defineCommand({
+  meta: {
+    name: "evidence",
+    description:
+      "Bridge: convert experience log into EvidenceBundle[] at data/agent/evidence.json (no LLM).",
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data",
+    },
+  },
+  async run({ args }) {
+    const result = await evidence(args["data-dir"]);
+    console.log(`[evidence] ${result.log.bundles.length} bundle(s) → ${result.evidencePath}`);
+  },
+});
+
+const interpretCmd = defineCommand({
+  meta: {
+    name: "interpret",
+    description:
+      "LLM step: turn EvidenceBundle[] into ProjectNarrative[] at data/agent/narratives.json.",
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data",
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json",
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)",
+    },
+    "max-narratives": {
+      type: "string",
+      description: "Soft cap on the number of narratives returned",
+    },
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+
+    let config: ReturnType<typeof ConfigSchema.parse>;
+    try {
+      const configRaw = await readFile(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[interpret] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+
+    const langOverride = args.lang as "zh" | "en" | undefined;
+    const opts: { lang?: "zh" | "en"; maxNarratives?: number } = {};
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+
+    if (args["max-narratives"]) {
+      const n = Number.parseInt(args["max-narratives"], 10);
+      if (Number.isNaN(n) || n < 1) {
+        console.error("[interpret] --max-narratives must be a positive integer");
+        process.exit(1);
+      }
+      opts.maxNarratives = n;
+    }
+
+    const result = await interpret(config, args["data-dir"], opts);
+    console.log(
+      `[interpret] ${result.log.narratives.length} narrative(s) → ${result.narrativesPath}`,
+    );
+  },
+});
+
+const selectCmd = defineCommand({
+  meta: {
+    name: "select",
+    description:
+      "LLM step: pick projects + ordering + positioning. Reads narratives.json, writes plan.json.",
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data",
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json",
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)",
+    },
+    "top-n": {
+      type: "string",
+      description: "Maximum number of selected projects (default 6)",
+    },
+    "target-role": {
+      type: "string",
+      description: "Optional one-line target role to bias positioning",
+    },
+    "min-worthiness": {
+      type: "string",
+      description: "Pre-filter floor for resumeWorthiness (default 0.2)",
+    },
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+
+    let config: ReturnType<typeof ConfigSchema.parse>;
+    try {
+      const configRaw = await readFile(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[select] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+
+    const opts: {
+      lang?: "zh" | "en";
+      topN?: number;
+      targetRole?: string;
+      minWorthiness?: number;
+    } = {};
+    const langOverride = args.lang as "zh" | "en" | undefined;
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+
+    if (args["top-n"]) {
+      const n = Number.parseInt(args["top-n"], 10);
+      if (Number.isNaN(n) || n < 1) {
+        console.error("[select] --top-n must be a positive integer");
+        process.exit(1);
+      }
+      opts.topN = n;
+    }
+    if (args["target-role"]) opts.targetRole = args["target-role"];
+    if (args["min-worthiness"]) {
+      const v = Number.parseFloat(args["min-worthiness"]);
+      if (Number.isNaN(v) || v < 0 || v > 1) {
+        console.error("[select] --min-worthiness must be a number in [0,1]");
+        process.exit(1);
+      }
+      opts.minWorthiness = v;
+    }
+
+    const result = await select(config, args["data-dir"], opts);
+    console.log(
+      `[select] ${result.plan.selectedProjectIds.length} selected → ${result.planPath}`,
+    );
+  },
+});
+
 const curateCmd = defineCommand({
   meta: {
     name: "curate",
@@ -658,6 +817,9 @@ const main = defineCommand({
   subCommands: {
     observe: observeCmd,
     evolve: evolveCmd,
+    evidence: evidenceCmd,
+    interpret: interpretCmd,
+    select: selectCmd,
     curate: curateCmd,
     compose: composeCmd,
     critique: critiqueCmd,
