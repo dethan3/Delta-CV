@@ -9,7 +9,10 @@ import { composeDraft, type ComposeOptions } from "./agent/compose.ts";
 import { critiqueDraft } from "./agent/critique.ts";
 import { buildEvidenceBundlesFromEntries } from "./agent/evidence.ts";
 import { interpretBundles } from "./agent/interpret.ts";
-import { buildResumePlan } from "./agent/select.ts";
+import { matchNarrativesToJd } from "./agent/jd-match.ts";
+import { verifyDraftFacts } from "./agent/verify-facts.ts";
+import { runEval } from "./eval/runner.ts";
+import { buildResumePlan, preFilterNarratives } from "./agent/select.ts";
 import { parseJdProfile } from "./agent/jd-parse.ts";
 import { scoreClaimsForJd, scoreProjectsForJd } from "./agent/jd-score.ts";
 import { mergeExperienceEntries } from "./agent/merger.ts";
@@ -33,14 +36,18 @@ import {
   readEventsSince,
   readExperienceLog,
   readLatestSnapshot,
+  readJdMatchReport,
   readNarratives,
+  readPlan,
   readResumeDraft,
   writeClaims,
   writeCritique,
   writeCurateResult,
   writeEvolveCheckpoint,
+  writeEvalReport,
   writeExperienceLog,
   writeEvidence,
+  writeJdMatchReport,
   writeNarratives,
   writePlan,
   writeJdProfile,
@@ -51,6 +58,7 @@ import {
   writeRevision,
   writeSnapshot,
   writeTailoredResume,
+  writeVerifyFactsReport,
 } from "./io/data.ts";
 import type { Config } from "./schema/config.ts";
 import type {
@@ -63,7 +71,8 @@ import type {
 import type { EvidenceLog } from "./schema/evidence.ts";
 import type { ExperienceLog } from "./schema/experience.ts";
 import type { NarrativeLog } from "./schema/narrative.ts";
-import type { ResumePlan } from "./schema/plan.ts";
+import type { JdMatchReport, ResumePlan } from "./schema/plan.ts";
+import type { EvalReport, VerifyFactsReport } from "./schema/eval.ts";
 import type { SnapshotDiff } from "./schema/snapshot.ts";
 import { rerankByJd, slugifyJd } from "./tailor/jd-rerank.ts";
 import { renderResume } from "./tailor/render.ts";
@@ -394,12 +403,26 @@ export interface SelectResult {
   prefilterDroppedCount: number;
 }
 
+export interface JdMatchResult {
+  jdProfile: JdProfile;
+  jdProfilePath: string;
+  report: JdMatchReport;
+  reportPath: string;
+}
+
+export interface JdMatchRunOptions {
+  lang?: "zh" | "en";
+  jdText: string;
+  allowAdjacency?: boolean;
+}
+
 export interface SelectRunOptions {
   lang?: "zh" | "en";
   topN?: number;
   targetRole?: string;
   userHints?: string[];
   minWorthiness?: number;
+  jdMatchSlug?: string;
 }
 
 /**
@@ -411,8 +434,6 @@ export interface SelectRunOptions {
  *   skillEmphasis. Defensive normalization clamps ids to known projectKeys.
  * - Writes `data/agent/plan.json`.
  *
- * Not connected to JD in this PR. compose() still uses the legacy curate
- * output until PR2-C wires it to consume ResumePlan + ProjectNarrative[].
  */
 export async function select(
   config: Config,
@@ -438,7 +459,6 @@ export async function select(
 
   // Pre-filter visibility (the same logic runs again inside buildResumePlan;
   // here we just count for the log).
-  const { preFilterNarratives } = await import("./agent/select.ts");
   const preMinW: { minWorthiness?: number } =
     options.minWorthiness !== undefined ? { minWorthiness: options.minWorthiness } : {};
   const { dropped } = preFilterNarratives(narLog.narratives, preMinW);
@@ -457,6 +477,16 @@ export async function select(
   if (options.userHints && options.userHints.length > 0)
     selectOptions.userHints = options.userHints;
   if (options.minWorthiness !== undefined) selectOptions.minWorthiness = options.minWorthiness;
+  if (options.jdMatchSlug) {
+    const report = await readJdMatchReport(dataDir, options.jdMatchSlug);
+    if (!report) {
+      throw new Error(
+        `No jd-match report found for slug "${options.jdMatchSlug}". Run 'delta jd-match' first.`,
+      );
+    }
+    selectOptions.jdMatches = report.matches;
+    selectOptions.jdSlug = report.jdSlug;
+  }
 
   const plan = await buildResumePlan(llmConfig, narLog.narratives, selectOptions);
   const planPath = await writePlan(dataDir, plan);
@@ -473,6 +503,46 @@ export async function select(
   }
 
   return { plan, planPath, prefilterDroppedCount: dropped.length };
+}
+
+/**
+ * JD Match: parse a JD, score each narrative against it, and persist the report.
+ */
+export async function jdMatch(
+  config: Config,
+  dataDir: string,
+  options: JdMatchRunOptions,
+): Promise<JdMatchResult> {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Re-run 'delta interpret'.");
+  }
+
+  const lang: "zh" | "en" =
+    options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+
+  const jdProfile = await parseJdProfile(llmConfig, options.jdText, lang);
+  const jdProfilePath = await writeJdProfile(dataDir, jdProfile);
+  const report = await matchNarrativesToJd(llmConfig, narLog.narratives, jdProfile, {
+    lang,
+    ...(options.allowAdjacency !== undefined ? { allowAdjacency: options.allowAdjacency } : {}),
+  });
+  const reportPath = await writeJdMatchReport(dataDir, report);
+
+  console.log(
+    `[jd-match] "${jdProfile.jobTitle}" → ${report.matches.length} narrative match(es) written`,
+  );
+
+  return { jdProfile, jdProfilePath, report, reportPath };
 }
 
 /**
@@ -516,6 +586,8 @@ export interface ComposeResult {
   mdPath: string | null;
   jdProfile: JdProfile | null;
   jdProfilePath: string | null;
+  verifyFacts: VerifyFactsReport | null;
+  verifyFactsPath: string | null;
 }
 
 export interface ComposeRunOptions extends ComposeOptions {
@@ -523,17 +595,13 @@ export interface ComposeRunOptions extends ComposeOptions {
   style?: "clean" | "developer" | "compact";
   slug?: string;
   topN?: number;
+  legacy?: boolean;
 }
 
 /**
- * Compose: run curate (if needed) then call LLM once to produce a ResumeDraft,
- * render to HTML and/or Markdown, and persist all outputs.
- *
- * When options.jd is provided:
- *   1. Parse the JD text → JdProfile (one LLM call)
- *   2. Re-score and re-sort projects/claims against the JdProfile
- *   3. Compose the draft with JD context
- *   4. Use JD-derived slug (e.g. "jd-ai-engineer")
+ * Compose: default to the new agent path (interpret → select → compose).
+ * Falls back to the legacy curate → compose path only when `options.legacy`
+ * is explicitly set.
  */
 export async function compose(
   config: Config,
@@ -545,55 +613,186 @@ export async function compose(
     throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
   }
   const llmConfig = { ...config.llm, apiKey };
+  const lang = options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
 
-  // Run curate inline so compose can be called standalone
-  const log = await readExperienceLog(dataDir);
-  if (!log) {
-    throw new Error("No experience log found. Run 'delta evolve' first.");
+  if (options.legacy) {
+    const log = await readExperienceLog(dataDir);
+    if (!log) {
+      throw new Error("No experience log found. Run 'delta evolve' first.");
+    }
+
+    const topN = options.topN ?? 6;
+    const drafts = mergeExperienceEntries(log.entries);
+    const scored = scoreProjects(drafts);
+    const claims = buildCapabilityClaims(scored);
+
+    let jdProfile: JdProfile | null = null;
+    let jdProfilePath: string | null = null;
+    let finalProjects = scored;
+    let finalClaims = claims;
+
+    if (options.jd) {
+      jdProfile = await parseJdProfile(llmConfig, options.jd, lang);
+      jdProfilePath = await writeJdProfile(dataDir, jdProfile);
+      finalProjects = scoreProjectsForJd(scored, jdProfile);
+      finalClaims = scoreClaimsForJd(claims, jdProfile);
+      console.log(
+        `[compose:legacy] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) — ${jdProfile.requiredSkills.length} required skills`,
+      );
+    }
+
+    const curateResult: CurateResult = {
+      version: 1,
+      generatedAt: new Date().toISOString(),
+      projects: finalProjects,
+      claims: finalClaims,
+    };
+
+    const legacyPlan = {
+      version: 1 as const,
+      generatedAt: new Date().toISOString(),
+      positioning: options.targetRole ?? "Generalist software engineer",
+      selectedProjectIds: curateResult.projects.slice(0, topN).map((p) => p.id),
+      selectionRationale: "Legacy compose path derived selected projects from curate ranking.",
+      deprioritizedProjectIds: curateResult.projects.slice(topN).map((p) => p.id),
+      skillEmphasis: [],
+      styleHints: [],
+      ...(options.targetRole ? { targetRole: options.targetRole } : {}),
+      ...(options.jd && jdProfile ? { jdSlug: jdProfile.slug } : {}),
+    };
+
+    const legacyNarratives = curateResult.projects.map((project) => ({
+      projectKey: project.id,
+      title: project.title,
+      period: project.period,
+      scope: project.highlights.map((h) => h.text).slice(0, 2).join(" "),
+      candidateRole: "contributor",
+      coreProblem: project.highlights[0]?.text ?? project.title,
+      solutionShape: project.highlights.slice(1, 3).map((h) => h.text).join(" "),
+      proofPoints: project.highlights.map((h) => ({
+        text: h.text,
+        kind: "shipped",
+        evidenceRefs: (h.evidence && h.evidence.length > 0) ? h.evidence : project.evidenceEntryIds,
+        strength: "moderate" as const,
+      })),
+      techStack: project.stack,
+      strengthSignals: project.tags,
+      riskFlags: project.weakSignals.map((signal) => ({ kind: signal })),
+      resumeWorthiness: project.importance,
+      sourceEvidenceIds: project.evidenceEntryIds.length > 0 ? project.evidenceEntryIds : [project.id],
+      repos: [project.repo],
+    }));
+
+    const draft = await composeDraft(llmConfig, config.login, legacyPlan, legacyNarratives, {
+      lang,
+      ...(options.targetRole ? { targetRole: options.targetRole } : {}),
+      ...(options.jd ? { jd: options.jd } : {}),
+    });
+
+    const slug = options.slug ?? (jdProfile ? jdProfile.slug : "default");
+    const draftPath = await writeResumeDraft(dataDir, slug, draft);
+    const verifyFacts = await verifyDraftFacts(llmConfig, draft, legacyNarratives, {
+      lang,
+      useLlm: false,
+      draftSlug: slug,
+    });
+    const verifyFactsPath = await writeVerifyFactsReport(dataDir, slug, verifyFacts);
+
+    const format = options.format ?? "both";
+    const style = options.style ?? "clean";
+    let htmlPath: string | null = null;
+    let mdPath: string | null = null;
+
+    if (format === "html" || format === "both") {
+      const html = renderWithStyle(draft, style);
+      htmlPath = await writeResumeHtml(dataDir, slug, html);
+    }
+    if (format === "md" || format === "both") {
+      const md = renderResumeDraftMarkdown(draft);
+      mdPath = await writeResumeMd(dataDir, slug, md);
+    }
+
+    return {
+      draft,
+      draftPath,
+      htmlPath,
+      mdPath,
+      jdProfile,
+      jdProfilePath,
+      verifyFacts,
+      verifyFactsPath,
+    };
   }
 
-  const topN = options.topN ?? 6;
-  const drafts = mergeExperienceEntries(log.entries);
-  const scored = scoreProjects(drafts);
-  const claims = buildCapabilityClaims(scored);
-
-  const lang = config.language === "bilingual" ? "zh" : config.language;
-
-  // ── JD pipeline ────────────────────────────────────────────────────────────
   let jdProfile: JdProfile | null = null;
   let jdProfilePath: string | null = null;
-  let finalProjects = scored;
-  let finalClaims = claims;
+  let jdMatchReport: JdMatchReport | null = null;
+
+  let narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    const log = await readExperienceLog(dataDir);
+    if (!log) {
+      throw new Error("No experience log found. Run 'delta evolve' first.");
+    }
+    const evidenceLog = buildEvidenceBundlesFromEntries(log.entries);
+    await writeEvidence(dataDir, evidenceLog);
+    narLog = await interpretBundles(llmConfig, evidenceLog.bundles, { lang });
+    await writeNarratives(dataDir, narLog);
+    console.log(`[compose] generated ${narLog.narratives.length} narrative(s) from experience log`);
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Run 'delta interpret' again after collecting data.");
+  }
 
   if (options.jd) {
     jdProfile = await parseJdProfile(llmConfig, options.jd, lang);
     jdProfilePath = await writeJdProfile(dataDir, jdProfile);
-    finalProjects = scoreProjectsForJd(scored, jdProfile);
-    finalClaims = scoreClaimsForJd(claims, jdProfile);
+    jdMatchReport = await matchNarrativesToJd(llmConfig, narLog.narratives, jdProfile, { lang });
+    await writeJdMatchReport(dataDir, jdMatchReport);
     console.log(
-      `[compose] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) — ${jdProfile.requiredSkills.length} required skills`,
+      `[compose] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) — ${jdProfile.requiredSkills.length} required skills; ${jdMatchReport.matches.length} narrative match(es)`,
     );
   }
 
-  const curateResult: CurateResult = {
-    version: 1,
-    generatedAt: new Date().toISOString(),
-    projects: finalProjects,
-    claims: finalClaims,
-  };
+  const existingPlan = await readPlan(dataDir);
+  const shouldRebuildPlan =
+    !existingPlan ||
+    options.targetRole !== undefined ||
+    options.jd !== undefined ||
+    (options.topN !== undefined && existingPlan.selectedProjectIds.length > options.topN);
 
-  const composeOpts: ComposeOptions = { lang, topN };
-  if (options.targetRole) {
-    composeOpts.targetRole = options.targetRole;
-  } else if (jdProfile) {
-    composeOpts.targetRole = jdProfile.jobTitle;
+  let plan = shouldRebuildPlan ? null : existingPlan;
+  if (!plan) {
+    const selectOptions: Parameters<typeof buildResumePlan>[2] = { lang };
+    if (options.topN !== undefined) selectOptions.topN = options.topN;
+    if (options.targetRole) selectOptions.targetRole = options.targetRole;
+    else if (jdProfile) selectOptions.targetRole = jdProfile.jobTitle;
+    if (jdProfile) selectOptions.jdSlug = jdProfile.slug;
+    if (jdMatchReport) selectOptions.jdMatches = jdMatchReport.matches;
+    plan = await buildResumePlan(llmConfig, narLog.narratives, selectOptions);
+    await writePlan(dataDir, plan);
+    const { dropped } = preFilterNarratives(narLog.narratives);
+    console.log(
+      `[compose] built plan with ${plan.selectedProjectIds.length} selected project(s); pre-filter dropped ${dropped.length}`,
+    );
   }
+
+  const composeOpts: ComposeOptions = { lang };
+  if (options.targetRole) composeOpts.targetRole = options.targetRole;
+  else if (plan.targetRole) composeOpts.targetRole = plan.targetRole;
+  else if (jdProfile) composeOpts.targetRole = jdProfile.jobTitle;
   if (options.jd) composeOpts.jd = options.jd;
 
-  const draft = await composeDraft(llmConfig, config.login, curateResult, composeOpts);
+  const draft = await composeDraft(llmConfig, config.login, plan, narLog.narratives, composeOpts);
 
   const slug = options.slug ?? (jdProfile ? jdProfile.slug : "default");
   const draftPath = await writeResumeDraft(dataDir, slug, draft);
+  const verifyFacts = await verifyDraftFacts(llmConfig, draft, narLog.narratives, {
+    lang,
+    useLlm: false,
+    draftSlug: slug,
+  });
+  const verifyFactsPath = await writeVerifyFactsReport(dataDir, slug, verifyFacts);
 
   const format = options.format ?? "both";
   const style = options.style ?? "clean";
@@ -609,12 +808,31 @@ export async function compose(
     mdPath = await writeResumeMd(dataDir, slug, md);
   }
 
-  return { draft, draftPath, htmlPath, mdPath, jdProfile, jdProfilePath };
+  return {
+    draft,
+    draftPath,
+    htmlPath,
+    mdPath,
+    jdProfile,
+    jdProfilePath,
+    verifyFacts,
+    verifyFactsPath,
+  };
 }
 
 export interface CritiqueRunResult {
   critique: CritiqueResult;
   critiquePath: string;
+}
+
+export interface VerifyFactsRunResult {
+  report: VerifyFactsReport;
+  reportPath: string;
+}
+
+export interface EvalRunResult {
+  report: EvalReport;
+  reportPath: string;
 }
 
 /**
@@ -644,6 +862,56 @@ export async function critique(
   const critiquePath = await writeCritique(dataDir, slug, critiqueResult);
 
   return { critique: critiqueResult, critiquePath };
+}
+
+/**
+ * Verify facts on an existing ResumeDraft and persist the report.
+ */
+export async function verifyFacts(
+  config: Config,
+  dataDir: string,
+  slug = "default",
+  options: { useLlm?: boolean } = {},
+): Promise<VerifyFactsRunResult> {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const draft = await readResumeDraft(dataDir, slug);
+  if (!draft) {
+    throw new Error(`No resume draft found for slug "${slug}". Run 'delta compose' first.`);
+  }
+
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+
+  const lang = config.language === "bilingual" ? "zh" : config.language;
+  const report = await verifyDraftFacts(llmConfig, draft, narLog.narratives, {
+    lang,
+    useLlm: options.useLlm ?? false,
+    draftSlug: slug,
+  });
+  const reportPath = await writeVerifyFactsReport(dataDir, slug, report);
+  return { report, reportPath };
+}
+
+/**
+ * Run regression eval and persist the report.
+ */
+export async function evalPipeline(
+  config: Config,
+  dataDir: string,
+  options: { fixturesDir: string; caseIds?: string[] } = { fixturesDir: "src/core/eval/fixtures" },
+): Promise<EvalRunResult> {
+  const report = await runEval(config, {
+    fixturesDir: options.fixturesDir,
+    ...(options.caseIds && options.caseIds.length > 0 ? { caseIds: options.caseIds } : {}),
+  });
+  const reportPath = await writeEvalReport(dataDir, "latest", report);
+  return { report, reportPath };
 }
 
 export interface ReviseRunResult {

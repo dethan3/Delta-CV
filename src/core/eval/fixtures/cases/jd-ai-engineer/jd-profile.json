@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "parsedAt": "2026-05-25T00:00:00.000Z",
+  "slug": "jd-ai-engineer",
+  "jobTitle": "AI Engineer",
+  "seniority": "mid",
+  "requiredSkills": ["LLM APIs", "Prompt Design", "Evaluation", "TypeScript"],
+  "niceToHaveSkills": ["Python", "Vector Databases"],
+  "keyResponsibilities": ["Build AI workflows", "Evaluate model quality"],
+  "targetProfile": "Engineer shipping LLM-powered product tooling"
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "narratives": [
+    {
+      "projectKey": "ui-console",
+      "title": "UI Console",
+      "period": { "from": "2024-09-01", "to": "2025-02-28" },
+      "scope": "Shared frontend patterns for internal product tooling.",
+      "candidateRole": "contributor",
+      "coreProblem": "Internal admin tools repeated the same UI patterns with inconsistent quality.",
+      "solutionShape": "Built reusable React patterns and documented them in Storybook.",
+      "proofPoints": [
+        { "text": "Built reusable React form and table patterns", "kind": "shipped", "evidenceRefs": ["ev-ui-1"], "strength": "strong" },
+        { "text": "Documented component usage and accessibility expectations", "kind": "process", "evidenceRefs": ["ev-ui-2"], "strength": "strong" }
+      ],
+      "techStack": ["React", "TypeScript", "CSS", "Storybook"],
+      "strengthSignals": ["frontend"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.84,
+      "sourceEvidenceIds": ["ev-ui-1", "ev-ui-2"],
+      "repos": ["ui-console"]
+    }
+  ]
+}

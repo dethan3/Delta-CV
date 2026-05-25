@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "narratives": [
+    {
+      "projectKey": "app-suite",
+      "title": "App Suite",
+      "period": { "from": "2025-01-01", "to": "2025-04-30" },
+      "scope": "Unified release request workflows across internal tools.",
+      "candidateRole": "owner",
+      "coreProblem": "Release work was split across disconnected tools.",
+      "solutionShape": "Built one workflow service with approval and audit paths.",
+      "proofPoints": [
+        { "text": "Unified release requests across three internal tools", "kind": "shipped", "evidenceRefs": ["ev-app-1"], "strength": "strong" },
+        { "text": "Added audit logging and approval checkpoints", "kind": "process", "evidenceRefs": ["ev-app-2"], "strength": "strong" }
+      ],
+      "techStack": ["TypeScript", "React", "Node.js", "PostgreSQL"],
+      "strengthSignals": ["ownership", "product-thinking"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.86,
+      "sourceEvidenceIds": ["ev-app-1", "ev-app-2"],
+      "repos": ["app-suite"]
+    },
+    {
+      "projectKey": "deploy-ops",
+      "title": "Deploy Ops",
+      "period": { "from": "2024-08-01", "to": "2024-12-31" },
+      "scope": "Standardised preview environments and rollout workflows.",
+      "candidateRole": "contributor",
+      "coreProblem": "Every repo managed preview environments differently.",
+      "solutionShape": "Turned deployment automation into reusable workflow modules.",
+      "proofPoints": [
+        { "text": "Automated preview environment provisioning", "kind": "shipped", "evidenceRefs": ["ev-deploy-1"], "strength": "strong" }
+      ],
+      "techStack": ["GitHub Actions", "Docker", "Bash"],
+      "strengthSignals": ["platform"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.72,
+      "sourceEvidenceIds": ["ev-deploy-1"],
+      "repos": ["deploy-ops"]
+    }
+  ]
+}

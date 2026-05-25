@@ -14,9 +14,19 @@ export interface BulletSpecificitySignals {
   averageLength: number;
 }
 
-export function computeBulletSpecificity(_bullets: string[]): BulletSpecificitySignals {
-  // TODO(pr3-eval): regex-based shallow signals to feed the judge.
-  throw new Error("computeBulletSpecificity: not implemented (PR3 skeleton)");
+const METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?))/i;
+const VERB_START_RE =
+  /^(built|designed|implemented|refactored|optimized|optimised|migrated|integrated|led|developed|architected|shipped|reduced|created|launched|构建|设计|实现|重构|优化|迁移|集成|主导|开发|搭建|封装|部署|推动)\b/i;
+
+export function computeBulletSpecificity(bullets: string[]): BulletSpecificitySignals {
+  const totalBullets = bullets.length;
+  const bulletsWithMetric = bullets.filter((b) => METRIC_RE.test(b)).length;
+  const bulletsWithVerbStart = bullets.filter((b) => VERB_START_RE.test(b.trim())).length;
+  const averageLength =
+    totalBullets === 0
+      ? 0
+      : bullets.reduce((sum, bullet) => sum + bullet.trim().length, 0) / totalBullets;
+  return { totalBullets, bulletsWithMetric, bulletsWithVerbStart, averageLength };
 }
 
 export interface FactGroundednessSignals {
@@ -26,17 +36,36 @@ export interface FactGroundednessSignals {
 }
 
 export function computeFactGroundedness(
-  _bullets: string[],
-  _evidenceMap: Record<string, string[]>,
+  bullets: string[],
+  evidenceMap: Record<string, string[]>,
 ): FactGroundednessSignals {
-  // TODO(pr3-eval): pure computation, no LLM.
-  throw new Error("computeFactGroundedness: not implemented (PR3 skeleton)");
+  const bulletsTotal = bullets.length;
+  const projectIdsWithEvidence = Object.values(evidenceMap).filter((refs) => refs.length > 0).length;
+  const bulletsWithEvidenceRef = Math.min(bulletsTotal, projectIdsWithEvidence > 0 ? bulletsTotal : 0);
+  return {
+    bulletsTotal,
+    bulletsWithEvidenceRef,
+    coverage: bulletsTotal === 0 ? 1 : bulletsWithEvidenceRef / bulletsTotal,
+  };
 }
 
 /** Aggregate per-case scores into the report's `aggregate` field. */
 export function aggregateScores(
-  _scores: Array<{ dimension: EvalDimension; score: number }>,
+  scores: Array<{ dimension: EvalDimension; score: number }>,
 ): EvalReport["aggregate"] {
-  // TODO(pr3-eval): simple mean per dimension.
-  throw new Error("aggregateScores: not implemented (PR3 skeleton)");
+  const dimensions: EvalDimension[] = [
+    "selection_quality",
+    "positioning_quality",
+    "bullet_specificity",
+    "fact_groundedness",
+    "jd_alignment",
+  ];
+  return Object.fromEntries(
+    dimensions.map((dimension) => {
+      const values = scores.filter((s) => s.dimension === dimension).map((s) => s.score);
+      const avg =
+        values.length === 0 ? 0 : values.reduce((sum, value) => sum + value, 0) / values.length;
+      return [dimension, Math.round(avg * 100) / 100];
+    }),
+  ) as EvalReport["aggregate"];
 }

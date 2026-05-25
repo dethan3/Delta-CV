@@ -1,0 +1,11 @@
+{
+  "login": "fixture-user",
+  "language": "en",
+  "llm": {
+    "provider": "openai-compatible",
+    "baseUrl": "https://example.com/v1",
+    "model": "smoke-model",
+    "apiKey": "smoke-key",
+    "maxRetries": 0
+  }
+}

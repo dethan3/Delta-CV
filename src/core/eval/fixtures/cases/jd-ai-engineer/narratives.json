@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "narratives": [
+    {
+      "projectKey": "ai-eval-studio",
+      "title": "AI Eval Studio",
+      "period": { "from": "2025-01-01", "to": "2025-05-10" },
+      "scope": "LLM orchestration plus evaluation-aware quality controls.",
+      "candidateRole": "owner",
+      "coreProblem": "Model output quality was hard to compare or trust across prompt revisions.",
+      "solutionShape": "Combined structured-output prompting with fixed-case evaluation and evidence verification.",
+      "proofPoints": [
+        { "text": "Paired prompt execution with fixed-case regression checks", "kind": "process", "evidenceRefs": ["ev-ai-1"], "strength": "strong" },
+        { "text": "Flagged unsupported claims before resume generation", "kind": "design", "evidenceRefs": ["ev-ai-2"], "strength": "strong" }
+      ],
+      "techStack": ["TypeScript", "LLM APIs", "JSON Schema", "Node.js"],
+      "strengthSignals": ["ownership", "llm-ops"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.93,
+      "sourceEvidenceIds": ["ev-ai-1", "ev-ai-2"],
+      "repos": ["ai-eval-studio"]
+    }
+  ]
+}

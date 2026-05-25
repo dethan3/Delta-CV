@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "login": "fixture-user",
+  "headline": "AI engineer building evaluation-aware LLM tooling",
+  "summary": "AI engineer focused on prompt execution, structured model output, and evaluation feedback loops. Strong in TypeScript-based orchestration, evidence-aware pipeline design, and pragmatic quality gates. Best work turns ambiguous model behavior into inspectable developer workflows.",
+  "skills": [
+    { "category": "AI Engineering", "items": ["LLM APIs", "Prompt Design", "TypeScript", "Evaluation"] },
+    { "category": "Developer Tooling", "items": ["CLI", "JSON Schema", "Node.js"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "ai-eval-studio",
+      "title": "AI Eval Studio",
+      "period": { "from": "2025-01-01", "to": "2025-05-10" },
+      "bullets": [
+        "Built a structured-output LLM pipeline that paired prompt execution with fixed-case regression checks.",
+        "Implemented evidence-aware verification steps so unsupported claims could be flagged before resume generation."
+      ],
+      "stack": ["TypeScript", "LLM APIs", "JSON Schema", "Node.js"]
+    }
+  ],
+  "otherExperience": [],
+  "evidenceMap": {
+    "ai-eval-studio": ["ev-ai-1", "ev-ai-2"]
+  }
+}

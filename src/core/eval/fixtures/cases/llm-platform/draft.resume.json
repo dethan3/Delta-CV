@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "login": "fixture-user",
+  "headline": "Engineer building LLM tooling and evaluation loops",
+  "summary": "Engineer focused on LLM tooling, prompt execution workflows, and evidence-aware quality checks. Comfortable across backend orchestration, prompt shaping, and developer-facing CLI surfaces. Tends to ship systems that make AI output more inspectable and safer to iterate.",
+  "skills": [
+    { "category": "LLM Engineering", "items": ["Prompt Design", "TypeScript", "JSON Schema", "Evaluation"] },
+    { "category": "Platform", "items": ["CLI", "Node.js", "Observability"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "llm-runner",
+      "title": "LLM Runner",
+      "period": { "from": "2025-02-01", "to": "2025-05-01" },
+      "bullets": [
+        "Built a schema-constrained prompt runner that normalised model output into stable JSON artifacts.",
+        "Added regression-style evaluation hooks so prompt changes could be compared against fixed cases."
+      ],
+      "stack": ["TypeScript", "Node.js", "JSON Schema"]
+    }
+  ],
+  "otherExperience": ["Prompt Console (2024-11 ~ 2025-01): Internal playground for prompt iteration and result inspection."],
+  "evidenceMap": {
+    "llm-runner": ["ev-llm-1", "ev-llm-2"]
+  }
+}

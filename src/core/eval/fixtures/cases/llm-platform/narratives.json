@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "narratives": [
+    {
+      "projectKey": "llm-runner",
+      "title": "LLM Runner",
+      "period": { "from": "2025-02-01", "to": "2025-05-01" },
+      "scope": "Built tooling around schema-constrained prompting and evaluation.",
+      "candidateRole": "owner",
+      "coreProblem": "Prompt iterations were hard to compare and inspect.",
+      "solutionShape": "Wrapped model calls with JSON schema constraints and case-based evaluation hooks.",
+      "proofPoints": [
+        { "text": "Normalised model output into stable JSON artifacts", "kind": "design", "evidenceRefs": ["ev-llm-1"], "strength": "strong" },
+        { "text": "Added regression-style evaluation hooks", "kind": "process", "evidenceRefs": ["ev-llm-2"], "strength": "strong" }
+      ],
+      "techStack": ["TypeScript", "Node.js", "JSON Schema", "Evaluation"],
+      "strengthSignals": ["ownership", "llm-ops"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.91,
+      "sourceEvidenceIds": ["ev-llm-1", "ev-llm-2"],
+      "repos": ["llm-runner"]
+    }
+  ]
+}

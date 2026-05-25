@@ -13,8 +13,9 @@ import type { EventEnvelope } from "../schema/event.ts";
 import type { EvidenceLog } from "../schema/evidence.ts";
 import type { ExperienceLog } from "../schema/experience.ts";
 import type { NarrativeLog } from "../schema/narrative.ts";
-import type { ResumePlan } from "../schema/plan.ts";
+import type { JdMatchReport, ResumePlan } from "../schema/plan.ts";
 import type { Snapshot } from "../schema/snapshot.ts";
+import type { EvalReport, VerifyFactsReport } from "../schema/eval.ts";
 
 /** Compute ISO 8601 week key in "yyyy-Www" format (e.g. "2026-W18"). */
 export function getISOWeekKey(isoDate: string): string {
@@ -469,4 +470,78 @@ export async function readPlan(dataDir: string): Promise<ResumePlan | null> {
     }
     throw err;
   }
+}
+
+/** Write a JdMatchReport to data/agent/jd-matches/<jdSlug>.json. */
+export async function writeJdMatchReport(
+  dataDir: string,
+  report: JdMatchReport,
+): Promise<string> {
+  const dir = join(dataDir, "agent", "jd-matches");
+  await mkdir(dir, { recursive: true });
+  const filePath = join(dir, `${report.jdSlug}.json`);
+  await writeFile(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a JdMatchReport from data/agent/jd-matches/<jdSlug>.json. Returns null if not found. */
+export async function readJdMatchReport(
+  dataDir: string,
+  jdSlug: string,
+): Promise<JdMatchReport | null> {
+  const filePath = join(dataDir, "agent", "jd-matches", `${jdSlug}.json`);
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { JdMatchReportSchema } = await import("../schema/plan.ts");
+    return JdMatchReportSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write a VerifyFactsReport to data/agent/verify-facts/<slug>.json. */
+export async function writeVerifyFactsReport(
+  dataDir: string,
+  slug: string,
+  report: VerifyFactsReport,
+): Promise<string> {
+  const dir = join(dataDir, "agent", "verify-facts");
+  await mkdir(dir, { recursive: true });
+  const filePath = join(dir, `${slug}.json`);
+  await writeFile(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
+}
+
+/** Read a VerifyFactsReport from data/agent/verify-facts/<slug>.json. Returns null if not found. */
+export async function readVerifyFactsReport(
+  dataDir: string,
+  slug: string,
+): Promise<VerifyFactsReport | null> {
+  const filePath = join(dataDir, "agent", "verify-facts", `${slug}.json`);
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const { VerifyFactsReportSchema } = await import("../schema/eval.ts");
+    return VerifyFactsReportSchema.parse(JSON.parse(raw));
+  } catch (err: unknown) {
+    if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/** Write an EvalReport to data/agent/eval/<slug>.json. */
+export async function writeEvalReport(
+  dataDir: string,
+  slug: string,
+  report: EvalReport,
+): Promise<string> {
+  const dir = join(dataDir, "agent", "eval");
+  await mkdir(dir, { recursive: true });
+  const filePath = join(dir, `${slug}.json`);
+  await writeFile(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
 }

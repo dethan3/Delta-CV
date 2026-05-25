@@ -5186,6 +5186,245 @@ var init_agent = __esm({
   }
 });
 
+// src/core/schema/narrative.ts
+var narrative_exports = {};
+__export(narrative_exports, {
+  NarrativeLogSchema: () => NarrativeLogSchema,
+  ProjectNarrativeSchema: () => ProjectNarrativeSchema,
+  ProofPointSchema: () => ProofPointSchema,
+  RiskFlagSchema: () => RiskFlagSchema
+});
+var ProofPointSchema, RiskFlagSchema, ProjectNarrativeSchema, NarrativeLogSchema;
+var init_narrative = __esm({
+  "src/core/schema/narrative.ts"() {
+    "use strict";
+    init_cjs_shims();
+    init_zod();
+    ProofPointSchema = external_exports.object({
+      text: external_exports.string(),
+      /** "metric" | "shipped" | "ownership" | "design" | "process" — flexible vocabulary. */
+      kind: external_exports.string(),
+      /** Refs into source EvidenceBundle ids / event ids. */
+      evidenceRefs: external_exports.array(external_exports.string()).min(1),
+      /** Whether this proof point is safe to use verbatim, or needs softer phrasing. */
+      strength: external_exports.enum(["strong", "moderate", "soft"])
+    });
+    RiskFlagSchema = external_exports.object({
+      /** e.g. "maintenance-only", "ambiguous-ownership", "no-quantifiable-outcome". */
+      kind: external_exports.string(),
+      note: external_exports.string().optional()
+    });
+    ProjectNarrativeSchema = external_exports.object({
+      /** Stable key across runs. Often derived from primary repo + workstream label. */
+      projectKey: external_exports.string(),
+      title: external_exports.string(),
+      period: external_exports.object({ from: external_exports.string(), to: external_exports.string() }),
+      /** Short statement of what this project covered. */
+      scope: external_exports.string(),
+      /** What role did the candidate play (owner / contributor / maintainer / etc.). */
+      candidateRole: external_exports.string(),
+      /** The problem this project tried to solve. */
+      coreProblem: external_exports.string(),
+      /** Shape of the solution: architecture, approach, key trade-offs. */
+      solutionShape: external_exports.string(),
+      proofPoints: external_exports.array(ProofPointSchema),
+      techStack: external_exports.array(external_exports.string()),
+      /** Tags describing seniority / impact signals, e.g. "ownership", "cross-team". */
+      strengthSignals: external_exports.array(external_exports.string()).default([]),
+      riskFlags: external_exports.array(RiskFlagSchema).default([]),
+      /** 0..1 score the interpreter assigns for resume-worthiness. */
+      resumeWorthiness: external_exports.number().min(0).max(1),
+      /** EvidenceBundle ids this narrative was synthesized from. */
+      sourceEvidenceIds: external_exports.array(external_exports.string()).min(1),
+      /** Primary repos involved (one narrative may span multiple). */
+      repos: external_exports.array(external_exports.string()).min(1)
+    });
+    NarrativeLogSchema = external_exports.object({
+      version: external_exports.literal(1),
+      generatedAt: external_exports.string().datetime(),
+      narratives: external_exports.array(ProjectNarrativeSchema)
+    });
+  }
+});
+
+// src/core/schema/plan.ts
+var plan_exports = {};
+__export(plan_exports, {
+  JdMatchReportSchema: () => JdMatchReportSchema,
+  JdMatchSchema: () => JdMatchSchema,
+  ResumePlanSchema: () => ResumePlanSchema,
+  SkillEmphasisSchema: () => SkillEmphasisSchema
+});
+var SkillEmphasisSchema, ResumePlanSchema, JdMatchSchema, JdMatchReportSchema;
+var init_plan = __esm({
+  "src/core/schema/plan.ts"() {
+    "use strict";
+    init_cjs_shims();
+    init_zod();
+    SkillEmphasisSchema = external_exports.object({
+      /** Capability name (e.g. "LLM ops", "Distributed systems"). */
+      name: external_exports.string(),
+      /**
+       * Projects (by projectKey) that prove this capability. MUST be a non-empty
+       * subset of ResumePlan.selectedProjectIds — that's how the audit trail
+       * works: every emphasized skill is traceable to at least one resume project.
+       */
+      supportingProjectIds: external_exports.array(external_exports.string()).min(1),
+      /** One short sentence explaining the linkage. */
+      rationale: external_exports.string().optional()
+    });
+    ResumePlanSchema = external_exports.object({
+      version: external_exports.literal(1),
+      generatedAt: external_exports.string().datetime(),
+      /** One-line candidate positioning, e.g. "Backend-leaning full-stack engineer with LLM ops experience". */
+      positioning: external_exports.string(),
+      /** Optional target role string (free-form). */
+      targetRole: external_exports.string().optional(),
+      /**
+       * ProjectNarrative.projectKey list, in the final desired order.
+       * This array IS the order — there is no parallel projectOrder field.
+       * compose() must render projects in exactly this sequence.
+       */
+      selectedProjectIds: external_exports.array(external_exports.string()),
+      /** Why these projects were chosen, in narrative form. */
+      selectionRationale: external_exports.string(),
+      /** Narratives intentionally dropped, for audit. */
+      deprioritizedProjectIds: external_exports.array(external_exports.string()).default([]),
+      skillEmphasis: external_exports.array(SkillEmphasisSchema).default([]),
+      /** Soft hints for compose: tone, length, audience, etc. */
+      styleHints: external_exports.array(external_exports.string()).default([]),
+      /** Optional reference to the JdMatch report this plan was built against. */
+      jdSlug: external_exports.string().optional()
+    });
+    JdMatchSchema = external_exports.object({
+      projectId: external_exports.string(),
+      /** 0..1, model-assigned. */
+      relevanceScore: external_exports.number().min(0).max(1),
+      /** JD requirements this project can credibly demonstrate. */
+      matchedRequirements: external_exports.array(external_exports.string()),
+      /** Adjacent strengths that are useful context but should not be hard-claimed. */
+      adjacentStrengths: external_exports.array(external_exports.string()).default([]),
+      /** Suggested narrative angle for this project given the JD. */
+      bestAngle: external_exports.string(),
+      /** Things the writer must NOT claim because evidence is insufficient. */
+      doNotOverclaim: external_exports.array(external_exports.string()).default([])
+    });
+    JdMatchReportSchema = external_exports.object({
+      version: external_exports.literal(1),
+      generatedAt: external_exports.string().datetime(),
+      jdSlug: external_exports.string(),
+      matches: external_exports.array(JdMatchSchema)
+    });
+  }
+});
+
+// src/core/schema/snapshot.ts
+var snapshot_exports = {};
+__export(snapshot_exports, {
+  FocusItemSchema: () => FocusItemSchema,
+  SnapshotDiffSchema: () => SnapshotDiffSchema,
+  SnapshotSchema: () => SnapshotSchema
+});
+var FocusItemSchema, SnapshotSchema, SnapshotDiffSchema;
+var init_snapshot = __esm({
+  "src/core/schema/snapshot.ts"() {
+    "use strict";
+    init_cjs_shims();
+    init_zod();
+    FocusItemSchema = external_exports.object({
+      tag: external_exports.string(),
+      score: external_exports.number(),
+      trend: external_exports.enum(["rising", "stable", "declining"])
+    });
+    SnapshotSchema = external_exports.object({
+      date: external_exports.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      focus: external_exports.array(FocusItemSchema),
+      topTags: external_exports.array(external_exports.string()),
+      experienceLogChecksum: external_exports.string(),
+      /** Raw tag frequencies stored for accurate trend computation on the next evolve run. */
+      tagFrequency: external_exports.record(external_exports.number()).optional()
+    });
+    SnapshotDiffSchema = external_exports.object({
+      from: external_exports.string(),
+      to: external_exports.string(),
+      newCapabilities: external_exports.array(external_exports.string()),
+      risingTags: external_exports.array(external_exports.string()),
+      decliningTags: external_exports.array(external_exports.string())
+    });
+  }
+});
+
+// src/core/schema/evidence.ts
+var evidence_exports = {};
+__export(evidence_exports, {
+  EvidenceBundleSchema: () => EvidenceBundleSchema,
+  EvidenceExcerptSchema: () => EvidenceExcerptSchema,
+  EvidenceLogSchema: () => EvidenceLogSchema,
+  EvidencePeriodSchema: () => EvidencePeriodSchema,
+  PossibleOutcomeSchema: () => PossibleOutcomeSchema,
+  TechnicalMoveSchema: () => TechnicalMoveSchema
+});
+var EvidencePeriodSchema, TechnicalMoveSchema, PossibleOutcomeSchema, EvidenceExcerptSchema, EvidenceBundleSchema, EvidenceLogSchema;
+var init_evidence = __esm({
+  "src/core/schema/evidence.ts"() {
+    "use strict";
+    init_cjs_shims();
+    init_zod();
+    EvidencePeriodSchema = external_exports.object({
+      from: external_exports.string(),
+      to: external_exports.string()
+    });
+    TechnicalMoveSchema = external_exports.object({
+      /** Short verb-led description, e.g. "introduced retry-with-backoff in fetch layer". */
+      text: external_exports.string(),
+      /** Optional pointers into the underlying event ids / shas. */
+      evidenceRefs: external_exports.array(external_exports.string()).default([]),
+      /** Optional tags (lowercase). */
+      tags: external_exports.array(external_exports.string()).default([])
+    });
+    PossibleOutcomeSchema = external_exports.object({
+      text: external_exports.string(),
+      /** "supported" if evidence is explicit; "inferred" if reasoned from context; "speculative" otherwise. */
+      confidence: external_exports.enum(["supported", "inferred", "speculative"]),
+      evidenceRefs: external_exports.array(external_exports.string()).default([])
+    });
+    EvidenceExcerptSchema = external_exports.object({
+      /** Verbatim (or minimally trimmed) text from the source. */
+      text: external_exports.string(),
+      /** Source ids: event id, commit sha, PR/issue url, etc. At least one. */
+      evidenceRefs: external_exports.array(external_exports.string()).min(1),
+      /** Optional origin kind, e.g. "commit" | "pr-title" | "pr-body" | "issue" | "review". */
+      kind: external_exports.string().optional()
+    });
+    EvidenceBundleSchema = external_exports.object({
+      id: external_exports.string(),
+      repo: external_exports.string(),
+      period: EvidencePeriodSchema,
+      /** Hints about which sub-workstream this belongs to, e.g. "auth-rewrite", "perf-q2". */
+      workstreamHints: external_exports.array(external_exports.string()).default([]),
+      /** Concrete technical moves. */
+      technicalMoves: external_exports.array(TechnicalMoveSchema),
+      /** Outcomes the model thinks are plausible. May be empty. */
+      possibleOutcomes: external_exports.array(PossibleOutcomeSchema).default([]),
+      /** Verbatim evidence excerpts with origin refs preserved. */
+      explicitEvidence: external_exports.array(EvidenceExcerptSchema).default([]),
+      /** Claims the model wants to flag as uncertain — do not yet promote to resume. */
+      uncertainClaims: external_exports.array(external_exports.string()).default([]),
+      /** Stack actually visible in this chunk of work. */
+      stack: external_exports.array(external_exports.string()).default([]),
+      /** Capability tags (lowercase). */
+      tags: external_exports.array(external_exports.string()).default([]),
+      /** Source evidence entry ids (cluster ids / event ids) for traceability. */
+      sourceEventIds: external_exports.array(external_exports.string()).default([])
+    });
+    EvidenceLogSchema = external_exports.object({
+      version: external_exports.literal(1),
+      generatedAt: external_exports.string().datetime(),
+      bundles: external_exports.array(EvidenceBundleSchema)
+    });
+  }
+});
+
 // node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js
 var require_types = __commonJS({
   "node_modules/.pnpm/graphemesplit@2.6.0/node_modules/graphemesplit/types.js"(exports2, module2) {
@@ -5983,45 +6222,9 @@ var require_graphemesplit = __commonJS({
   }
 });
 
-// src/core/schema/snapshot.ts
-var snapshot_exports = {};
-__export(snapshot_exports, {
-  FocusItemSchema: () => FocusItemSchema,
-  SnapshotDiffSchema: () => SnapshotDiffSchema,
-  SnapshotSchema: () => SnapshotSchema
-});
-var FocusItemSchema, SnapshotSchema, SnapshotDiffSchema;
-var init_snapshot = __esm({
-  "src/core/schema/snapshot.ts"() {
-    "use strict";
-    init_cjs_shims();
-    init_zod();
-    FocusItemSchema = external_exports.object({
-      tag: external_exports.string(),
-      score: external_exports.number(),
-      trend: external_exports.enum(["rising", "stable", "declining"])
-    });
-    SnapshotSchema = external_exports.object({
-      date: external_exports.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-      focus: external_exports.array(FocusItemSchema),
-      topTags: external_exports.array(external_exports.string()),
-      experienceLogChecksum: external_exports.string(),
-      /** Raw tag frequencies stored for accurate trend computation on the next evolve run. */
-      tagFrequency: external_exports.record(external_exports.number()).optional()
-    });
-    SnapshotDiffSchema = external_exports.object({
-      from: external_exports.string(),
-      to: external_exports.string(),
-      newCapabilities: external_exports.array(external_exports.string()),
-      risingTags: external_exports.array(external_exports.string()),
-      decliningTags: external_exports.array(external_exports.string())
-    });
-  }
-});
-
 // src/cli.ts
 init_cjs_shims();
-var import_promises9 = require("fs/promises");
+var import_promises10 = require("fs/promises");
 
 // node_modules/.pnpm/citty@0.1.6/node_modules/citty/dist/index.mjs
 init_cjs_shims();
@@ -7875,8 +8078,8 @@ function checkHighlightLimits(markdown, maxHighlightLines = 2, maxHighlightsPerP
 
 // src/core/pipeline.ts
 init_cjs_shims();
-var import_promises8 = require("fs/promises");
-var import_node_path10 = require("path");
+var import_promises9 = require("fs/promises");
+var import_node_path11 = require("path");
 
 // src/core/collector/denoise.ts
 init_cjs_shims();
@@ -12178,66 +12381,165 @@ Constraints:
 - selectedProjects: 2\u20133 bullets each, maximum 3 bullets.
 - skills: group by capability area, each group has 3\u20138 items.
 - All text content in the requested language.
+- selectedProjects.projectId MUST exactly match one of plan.selectedProjectIds.
+- Preserve the plan's project order; do not reorder selectedProjects.
 - Do not invent projects, technologies, or metrics not present in the input.
 `;
-function formatProjectForPrompt(p) {
+var MAX_HEADLINE_WORDS = 25;
+var MAX_SUMMARY_SENTENCES = 4;
+var LOW_SIGNAL_METRIC_RE = /\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/i;
+function formatSelectedNarrativeForPrompt(n2) {
   return {
-    id: p.id,
-    repo: p.repo,
-    title: p.title,
-    period: `${p.period.from.slice(0, 7)} ~ ${p.period.to.slice(0, 7)}`,
-    activeMonths: p.activeMonths,
-    category: p.category,
-    importance: p.importance,
-    highlights: p.highlights.slice(0, 6).map((h2) => h2.text),
-    stack: p.stack.slice(0, 10)
+    projectId: n2.projectKey,
+    title: n2.title,
+    period: `${n2.period.from.slice(0, 10)} \u2192 ${n2.period.to.slice(0, 10)}`,
+    candidateRole: n2.candidateRole,
+    scope: n2.scope,
+    coreProblem: n2.coreProblem,
+    solutionShape: n2.solutionShape,
+    proofPoints: n2.proofPoints.map((pp) => ({
+      text: pp.text,
+      kind: pp.kind,
+      strength: pp.strength,
+      evidenceRefs: pp.evidenceRefs
+    })),
+    techStack: n2.techStack,
+    strengthSignals: n2.strengthSignals,
+    riskFlags: n2.riskFlags,
+    repos: n2.repos
   };
 }
-function formatClaimForPrompt(c3) {
+function formatOtherNarrativeForPrompt(n2) {
   return {
-    category: c3.category,
-    technologies: c3.technologies.slice(0, 8),
-    confidence: Math.round(c3.confidence * 100) / 100
+    projectId: n2.projectKey,
+    title: n2.title,
+    period: `${n2.period.from.slice(0, 10)} \u2192 ${n2.period.to.slice(0, 10)}`,
+    scope: n2.scope,
+    candidateRole: n2.candidateRole,
+    techStack: n2.techStack,
+    repos: n2.repos
   };
 }
-function buildUserPrompt(login, topProjects, otherProjects, claims, options) {
+function buildUserPrompt(login, plan, selectedNarratives, otherNarratives, options) {
   const input = {
     candidate: login,
     language: options.lang,
-    targetRole: options.targetRole ?? null,
-    topProjects: topProjects.map(formatProjectForPrompt),
-    otherProjects: otherProjects.map((p) => ({
-      id: p.id,
-      repo: p.repo,
-      title: p.title,
-      period: `${p.period.from.slice(0, 7)} ~ ${p.period.to.slice(0, 7)}`,
-      category: p.category
-    })),
-    capabilityClaims: claims.filter((c3) => c3.resumeUse).map(formatClaimForPrompt)
+    plan: {
+      positioning: plan.positioning,
+      targetRole: options.targetRole ?? plan.targetRole ?? null,
+      selectedProjectIds: plan.selectedProjectIds,
+      selectionRationale: plan.selectionRationale,
+      skillEmphasis: plan.skillEmphasis,
+      styleHints: plan.styleHints,
+      jdSlug: plan.jdSlug ?? null
+    },
+    selectedNarratives: selectedNarratives.map(formatSelectedNarrativeForPrompt),
+    otherNarratives: otherNarratives.map(formatOtherNarrativeForPrompt)
   };
   return JSON.stringify(input, null, 2);
 }
-async function composeDraft(llmConfig, login, curateResult, options) {
-  const topN = options.topN ?? 6;
-  const topProjects = curateResult.projects.slice(0, topN);
-  const otherProjects = curateResult.projects.slice(topN);
+function buildEvidenceMap(selectedNarratives) {
+  return Object.fromEntries(
+    selectedNarratives.map((n2) => [
+      n2.projectKey,
+      Array.from(
+        /* @__PURE__ */ new Set([
+          ...n2.sourceEvidenceIds,
+          ...n2.proofPoints.flatMap((pp) => pp.evidenceRefs)
+        ])
+      )
+    ])
+  );
+}
+function buildFallbackProjectSection(n2) {
+  return {
+    projectId: n2.projectKey,
+    title: n2.title,
+    period: n2.period,
+    bullets: n2.proofPoints.slice(0, 3).map((pp) => pp.text),
+    stack: n2.techStack
+  };
+}
+function trimSentence(text) {
+  return text.replace(/\s+/g, " ").trim();
+}
+function normalizeHeadline(headline, plan, lang) {
+  const raw = trimSentence(headline);
+  if (lang === "zh") {
+    return raw.length <= 40 ? raw : raw.slice(0, 40).trim();
+  }
+  const words = raw.split(/\s+/).filter((word) => word.length > 0);
+  if (words.length <= MAX_HEADLINE_WORDS) return raw;
+  const planWords = trimSentence(plan.positioning).split(/\s+/).filter((word) => word.length > 0);
+  const source = planWords.length > 0 ? planWords : words;
+  return source.slice(0, MAX_HEADLINE_WORDS).join(" ");
+}
+function normalizeSummary(summary, headline) {
+  const normalized = summary.replace(/\s+/g, " ").trim();
+  const parts = normalized.split(/(?<=[.!?。！？])\s+/).map((part) => part.trim()).filter((part) => part.length > 0);
+  const out = [];
+  for (const part of parts) {
+    if (out.length === 0 && trimSentence(part).toLowerCase() === trimSentence(headline).toLowerCase()) {
+      continue;
+    }
+    out.push(part);
+    if (out.length >= MAX_SUMMARY_SENTENCES) break;
+  }
+  if (out.length === 0) return normalized;
+  return out.join(" ");
+}
+function rewriteLowSignalMetricBullet(bullet) {
+  const rewritten = bullet.replace(/\s*,?\s*with\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "").replace(/\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "substantial implementation work").replace(/\s{2,}/g, " ").replace(/\s+([,.])/g, "$1").trim();
+  return rewritten.length > 0 ? rewritten : bullet;
+}
+function normalizeBullets(bullets) {
+  return bullets.map((bullet) => {
+    if (LOW_SIGNAL_METRIC_RE.test(bullet)) {
+      return rewriteLowSignalMetricBullet(bullet);
+    }
+    return bullet;
+  });
+}
+async function composeDraft(llmConfig, login, plan, narratives, options) {
+  const narrativesById = new Map(narratives.map((n2) => [n2.projectKey, n2]));
+  const selectedNarratives = plan.selectedProjectIds.map((id) => narrativesById.get(id)).filter((n2) => Boolean(n2));
+  if (selectedNarratives.length === 0) {
+    throw new Error("compose: plan.selectedProjectIds does not match any available narratives.");
+  }
+  const selectedIds = new Set(plan.selectedProjectIds);
+  const otherNarratives = narratives.filter((n2) => !selectedIds.has(n2.projectKey));
   const systemPromptBase = await loadPrompt("compose", options.lang);
   const system = `${systemPromptBase}
 
 ${OUTPUT_SCHEMA_DESCRIPTION}`;
-  const user = buildUserPrompt(login, topProjects, otherProjects, curateResult.claims, options);
+  const user = buildUserPrompt(login, plan, selectedNarratives, otherNarratives, options);
   const llmOutput = await generateObject(llmConfig, ComposeLlmOutputSchema, system, user);
+  const modelSections = new Map(
+    llmOutput.selectedProjects.map((section) => [section.projectId, section])
+  );
+  const selectedProjects = selectedNarratives.map((n2) => {
+    const section = modelSections.get(n2.projectKey);
+    if (!section) return buildFallbackProjectSection(n2);
+    const stack = section.stack.filter((item) => n2.techStack.includes(item));
+    return {
+      projectId: n2.projectKey,
+      title: section.title || n2.title,
+      period: n2.period,
+      bullets: normalizeBullets(section.bullets.slice(0, 3)),
+      stack: stack.length > 0 ? stack : n2.techStack
+    };
+  });
+  const headline = normalizeHeadline(llmOutput.headline, plan, options.lang);
+  const summary = normalizeSummary(llmOutput.summary, headline);
   const draft = {
     version: 1,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
     login,
     ...llmOutput,
-    evidenceMap: Object.fromEntries(
-      llmOutput.selectedProjects.map((sp) => {
-        const project = curateResult.projects.find((p) => p.id === sp.projectId);
-        return [sp.projectId, project?.evidenceEntryIds ?? []];
-      })
-    )
+    headline,
+    summary,
+    selectedProjects,
+    evidenceMap: buildEvidenceMap(selectedNarratives)
   };
   return draft;
 }
@@ -12314,6 +12616,1246 @@ ${formatDraftForCritique(draft)}`;
     draftSlug,
     ...llmOutput
   };
+}
+
+// src/core/agent/evidence.ts
+init_cjs_shims();
+function entryToEvidenceBundle(entry) {
+  const technicalMoves = entry.highlights.map((h2) => ({
+    text: h2.text,
+    evidenceRefs: h2.evidence ?? [],
+    tags: h2.tags
+  }));
+  return {
+    id: entry.id,
+    repo: entry.repo,
+    period: entry.period,
+    workstreamHints: [],
+    technicalMoves,
+    possibleOutcomes: [],
+    explicitEvidence: [],
+    uncertainClaims: [],
+    stack: entry.stack,
+    tags: entry.tags,
+    sourceEventIds: [entry.id]
+  };
+}
+function buildEvidenceBundlesFromEntries(entries) {
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    bundles: entries.map(entryToEvidenceBundle)
+  };
+}
+
+// src/core/agent/interpret.ts
+init_cjs_shims();
+init_zod();
+init_narrative();
+var SYSTEM_SCHEMA = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "narratives": [
+    {
+      "projectKey": "string (stable identifier, snake_case)",
+      "title": "string (2-8 words)",
+      "period": { "from": "ISO date string", "to": "ISO date string" },
+      "scope": "string (1-2 sentences)",
+      "candidateRole": "owner | contributor | maintainer | reviewer",
+      "coreProblem": "string (the problem this project tried to solve)",
+      "solutionShape": "string (architecture / approach / key trade-offs)",
+      "proofPoints": [
+        {
+          "text": "string",
+          "kind": "metric | shipped | ownership | design | process",
+          "evidenceRefs": ["string (EvidenceBundle.id or move evidenceRef)"],
+          "strength": "strong | moderate | soft"
+        }
+      ],
+      "techStack": ["string"],
+      "strengthSignals": ["string (e.g. 'cross-team', 'ownership', 'production-impact')"],
+      "riskFlags": [{ "kind": "string", "note": "string (optional)" }],
+      "resumeWorthiness": "number in [0,1]",
+      "sourceEvidenceIds": ["string (must reference input EvidenceBundle.id)"],
+      "repos": ["string (at least one)"]
+    }
+  ]
+}
+Hard constraints:
+- proofPoints[*].evidenceRefs MUST be drawn from the input bundles: either a
+  bundle id, or a value already appearing in some technicalMoves[*].evidenceRefs
+  / possibleOutcomes[*].evidenceRefs / explicitEvidence[*].evidenceRefs.
+  Any unknown ref will be silently dropped by the verifier; a proofPoint with
+  zero surviving refs disqualifies the entire narrative.
+- sourceEvidenceIds MUST contain at least one id present in the input bundles.
+- repos MUST be a subset of the repos present in the input bundles. Do not
+  invent repo names.
+- projectKey: you may write any placeholder; it will be REPLACED by a
+  deterministic key downstream. Do not rely on your value being preserved.
+- Maintenance-only narratives: set resumeWorthiness < 0.3 AND include a riskFlag { "kind": "maintenance-only" }.
+- Do NOT invent technologies that do not appear in any input bundle's stack or tags.
+`;
+var LlmOutputSchema = external_exports.object({
+  narratives: external_exports.array(ProjectNarrativeSchema)
+});
+function makeProjectKey(repos, workstream) {
+  const repoPart = [...new Set(repos)].sort().map((r3) => r3.replace(/[^\w-]/g, "_")).join("__");
+  if (!workstream) return repoPart;
+  const wsSlug = workstream.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 32);
+  return wsSlug ? `${repoPart}::${wsSlug}` : repoPart;
+}
+function makeStableProjectKey(repos, sourceEvidenceIds) {
+  const base = makeProjectKey(repos);
+  const sortedIds = [...sourceEvidenceIds].sort().join("|");
+  let h2 = 2166136261;
+  for (let i2 = 0; i2 < sortedIds.length; i2++) {
+    h2 ^= sortedIds.charCodeAt(i2);
+    h2 = h2 + ((h2 << 1) + (h2 << 4) + (h2 << 7) + (h2 << 8) + (h2 << 24)) >>> 0;
+  }
+  const hash = h2.toString(16).padStart(8, "0").slice(0, 8);
+  return `${base}::${hash}`;
+}
+function formatBundlesForPrompt(bundles) {
+  const compact = bundles.map((b2) => ({
+    id: b2.id,
+    repo: b2.repo,
+    period: `${b2.period.from.slice(0, 10)} \u2192 ${b2.period.to.slice(0, 10)}`,
+    workstreamHints: b2.workstreamHints,
+    technicalMoves: b2.technicalMoves.map((m2) => ({
+      text: m2.text,
+      evidenceRefs: m2.evidenceRefs,
+      tags: m2.tags
+    })),
+    possibleOutcomes: b2.possibleOutcomes.map((o3) => ({
+      text: o3.text,
+      confidence: o3.confidence,
+      evidenceRefs: o3.evidenceRefs
+    })),
+    explicitEvidence: b2.explicitEvidence,
+    uncertainClaims: b2.uncertainClaims,
+    stack: b2.stack,
+    tags: b2.tags
+  }));
+  return JSON.stringify({ bundles: compact }, null, 2);
+}
+async function interpretBundles(llmConfig, bundles, options) {
+  if (bundles.length === 0) {
+    return {
+      version: 1,
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      narratives: []
+    };
+  }
+  const systemBase = await loadPrompt("interpret", options.lang);
+  const maxHint = options.maxNarratives ? `
+Target at most ${options.maxNarratives} narratives. Returning fewer is fine.` : "";
+  const system = `${systemBase}
+${SYSTEM_SCHEMA}${maxHint}`;
+  const user = formatBundlesForPrompt(bundles);
+  const out = await generateObject(llmConfig, LlmOutputSchema, system, user);
+  const knownIds = new Set(bundles.map((b2) => b2.id));
+  const knownRepos = new Set(bundles.map((b2) => b2.repo));
+  const knownRefs = new Set(knownIds);
+  for (const b2 of bundles) {
+    for (const m2 of b2.technicalMoves) for (const r3 of m2.evidenceRefs) knownRefs.add(r3);
+    for (const o3 of b2.possibleOutcomes) for (const r3 of o3.evidenceRefs) knownRefs.add(r3);
+    for (const e2 of b2.explicitEvidence) for (const r3 of e2.evidenceRefs) knownRefs.add(r3);
+  }
+  const narratives = [];
+  let droppedHallucinated = 0;
+  let droppedNoProofPoints = 0;
+  for (const n2 of out.narratives) {
+    const validSources = n2.sourceEvidenceIds.filter((id) => knownIds.has(id));
+    if (validSources.length === 0) {
+      droppedHallucinated++;
+      continue;
+    }
+    const validRepos = n2.repos.filter((r3) => knownRepos.has(r3));
+    const repos = validRepos.length > 0 ? validRepos : Array.from(
+      new Set(bundles.filter((b2) => validSources.includes(b2.id)).map((b2) => b2.repo))
+    );
+    const proofPoints = n2.proofPoints.map((pp) => ({
+      ...pp,
+      evidenceRefs: pp.evidenceRefs.filter((r3) => knownRefs.has(r3))
+    })).filter((pp) => pp.evidenceRefs.length > 0);
+    if (proofPoints.length === 0) {
+      droppedNoProofPoints++;
+      continue;
+    }
+    narratives.push({
+      projectKey: makeStableProjectKey(repos, validSources),
+      title: n2.title,
+      period: n2.period,
+      scope: n2.scope,
+      candidateRole: n2.candidateRole,
+      coreProblem: n2.coreProblem,
+      solutionShape: n2.solutionShape,
+      proofPoints,
+      techStack: n2.techStack,
+      strengthSignals: n2.strengthSignals ?? [],
+      riskFlags: n2.riskFlags ?? [],
+      resumeWorthiness: n2.resumeWorthiness,
+      sourceEvidenceIds: validSources,
+      repos
+    });
+  }
+  if (droppedHallucinated > 0 || droppedNoProofPoints > 0) {
+    console.warn(
+      `[interpret] dropped ${droppedHallucinated} narrative(s) with hallucinated sources, ${droppedNoProofPoints} with zero verifiable proofPoints`
+    );
+  }
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    narratives
+  };
+}
+
+// src/core/agent/jd-match.ts
+init_cjs_shims();
+init_zod();
+init_plan();
+function fallbackBestAngle(title, lang) {
+  return lang === "zh" ? `${title} \u4E0E\u8BE5\u5C97\u4F4D\u7684\u76F4\u63A5\u8BC1\u636E\u8F83\u5F31\uFF0C\u82E5\u4FDD\u7559\u5E94\u91C7\u7528\u4FDD\u5B88\u8868\u8FF0\u6216\u964D\u7EA7\u5904\u7406\u3002` : `${title} has limited direct evidence against this JD, so it should be framed conservatively or deprioritised.`;
+}
+var SYSTEM_SCHEMA2 = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "matches": [
+    {
+      "projectId": "string (must equal one input projectKey)",
+      "relevanceScore": "number in [0,1]",
+      "matchedRequirements": ["string (subset of jd.requiredSkills only)"],
+      "adjacentStrengths": ["string"],
+      "bestAngle": "string (one sentence)",
+      "doNotOverclaim": ["string"]
+    }
+  ]
+}
+Hard constraints:
+- Return exactly one match object per input narrative.
+- projectId MUST be one of the input projectKey values.
+- matchedRequirements MUST be drawn only from jd.requiredSkills.
+- niceToHaveSkills may influence adjacentStrengths, but MUST NOT appear in matchedRequirements unless they also appear in requiredSkills.
+- If evidence is weak, lower relevanceScore instead of stretching matchedRequirements.
+- doNotOverclaim should name concrete phrases or claims the writer must avoid.
+`;
+var JdMatchOutputSchema = external_exports.object({
+  matches: external_exports.array(JdMatchSchema)
+});
+function buildUserPrompt2(narratives, jd, options) {
+  return JSON.stringify(
+    {
+      jd: {
+        slug: jd.slug,
+        jobTitle: jd.jobTitle,
+        seniority: jd.seniority,
+        requiredSkills: jd.requiredSkills,
+        niceToHaveSkills: jd.niceToHaveSkills,
+        keyResponsibilities: jd.keyResponsibilities,
+        targetProfile: jd.targetProfile
+      },
+      allowAdjacency: options.allowAdjacency ?? false,
+      narratives: narratives.map((n2) => ({
+        projectKey: n2.projectKey,
+        title: n2.title,
+        period: `${n2.period.from.slice(0, 10)} \u2192 ${n2.period.to.slice(0, 10)}`,
+        candidateRole: n2.candidateRole,
+        coreProblem: n2.coreProblem,
+        solutionShape: n2.solutionShape,
+        proofPoints: n2.proofPoints.map((pp) => ({
+          text: pp.text,
+          kind: pp.kind,
+          strength: pp.strength
+        })),
+        techStack: n2.techStack,
+        strengthSignals: n2.strengthSignals,
+        riskFlags: n2.riskFlags,
+        resumeWorthiness: n2.resumeWorthiness
+      }))
+    },
+    null,
+    2
+  );
+}
+async function matchNarrativesToJd(llmConfig, narratives, jd, options) {
+  if (narratives.length === 0) {
+    return {
+      version: 1,
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      jdSlug: jd.slug,
+      matches: []
+    };
+  }
+  const systemBase = await loadPrompt("jd-match", options.lang);
+  const system = `${systemBase}
+
+${SYSTEM_SCHEMA2}`;
+  const user = buildUserPrompt2(narratives, jd, options);
+  const out = await generateObject(llmConfig, JdMatchOutputSchema, system, user);
+  const validProjectIds = new Set(narratives.map((n2) => n2.projectKey));
+  const validRequiredSkills = new Set(jd.requiredSkills);
+  const byProject = new Map(out.matches.map((m2) => [m2.projectId, m2]));
+  const matches = narratives.map((n2) => {
+    const raw = byProject.get(n2.projectKey);
+    if (!raw) {
+      return {
+        projectId: n2.projectKey,
+        relevanceScore: 0,
+        matchedRequirements: [],
+        adjacentStrengths: [],
+        bestAngle: fallbackBestAngle(n2.title, options.lang),
+        doNotOverclaim: []
+      };
+    }
+    return {
+      projectId: n2.projectKey,
+      relevanceScore: Math.max(0, Math.min(1, raw.relevanceScore)),
+      matchedRequirements: raw.matchedRequirements.filter((req) => validRequiredSkills.has(req)),
+      adjacentStrengths: options.allowAdjacency ? Array.from(new Set(raw.adjacentStrengths ?? [])) : [],
+      bestAngle: raw.bestAngle,
+      doNotOverclaim: Array.from(new Set(raw.doNotOverclaim ?? []))
+    };
+  }).filter((m2) => validProjectIds.has(m2.projectId));
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    jdSlug: jd.slug,
+    matches
+  };
+}
+
+// src/core/agent/verify-facts.ts
+init_cjs_shims();
+init_zod();
+var METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?|fps|mb|gb))/i;
+var LOW_SIGNAL_METRIC_RE2 = /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b/i;
+var OWNERSHIP_RE = /\b(led|owned|drove|spearheaded|directed|主导|负责|牵头|owner|ownership)\b/i;
+var SCALE_RE = /\b(production-scale|high-throughput|high availability|high-traffic|large-scale|real-time|60fps|高并发|生产级|大规模|实时)\b/i;
+var ARCH_RE = /\b(distributed|multi-tenant|event-driven|virtual scrolling|微服务|分布式|事件驱动|虚拟滚动)\b/i;
+var VerifyFactsLlmIssueSchema = external_exports.object({
+  severity: external_exports.enum(["error", "warning", "info"]),
+  location: external_exports.string(),
+  text: external_exports.string(),
+  kind: external_exports.string(),
+  reason: external_exports.string(),
+  suggestedFix: external_exports.string().optional()
+});
+var VerifyFactsLlmOutputSchema = external_exports.object({
+  claims: external_exports.array(VerifyFactsLlmIssueSchema)
+});
+var VERIFY_SCHEMA = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "claims": [
+    {
+      "severity": "error" | "warning" | "info",
+      "location": "string",
+      "text": "string",
+      "kind": "metric" | "ownership" | "scale" | "architecture" | "other",
+      "reason": "string",
+      "suggestedFix": "string (optional)"
+    }
+  ]
+}
+`;
+function hasEvidenceRefs(narrative) {
+  return narrative.proofPoints.some((pp) => pp.evidenceRefs.length > 0);
+}
+function getBulletMetricSupport(narrative, bullet) {
+  const metricToken = bullet.match(METRIC_RE)?.[0]?.toLowerCase();
+  const metricProofPoints = narrative.proofPoints.filter(
+    (pp) => pp.kind === "metric" && pp.evidenceRefs.length > 0
+  );
+  if (metricProofPoints.length === 0) {
+    return { supported: false, strongestStrength: null };
+  }
+  if (!metricToken) {
+    const strongestStrength2 = metricProofPoints.some((pp) => pp.strength === "strong") ? "strong" : metricProofPoints.some((pp) => pp.strength === "moderate") ? "moderate" : "soft";
+    return { supported: true, strongestStrength: strongestStrength2 };
+  }
+  const matches = metricProofPoints.filter((pp) => pp.text.toLowerCase().includes(metricToken));
+  if (matches.length === 0) {
+    return { supported: false, strongestStrength: null };
+  }
+  const strongestStrength = matches.some((pp) => pp.strength === "strong") ? "strong" : matches.some((pp) => pp.strength === "moderate") ? "moderate" : "soft";
+  return { supported: true, strongestStrength };
+}
+function hasOwnershipSupport(narrative) {
+  return narrative.candidateRole === "owner" || narrative.strengthSignals.includes("ownership");
+}
+function hasKeywordSupport(narrative, bullet) {
+  const lower = bullet.toLowerCase();
+  const compactTokens = lower.replace(/[^\w\s%-]/g, " ").split(/\s+/).map((token) => token.trim()).filter((token) => token.length >= 4 || /\d/.test(token));
+  const haystacks = [
+    ...narrative.proofPoints.map((pp) => pp.text.toLowerCase()),
+    narrative.solutionShape.toLowerCase(),
+    narrative.coreProblem.toLowerCase(),
+    narrative.scope.toLowerCase()
+  ];
+  return compactTokens.some((token) => haystacks.some((haystack) => haystack.includes(token)));
+}
+function fallbackFix(kind, lang) {
+  if (lang === "zh") {
+    if (kind === "metric") return "\u53BB\u6389\u5177\u4F53\u6570\u5B57\uFF0C\u6539\u5199\u4E3A\u66F4\u4FDD\u5B88\u7684\u5B9A\u6027\u7ED3\u679C\u3002";
+    if (kind === "ownership") return "\u5F31\u5316 ownership \u8868\u8FF0\uFF0C\u6539\u4E3A\u201C\u53C2\u4E0E\u63A8\u52A8\u201D\u6216\u201C\u652F\u6301\u5B9E\u73B0\u201D\u3002";
+    if (kind === "scale") return "\u53BB\u6389\u89C4\u6A21\u5316\u63AA\u8F9E\uFF0C\u6539\u5199\u4E3A\u5177\u4F53\u5B9E\u73B0\u6216\u4F18\u5316\u52A8\u4F5C\u3002";
+    if (kind === "architecture") return "\u907F\u514D\u67B6\u6784\u7EA7\u5B9A\u6027\uFF0C\u76F4\u63A5\u63CF\u8FF0\u5DF2\u8BC1\u660E\u7684\u5B9E\u73B0\u65B9\u5F0F\u3002";
+    return "\u8865\u5145\u53EF\u8FFD\u6EAF\u8BC1\u636E\uFF0C\u6216\u5220\u9664\u8FD9\u6761\u8868\u8FF0\u3002";
+  }
+  if (kind === "metric") return "Remove the explicit metric and rewrite it as a conservative qualitative outcome.";
+  if (kind === "ownership")
+    return "Soften the ownership claim to contribution-oriented wording.";
+  if (kind === "scale") return "Drop the scale language and describe the concrete implementation instead.";
+  if (kind === "architecture")
+    return "Avoid architecture-level claims and describe only the proven implementation details.";
+  return "Add traceable evidence or remove the claim.";
+}
+function dedupeClaims(claims) {
+  const seen = /* @__PURE__ */ new Set();
+  const out = [];
+  for (const claim of claims) {
+    const key = `${claim.location}::${claim.kind}::${claim.text}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(claim);
+  }
+  return out;
+}
+async function verifyDraftFacts(llmConfig, draft, narratives, options) {
+  const byProject = new Map(narratives.map((n2) => [n2.projectKey, n2]));
+  const claims = [];
+  let bulletsTotal = 0;
+  let bulletsWithEvidence = 0;
+  for (const project of draft.selectedProjects) {
+    const narrative = byProject.get(project.projectId);
+    for (const bullet of project.bullets) {
+      bulletsTotal += 1;
+      const location = `${project.title}`;
+      if (!narrative) {
+        claims.push({
+          severity: "error",
+          location,
+          text: bullet,
+          kind: "other",
+          reason: "No matching ProjectNarrative was found for this resume project.",
+          suggestedFix: fallbackFix("other", options.lang)
+        });
+        continue;
+      }
+      if (hasEvidenceRefs(narrative)) bulletsWithEvidence += 1;
+      if (!hasEvidenceRefs(narrative)) {
+        claims.push({
+          severity: "warning",
+          location,
+          text: bullet,
+          kind: "other",
+          reason: "This project has no verifiable proofPoints with evidenceRefs.",
+          suggestedFix: fallbackFix("other", options.lang)
+        });
+      }
+      if (METRIC_RE.test(bullet)) {
+        const metricSupport = getBulletMetricSupport(narrative, bullet);
+        if (!metricSupport.supported) {
+          claims.push({
+            severity: "error",
+            location,
+            text: bullet,
+            kind: "metric",
+            reason: "The bullet contains a metric-shaped claim without metric proof support.",
+            suggestedFix: fallbackFix("metric", options.lang)
+          });
+        } else if (metricSupport.strongestStrength !== "strong") {
+          claims.push({
+            severity: "warning",
+            location,
+            text: bullet,
+            kind: "metric",
+            reason: "The metric claim is only backed by moderate or soft evidence and should be phrased more conservatively.",
+            suggestedFix: fallbackFix("metric", options.lang)
+          });
+        }
+      }
+      if (LOW_SIGNAL_METRIC_RE2.test(bullet)) {
+        claims.push({
+          severity: "warning",
+          location,
+          text: bullet,
+          kind: "metric",
+          reason: "Lines-of-code style metrics are low-signal and usually weaker than outcome or usage evidence.",
+          suggestedFix: fallbackFix("metric", options.lang)
+        });
+      }
+      if (OWNERSHIP_RE.test(bullet) && !hasOwnershipSupport(narrative)) {
+        claims.push({
+          severity: "error",
+          location,
+          text: bullet,
+          kind: "ownership",
+          reason: "The bullet implies ownership or leadership that the narrative does not prove.",
+          suggestedFix: fallbackFix("ownership", options.lang)
+        });
+      }
+      if (SCALE_RE.test(bullet) && !hasKeywordSupport(narrative, bullet)) {
+        claims.push({
+          severity: "warning",
+          location,
+          text: bullet,
+          kind: "scale",
+          reason: "The bullet makes a scale claim that is not directly grounded in the narrative.",
+          suggestedFix: fallbackFix("scale", options.lang)
+        });
+      }
+      if (ARCH_RE.test(bullet) && !hasKeywordSupport(narrative, bullet)) {
+        claims.push({
+          severity: "warning",
+          location,
+          text: bullet,
+          kind: "architecture",
+          reason: "The bullet uses architecture terminology that is not directly grounded in the narrative.",
+          suggestedFix: fallbackFix("architecture", options.lang)
+        });
+      }
+    }
+  }
+  if (options.useLlm) {
+    const systemBase = await loadPrompt("verify-facts", options.lang);
+    const system = `${systemBase}
+
+${VERIFY_SCHEMA}`;
+    const user = JSON.stringify(
+      {
+        draft: {
+          headline: draft.headline,
+          summary: draft.summary,
+          selectedProjects: draft.selectedProjects
+        },
+        narratives: narratives.map((n2) => ({
+          projectKey: n2.projectKey,
+          title: n2.title,
+          candidateRole: n2.candidateRole,
+          proofPoints: n2.proofPoints,
+          strengthSignals: n2.strengthSignals,
+          solutionShape: n2.solutionShape,
+          coreProblem: n2.coreProblem
+        }))
+      },
+      null,
+      2
+    );
+    const llmOut = await generateObject(llmConfig, VerifyFactsLlmOutputSchema, system, user);
+    for (const claim of llmOut.claims) {
+      claims.push({
+        severity: claim.severity,
+        location: claim.location,
+        text: claim.text,
+        kind: claim.kind,
+        reason: claim.reason,
+        ...claim.suggestedFix ? { suggestedFix: claim.suggestedFix } : {}
+      });
+    }
+  }
+  return {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    draftSlug: options.draftSlug ?? "default",
+    claims: dedupeClaims(claims),
+    coverage: bulletsTotal === 0 ? 1 : bulletsWithEvidence / bulletsTotal
+  };
+}
+
+// src/core/eval/runner.ts
+init_cjs_shims();
+var import_promises7 = require("fs/promises");
+var import_node_os = require("os");
+var import_node_path9 = require("path");
+
+// src/core/io/data.ts
+init_cjs_shims();
+var import_promises6 = require("fs/promises");
+var import_node_path8 = require("path");
+function getISOWeekKey(isoDate) {
+  const d2 = new Date(isoDate);
+  const dayOfWeek = d2.getUTCDay();
+  const thursday = new Date(d2);
+  thursday.setUTCDate(d2.getUTCDate() + 3 - (dayOfWeek + 6) % 7);
+  const jan4 = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 4));
+  const jan4Thursday = new Date(jan4);
+  jan4Thursday.setUTCDate(jan4.getUTCDate() + 3 - (jan4.getUTCDay() + 6) % 7);
+  const weekNumber = Math.ceil(
+    ((thursday.getTime() - jan4Thursday.getTime()) / 864e5 + 1) / 7
+  );
+  const isoYear = thursday.getUTCFullYear();
+  return `${isoYear}-W${String(weekNumber).padStart(2, "0")}`;
+}
+function eventIdentity(event) {
+  return `${event.kind}:${event.repo}:${event.ts}`;
+}
+async function appendEvents(dataDir, events) {
+  if (events.length === 0) return;
+  const eventsDir = (0, import_node_path8.join)(dataDir, "events");
+  await (0, import_promises6.mkdir)(eventsDir, { recursive: true });
+  const byWeek = /* @__PURE__ */ new Map();
+  for (const event of events) {
+    const key = getISOWeekKey(event.ts);
+    const group = byWeek.get(key);
+    if (group) {
+      group.push(event);
+    } else {
+      byWeek.set(key, [event]);
+    }
+  }
+  for (const [weekKey, weekEvents] of byWeek) {
+    const filePath = (0, import_node_path8.join)(eventsDir, `${weekKey}.jsonl`);
+    const existingIds = /* @__PURE__ */ new Set();
+    try {
+      const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+      for (const line of raw.split("\n")) {
+        if (line.trim() === "") continue;
+        try {
+          const parsed = JSON.parse(line);
+          existingIds.add(eventIdentity(parsed));
+        } catch {
+        }
+      }
+    } catch (err) {
+      if (err instanceof Error && "code" in err && err.code !== "ENOENT") {
+        throw err;
+      }
+    }
+    const newEvents = weekEvents.filter((e2) => !existingIds.has(eventIdentity(e2)));
+    if (newEvents.length === 0) continue;
+    const lines = `${newEvents.map((e2) => JSON.stringify(e2)).join("\n")}
+`;
+    await (0, import_promises6.appendFile)(filePath, lines, "utf8");
+  }
+}
+async function readEventsSince(dataDir, since) {
+  const eventsDir = (0, import_node_path8.join)(dataDir, "events");
+  let files;
+  try {
+    files = await (0, import_promises6.readdir)(eventsDir);
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return [];
+    }
+    throw err;
+  }
+  const sinceWeek = getISOWeekKey(since);
+  const jsonlFiles = files.filter((f3) => f3.endsWith(".jsonl") && f3 >= `${sinceWeek}.jsonl`).sort();
+  const events = [];
+  for (const file of jsonlFiles) {
+    const raw = await (0, import_promises6.readFile)((0, import_node_path8.join)(eventsDir, file), "utf8");
+    for (const line of raw.split("\n")) {
+      if (line.trim() === "") continue;
+      try {
+        const parsed = JSON.parse(line);
+        if (parsed.ts >= since) {
+          events.push(parsed);
+        }
+      } catch {
+      }
+    }
+  }
+  events.sort((a2, b2) => a2.ts.localeCompare(b2.ts));
+  return events;
+}
+async function writeExperienceLog(dataDir, log) {
+  const metaDir = (0, import_node_path8.join)(dataDir, "_meta");
+  await (0, import_promises6.mkdir)(metaDir, { recursive: true });
+  await (0, import_promises6.writeFile)((0, import_node_path8.join)(metaDir, "experience.json"), JSON.stringify(log, null, 2), "utf8");
+}
+async function readExperienceLog(dataDir) {
+  const path2 = (0, import_node_path8.join)(dataDir, "_meta", "experience.json");
+  try {
+    const raw = await (0, import_promises6.readFile)(path2, "utf8");
+    const { ExperienceLogSchema: ExperienceLogSchema2 } = await Promise.resolve().then(() => (init_experience(), experience_exports));
+    return ExperienceLogSchema2.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+var CHECKPOINT_PATH = (dataDir) => (0, import_node_path8.join)(dataDir, "_meta", "evolve-checkpoint.json");
+async function readEvolveCheckpoint(dataDir) {
+  try {
+    const raw = await (0, import_promises6.readFile)(CHECKPOINT_PATH(dataDir), "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+async function writeEvolveCheckpoint(dataDir, checkpoint) {
+  const metaDir = (0, import_node_path8.join)(dataDir, "_meta");
+  await (0, import_promises6.mkdir)(metaDir, { recursive: true });
+  await (0, import_promises6.writeFile)(CHECKPOINT_PATH(dataDir), JSON.stringify(checkpoint, null, 2), "utf8");
+}
+async function clearEvolveCheckpoint(dataDir) {
+  try {
+    await (0, import_promises6.unlink)(CHECKPOINT_PATH(dataDir));
+  } catch {
+  }
+}
+async function writeSnapshot(dataDir, snapshot) {
+  const snapshotsDir = (0, import_node_path8.join)(dataDir, "snapshots");
+  await (0, import_promises6.mkdir)(snapshotsDir, { recursive: true });
+  await (0, import_promises6.writeFile)(
+    (0, import_node_path8.join)(snapshotsDir, `${snapshot.date}.json`),
+    JSON.stringify(snapshot, null, 2),
+    "utf8"
+  );
+}
+async function readLatestSnapshot(dataDir) {
+  const snapshotsDir = (0, import_node_path8.join)(dataDir, "snapshots");
+  let files;
+  try {
+    files = await (0, import_promises6.readdir)(snapshotsDir);
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+  const jsonFiles = files.filter((f3) => f3.endsWith(".json")).sort();
+  const latest = jsonFiles[jsonFiles.length - 1];
+  if (!latest) return null;
+  try {
+    const raw = await (0, import_promises6.readFile)((0, import_node_path8.join)(snapshotsDir, latest), "utf8");
+    const { SnapshotSchema: SnapshotSchema2 } = await Promise.resolve().then(() => (init_snapshot(), snapshot_exports));
+    return SnapshotSchema2.parse(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+async function writeTailoredResume(dataDir, slug, markdown) {
+  const tailoredDir = (0, import_node_path8.join)(dataDir, "tailored");
+  await (0, import_promises6.mkdir)(tailoredDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(tailoredDir, `${slug}.md`);
+  await (0, import_promises6.writeFile)(filePath, markdown, "utf8");
+  return filePath;
+}
+async function writeProjects(dataDir, projects) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises6.writeFile)((0, import_node_path8.join)(agentDir, "projects.json"), JSON.stringify(projects, null, 2), "utf8");
+}
+async function writeClaims(dataDir, claims) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises6.writeFile)((0, import_node_path8.join)(agentDir, "claims.json"), JSON.stringify(claims, null, 2), "utf8");
+}
+async function writeCurateResult(dataDir, result) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  await (0, import_promises6.writeFile)((0, import_node_path8.join)(agentDir, "curate.json"), JSON.stringify(result, null, 2), "utf8");
+}
+async function writeResumeDraft(dataDir, slug, draft) {
+  const draftsDir = (0, import_node_path8.join)(dataDir, "agent", "drafts");
+  await (0, import_promises6.mkdir)(draftsDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(draftsDir, `${slug}.resume.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(draft, null, 2), "utf8");
+  return filePath;
+}
+async function readResumeDraft(dataDir, slug) {
+  const filePath = (0, import_node_path8.join)(dataDir, "agent", "drafts", `${slug}.resume.json`);
+  try {
+    const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+    const { ResumeDraftSchema: ResumeDraftSchema3 } = await Promise.resolve().then(() => (init_agent(), agent_exports));
+    return ResumeDraftSchema3.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writeResumeHtml(dataDir, slug, html) {
+  const resumesDir = (0, import_node_path8.join)(dataDir, "resumes");
+  await (0, import_promises6.mkdir)(resumesDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(resumesDir, `${slug}.html`);
+  await (0, import_promises6.writeFile)(filePath, html, "utf8");
+  return filePath;
+}
+async function writeResumeMd(dataDir, slug, markdown) {
+  const resumesDir = (0, import_node_path8.join)(dataDir, "resumes");
+  await (0, import_promises6.mkdir)(resumesDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(resumesDir, `${slug}.md`);
+  await (0, import_promises6.writeFile)(filePath, markdown, "utf8");
+  return filePath;
+}
+async function writeCritique(dataDir, slug, critique2) {
+  const critiquesDir = (0, import_node_path8.join)(dataDir, "agent", "critiques");
+  await (0, import_promises6.mkdir)(critiquesDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(critiquesDir, `${slug}.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(critique2, null, 2), "utf8");
+  return filePath;
+}
+async function writeRevision(dataDir, record) {
+  const draftsDir = (0, import_node_path8.join)(dataDir, "agent", "drafts");
+  await (0, import_promises6.mkdir)(draftsDir, { recursive: true });
+  const draftPath = (0, import_node_path8.join)(draftsDir, `${record.slug}.resume.json`);
+  await (0, import_promises6.writeFile)(draftPath, JSON.stringify(record.draft, null, 2), "utf8");
+  const recordPath = (0, import_node_path8.join)(draftsDir, `${record.slug}.revision.json`);
+  const recordWithoutDraft = { ...record, draft: void 0 };
+  await (0, import_promises6.writeFile)(recordPath, JSON.stringify(recordWithoutDraft, null, 2), "utf8");
+  return { draftPath, recordPath };
+}
+async function writeJdProfile(dataDir, profile) {
+  const dir = (0, import_node_path8.join)(dataDir, "agent", "jd-profiles");
+  await (0, import_promises6.mkdir)(dir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(dir, `${profile.slug}.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(profile, null, 2), "utf8");
+  return filePath;
+}
+async function writeEvidence(dataDir, log) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(agentDir, "evidence.json");
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(log, null, 2), "utf8");
+  return filePath;
+}
+async function readEvidence(dataDir) {
+  const filePath = (0, import_node_path8.join)(dataDir, "agent", "evidence.json");
+  try {
+    const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+    const { EvidenceLogSchema: EvidenceLogSchema2 } = await Promise.resolve().then(() => (init_evidence(), evidence_exports));
+    return EvidenceLogSchema2.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writeNarratives(dataDir, log) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(agentDir, "narratives.json");
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(log, null, 2), "utf8");
+  return filePath;
+}
+async function readNarratives(dataDir) {
+  const filePath = (0, import_node_path8.join)(dataDir, "agent", "narratives.json");
+  try {
+    const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+    const { NarrativeLogSchema: NarrativeLogSchema2 } = await Promise.resolve().then(() => (init_narrative(), narrative_exports));
+    return NarrativeLogSchema2.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writePlan(dataDir, plan) {
+  const agentDir = (0, import_node_path8.join)(dataDir, "agent");
+  await (0, import_promises6.mkdir)(agentDir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(agentDir, "plan.json");
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(plan, null, 2), "utf8");
+  return filePath;
+}
+async function readPlan(dataDir) {
+  const filePath = (0, import_node_path8.join)(dataDir, "agent", "plan.json");
+  try {
+    const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+    const { ResumePlanSchema: ResumePlanSchema2 } = await Promise.resolve().then(() => (init_plan(), plan_exports));
+    return ResumePlanSchema2.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writeJdMatchReport(dataDir, report) {
+  const dir = (0, import_node_path8.join)(dataDir, "agent", "jd-matches");
+  await (0, import_promises6.mkdir)(dir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(dir, `${report.jdSlug}.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
+}
+async function readJdMatchReport(dataDir, jdSlug) {
+  const filePath = (0, import_node_path8.join)(dataDir, "agent", "jd-matches", `${jdSlug}.json`);
+  try {
+    const raw = await (0, import_promises6.readFile)(filePath, "utf8");
+    const { JdMatchReportSchema: JdMatchReportSchema2 } = await Promise.resolve().then(() => (init_plan(), plan_exports));
+    return JdMatchReportSchema2.parse(JSON.parse(raw));
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function writeVerifyFactsReport(dataDir, slug, report) {
+  const dir = (0, import_node_path8.join)(dataDir, "agent", "verify-facts");
+  await (0, import_promises6.mkdir)(dir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(dir, `${slug}.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
+}
+async function writeEvalReport(dataDir, slug, report) {
+  const dir = (0, import_node_path8.join)(dataDir, "agent", "eval");
+  await (0, import_promises6.mkdir)(dir, { recursive: true });
+  const filePath = (0, import_node_path8.join)(dir, `${slug}.json`);
+  await (0, import_promises6.writeFile)(filePath, JSON.stringify(report, null, 2), "utf8");
+  return filePath;
+}
+
+// src/core/eval/metrics.ts
+init_cjs_shims();
+var METRIC_RE2 = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?))/i;
+var VERB_START_RE = /^(built|designed|implemented|refactored|optimized|optimised|migrated|integrated|led|developed|architected|shipped|reduced|created|launched|构建|设计|实现|重构|优化|迁移|集成|主导|开发|搭建|封装|部署|推动)\b/i;
+function computeBulletSpecificity(bullets) {
+  const totalBullets = bullets.length;
+  const bulletsWithMetric = bullets.filter((b2) => METRIC_RE2.test(b2)).length;
+  const bulletsWithVerbStart = bullets.filter((b2) => VERB_START_RE.test(b2.trim())).length;
+  const averageLength = totalBullets === 0 ? 0 : bullets.reduce((sum, bullet) => sum + bullet.trim().length, 0) / totalBullets;
+  return { totalBullets, bulletsWithMetric, bulletsWithVerbStart, averageLength };
+}
+function computeFactGroundedness(bullets, evidenceMap) {
+  const bulletsTotal = bullets.length;
+  const projectIdsWithEvidence = Object.values(evidenceMap).filter((refs) => refs.length > 0).length;
+  const bulletsWithEvidenceRef = Math.min(bulletsTotal, projectIdsWithEvidence > 0 ? bulletsTotal : 0);
+  return {
+    bulletsTotal,
+    bulletsWithEvidenceRef,
+    coverage: bulletsTotal === 0 ? 1 : bulletsWithEvidenceRef / bulletsTotal
+  };
+}
+function aggregateScores(scores) {
+  const dimensions = [
+    "selection_quality",
+    "positioning_quality",
+    "bullet_specificity",
+    "fact_groundedness",
+    "jd_alignment"
+  ];
+  return Object.fromEntries(
+    dimensions.map((dimension) => {
+      const values = scores.filter((s2) => s2.dimension === dimension).map((s2) => s2.score);
+      const avg = values.length === 0 ? 0 : values.reduce((sum, value) => sum + value, 0) / values.length;
+      return [dimension, Math.round(avg * 100) / 100];
+    })
+  );
+}
+
+// src/core/eval/runner.ts
+async function runEval(config, options) {
+  const cases = await loadCases(options.fixturesDir);
+  const selectedCases = options.caseIds && options.caseIds.length > 0 ? cases.filter((c3) => options.caseIds?.includes(c3.id)) : cases;
+  const results = [];
+  const allScores = [];
+  for (const evalCase of selectedCases) {
+    const caseDir = (0, import_node_path9.join)(options.fixturesDir, evalCase.fixturePath);
+    const draft = await materializeDraft(config, caseDir, evalCase);
+    const narratives = await loadOptionalJson(caseDir, "narratives.json");
+    const verify = await verifyDraftFacts(
+      { ...config.llm, apiKey: config.llm.apiKey ?? process.env.LLM_API_KEY ?? "" },
+      draft,
+      narratives?.narratives ?? [],
+      {
+        lang: config.language === "bilingual" ? "zh" : config.language,
+        useLlm: false,
+        draftSlug: evalCase.id
+      }
+    );
+    const bullets = draft.selectedProjects.flatMap((p) => p.bullets);
+    const spec = computeBulletSpecificity(bullets);
+    const fact = computeFactGroundedness(bullets, draft.evidenceMap);
+    const jdProfile = await loadOptionalJson(caseDir, "jd-profile.json");
+    const scores = [
+      {
+        dimension: "selection_quality",
+        score: scoreSelectionQuality(draft),
+        comment: "Heuristic score based on project count and section balance."
+      },
+      {
+        dimension: "positioning_quality",
+        score: scorePositioningQuality(draft),
+        comment: "Heuristic score based on headline clarity and summary completeness."
+      },
+      {
+        dimension: "bullet_specificity",
+        score: scoreBulletSpecificity(spec),
+        comment: "Heuristic score based on verbs, metrics, and average bullet length."
+      },
+      {
+        dimension: "fact_groundedness",
+        score: scoreFactGroundedness(fact.coverage, verify.claims.length),
+        comment: "Heuristic score based on coverage and verify-facts findings."
+      },
+      {
+        dimension: "jd_alignment",
+        score: scoreJdAlignment(draft, jdProfile, evalCase.jdSlug),
+        comment: "Heuristic score based on JD keyword overlap when a JD fixture exists."
+      }
+    ];
+    results.push({ caseId: evalCase.id, scores, draftSlug: evalCase.id });
+    allScores.push(...scores.map((s2) => ({ dimension: s2.dimension, score: s2.score })));
+  }
+  const report = {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    results,
+    aggregate: aggregateScores(allScores)
+  };
+  return report;
+}
+async function loadCases(fixturesDir) {
+  const filePath = (0, import_node_path9.join)(fixturesDir, "index.json");
+  try {
+    const raw = await (0, import_promises7.readFile)(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return [];
+    }
+    throw err;
+  }
+}
+async function loadOptionalJson(caseDir, filename) {
+  try {
+    const raw = await (0, import_promises7.readFile)((0, import_node_path9.join)(caseDir, filename), "utf8");
+    return JSON.parse(raw);
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+async function materializeDraft(config, caseDir, evalCase) {
+  const prebuiltDraft = await loadOptionalJson(caseDir, "draft.resume.json");
+  if (prebuiltDraft) return prebuiltDraft;
+  const experienceRaw = await loadOptionalJson(caseDir, "experience.json");
+  if (!experienceRaw) {
+    throw new Error(`Eval case "${evalCase.id}" is missing draft.resume.json and experience.json.`);
+  }
+  const tmp = await (0, import_promises7.mkdtemp)((0, import_node_path9.join)((0, import_node_os.tmpdir)(), "delta-eval-"));
+  try {
+    await (0, import_promises7.mkdir)((0, import_node_path9.join)(tmp, "_meta"), { recursive: true });
+    await (0, import_promises7.writeFile)((0, import_node_path9.join)(tmp, "_meta", "experience.json"), JSON.stringify(experienceRaw, null, 2), "utf8");
+    const narratives = await loadOptionalJson(caseDir, "narratives.json");
+    if (narratives) await writeNarratives(tmp, narratives);
+    const plan = await loadOptionalJson(caseDir, "plan.json");
+    if (plan) await writePlan(tmp, plan);
+    const jdText = await readOptionalText((0, import_node_path9.join)(caseDir, "jd.txt"));
+    await compose(config, tmp, {
+      lang: config.language === "bilingual" ? "zh" : config.language,
+      format: "md",
+      slug: evalCase.id,
+      ...jdText ? { jd: jdText } : {}
+    });
+    const draft = await readResumeDraft(tmp, evalCase.id);
+    if (!draft) {
+      throw new Error(`Eval case "${evalCase.id}" did not produce a draft.`);
+    }
+    return draft;
+  } finally {
+    await (0, import_promises7.rm)(tmp, { recursive: true, force: true });
+  }
+}
+async function readOptionalText(path2) {
+  try {
+    return await (0, import_promises7.readFile)(path2, "utf8");
+  } catch (err) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+}
+function clampScore(value) {
+  return Math.max(0, Math.min(10, Math.round(value * 100) / 100));
+}
+function scoreSelectionQuality(draft) {
+  const projectCount = draft.selectedProjects.length;
+  if (projectCount >= 3 && projectCount <= 6) return 8.5;
+  if (projectCount === 2 || projectCount === 7) return 7;
+  if (projectCount === 1) return 4;
+  return 5;
+}
+function scorePositioningQuality(draft) {
+  const headlineScore = draft.headline.trim().length >= 12 ? 4 : 2.5;
+  const summarySentenceCount = draft.summary.split(/[.!?。！？]/).filter((s2) => s2.trim().length > 0).length;
+  const summaryScore = Math.min(4, summarySentenceCount >= 3 ? 4 : summarySentenceCount * 1.25);
+  const skillScore = draft.skills.length > 0 ? 2 : 0.5;
+  return clampScore(headlineScore + summaryScore + skillScore);
+}
+function scoreBulletSpecificity(spec) {
+  if (spec.totalBullets === 0) return 0;
+  const verbRatio = spec.bulletsWithVerbStart / spec.totalBullets;
+  const metricRatio = spec.bulletsWithMetric / spec.totalBullets;
+  const lengthFactor = spec.averageLength >= 35 ? 1 : spec.averageLength / 35;
+  return clampScore(4 * verbRatio + 3 * metricRatio + 3 * lengthFactor);
+}
+function scoreFactGroundedness(coverage, issueCount) {
+  return clampScore(coverage * 10 - issueCount * 1.5);
+}
+function scoreJdAlignment(draft, jdProfile, jdSlug) {
+  if (!jdSlug) return 5;
+  if (!jdProfile) return 4;
+  const text = [draft.headline, draft.summary, ...draft.skills.flatMap((s2) => s2.items), ...draft.selectedProjects.flatMap((p) => p.bullets)].join(" ").toLowerCase();
+  const hits = jdProfile.requiredSkills.filter((skill) => text.includes(skill.toLowerCase())).length;
+  return clampScore(hits / Math.max(1, jdProfile.requiredSkills.length) * 10);
+}
+
+// src/core/agent/select.ts
+init_cjs_shims();
+init_zod();
+init_plan();
+var DEFAULT_TOP_N = 6;
+var DEFAULT_MIN_WORTHINESS = 0.2;
+var SYSTEM_SCHEMA3 = `
+Output ONLY valid JSON (no markdown fences) matching this exact schema:
+{
+  "positioning": "string (one-line candidate positioning)",
+  "targetRole": "string (optional, echo back only if user provided one)",
+  "selectedProjectIds": ["string (projectKey from input, in final desired order)"],
+  "selectionRationale": "string (why these projects, why this order \u2014 2-4 sentences)",
+  "deprioritizedProjectIds": ["string (projectKeys intentionally dropped)"],
+  "skillEmphasis": [
+    {
+      "name": "string (capability name)",
+      "rationale": "string (one short sentence pointing to which projects prove it)",
+      "supportingProjectIds": ["string (subset of selectedProjectIds)"]
+    }
+  ],
+  "styleHints": ["string (soft hints for the compose stage)"]
+}
+Hard constraints:
+- selectedProjectIds MUST be a subset of input projectKey values; never invent keys.
+- Every input narrative gets a verdict: it appears in EITHER selectedProjectIds OR
+  deprioritizedProjectIds \u2014 not both, not neither.
+- selectedProjectIds.length MUST be <= topN.
+- skillEmphasis[*].supportingProjectIds MUST be a subset of selectedProjectIds.
+- DO NOT select any narrative whose riskFlags contain { "kind": "maintenance-only" }
+  (these are pre-filtered out anyway).
+- selectionRationale must be substantive \u2014 not a one-line placeholder.
+`;
+var LlmOutputSchema2 = external_exports.object({
+  positioning: external_exports.string(),
+  targetRole: external_exports.string().optional(),
+  selectedProjectIds: external_exports.array(external_exports.string()),
+  selectionRationale: external_exports.string(),
+  deprioritizedProjectIds: external_exports.array(external_exports.string()).default([]),
+  skillEmphasis: external_exports.array(SkillEmphasisSchema).default([]),
+  styleHints: external_exports.array(external_exports.string()).default([])
+});
+function preFilterNarratives(narratives, options = {}) {
+  const minW = options.minWorthiness ?? DEFAULT_MIN_WORTHINESS;
+  const kept = [];
+  const dropped = [];
+  for (const n2 of narratives) {
+    const isMaintenanceOnly = n2.riskFlags?.some((f3) => f3.kind === "maintenance-only") ?? false;
+    const tooWeak = n2.resumeWorthiness < minW;
+    if (isMaintenanceOnly || tooWeak) {
+      dropped.push(n2);
+    } else {
+      kept.push(n2);
+    }
+  }
+  return { kept, dropped };
+}
+function formatNarrativesForPrompt(narratives, options) {
+  const compact = narratives.map((n2) => ({
+    projectKey: n2.projectKey,
+    title: n2.title,
+    period: `${n2.period.from.slice(0, 10)} \u2192 ${n2.period.to.slice(0, 10)}`,
+    repos: n2.repos,
+    candidateRole: n2.candidateRole,
+    coreProblem: n2.coreProblem,
+    solutionShape: n2.solutionShape,
+    proofPoints: n2.proofPoints.map((pp) => ({
+      text: pp.text,
+      kind: pp.kind,
+      strength: pp.strength
+    })),
+    techStack: n2.techStack,
+    strengthSignals: n2.strengthSignals,
+    riskFlags: n2.riskFlags,
+    resumeWorthiness: n2.resumeWorthiness
+  }));
+  const meta = { topN: options.topN };
+  if (options.targetRole) meta.targetRole = options.targetRole;
+  if (options.userHints && options.userHints.length > 0) meta.userHints = options.userHints;
+  if (options.jdMatches && options.jdMatches.length > 0) {
+    meta.jdMatches = options.jdMatches.map((m2) => ({
+      projectId: m2.projectId,
+      relevanceScore: m2.relevanceScore,
+      matchedRequirements: m2.matchedRequirements,
+      adjacentStrengths: m2.adjacentStrengths,
+      bestAngle: m2.bestAngle,
+      doNotOverclaim: m2.doNotOverclaim
+    }));
+  }
+  return JSON.stringify({ ...meta, narratives: compact }, null, 2);
+}
+async function buildResumePlan(llmConfig, narratives, options) {
+  const topN = options.topN ?? DEFAULT_TOP_N;
+  const { kept } = preFilterNarratives(narratives, {
+    ...options.minWorthiness !== void 0 ? { minWorthiness: options.minWorthiness } : {}
+  });
+  if (kept.length === 0) {
+    throw new Error(
+      "select: no narratives survived pre-filter. Lower --min-worthiness or re-run interpret."
+    );
+  }
+  const systemBase = await loadPrompt("select", options.lang);
+  const system = `${systemBase}
+${SYSTEM_SCHEMA3}
+The topN ceiling for this run is ${topN}.`;
+  const user = formatNarrativesForPrompt(kept, { ...options, topN });
+  const out = await generateObject(llmConfig, LlmOutputSchema2, system, user);
+  const knownKeys = new Set(kept.map((n2) => n2.projectKey));
+  const selectedSeen = /* @__PURE__ */ new Set();
+  const selectedProjectIds = [];
+  for (const id of out.selectedProjectIds) {
+    if (!knownKeys.has(id) || selectedSeen.has(id)) continue;
+    selectedSeen.add(id);
+    selectedProjectIds.push(id);
+    if (selectedProjectIds.length >= topN) break;
+  }
+  const deprioritizedSeen = /* @__PURE__ */ new Set();
+  const deprioritizedProjectIds = [];
+  for (const id of out.deprioritizedProjectIds ?? []) {
+    if (!knownKeys.has(id) || selectedSeen.has(id) || deprioritizedSeen.has(id)) continue;
+    deprioritizedSeen.add(id);
+    deprioritizedProjectIds.push(id);
+  }
+  for (const n2 of kept) {
+    if (!selectedSeen.has(n2.projectKey) && !deprioritizedSeen.has(n2.projectKey)) {
+      deprioritizedSeen.add(n2.projectKey);
+      deprioritizedProjectIds.push(n2.projectKey);
+    }
+  }
+  if (selectedProjectIds.length === 0) {
+    throw new Error(
+      "select: LLM returned no valid selectedProjectIds. Check that projectKeys in the input match what the model echoed back."
+    );
+  }
+  const skillEmphasis = (out.skillEmphasis ?? []).map((s2) => ({
+    name: s2.name,
+    rationale: s2.rationale,
+    supportingProjectIds: (s2.supportingProjectIds ?? []).filter((id) => selectedSeen.has(id))
+  })).filter((s2) => s2.supportingProjectIds.length > 0);
+  const plan = {
+    version: 1,
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    positioning: out.positioning,
+    selectedProjectIds,
+    selectionRationale: out.selectionRationale,
+    deprioritizedProjectIds,
+    skillEmphasis,
+    styleHints: out.styleHints ?? []
+  };
+  if (options.targetRole) plan.targetRole = options.targetRole;
+  else if (out.targetRole) plan.targetRole = out.targetRole;
+  if (options.jdSlug) plan.jdSlug = options.jdSlug;
+  return plan;
 }
 
 // src/core/agent/jd-parse.ts
@@ -12561,8 +14103,8 @@ function mergeExperienceEntries(entries) {
 
 // src/core/agent/revise.ts
 init_cjs_shims();
-var import_promises6 = require("fs/promises");
-var import_node_path8 = require("path");
+var import_promises8 = require("fs/promises");
+var import_node_path10 = require("path");
 init_agent();
 init_zod();
 var ReviseLlmOutputSchema = external_exports.object({
@@ -12612,7 +14154,7 @@ async function makeRevisionSlug(dataDir, baseSlug) {
   const originalBase = stripRevSuffix(baseSlug);
   let files = [];
   try {
-    files = await (0, import_promises6.readdir)((0, import_node_path8.join)(dataDir, "resumes"));
+    files = await (0, import_promises8.readdir)((0, import_node_path10.join)(dataDir, "resumes"));
   } catch {
   }
   const pattern = new RegExp(`^${originalBase}-rev-(\\d+)\\.(html|md|json)$`);
@@ -14107,7 +15649,7 @@ function tagEvents(events) {
 init_cjs_shims();
 init_zod();
 init_experience();
-var SYSTEM_SCHEMA = `
+var SYSTEM_SCHEMA4 = `
 Output ONLY valid JSON (no markdown fences) matching this exact schema:
 {
   "id": "string (e.g. 'owner_repo_2026-05')",
@@ -14192,250 +15734,10 @@ ${BATCH_SYSTEM_SCHEMA}`;
 async function generateEntry(config, cluster, allTags, lang, maxEvents = 40) {
   const systemPromptBase = await loadPrompt("evolve", lang);
   const system = `${systemPromptBase}
-${SYSTEM_SCHEMA}`;
+${SYSTEM_SCHEMA4}`;
   const user = formatEvents(cluster, allTags, maxEvents);
   const entry = await generateObject(config, ExperienceEntrySchema, system, user);
   return { ...entry, id: cluster.id, repo: cluster.repo, period: cluster.period };
-}
-
-// src/core/io/data.ts
-init_cjs_shims();
-var import_promises7 = require("fs/promises");
-var import_node_path9 = require("path");
-function getISOWeekKey(isoDate) {
-  const d2 = new Date(isoDate);
-  const dayOfWeek = d2.getUTCDay();
-  const thursday = new Date(d2);
-  thursday.setUTCDate(d2.getUTCDate() + 3 - (dayOfWeek + 6) % 7);
-  const jan4 = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 4));
-  const jan4Thursday = new Date(jan4);
-  jan4Thursday.setUTCDate(jan4.getUTCDate() + 3 - (jan4.getUTCDay() + 6) % 7);
-  const weekNumber = Math.ceil(
-    ((thursday.getTime() - jan4Thursday.getTime()) / 864e5 + 1) / 7
-  );
-  const isoYear = thursday.getUTCFullYear();
-  return `${isoYear}-W${String(weekNumber).padStart(2, "0")}`;
-}
-function eventIdentity(event) {
-  return `${event.kind}:${event.repo}:${event.ts}`;
-}
-async function appendEvents(dataDir, events) {
-  if (events.length === 0) return;
-  const eventsDir = (0, import_node_path9.join)(dataDir, "events");
-  await (0, import_promises7.mkdir)(eventsDir, { recursive: true });
-  const byWeek = /* @__PURE__ */ new Map();
-  for (const event of events) {
-    const key = getISOWeekKey(event.ts);
-    const group = byWeek.get(key);
-    if (group) {
-      group.push(event);
-    } else {
-      byWeek.set(key, [event]);
-    }
-  }
-  for (const [weekKey, weekEvents] of byWeek) {
-    const filePath = (0, import_node_path9.join)(eventsDir, `${weekKey}.jsonl`);
-    const existingIds = /* @__PURE__ */ new Set();
-    try {
-      const raw = await (0, import_promises7.readFile)(filePath, "utf8");
-      for (const line of raw.split("\n")) {
-        if (line.trim() === "") continue;
-        try {
-          const parsed = JSON.parse(line);
-          existingIds.add(eventIdentity(parsed));
-        } catch {
-        }
-      }
-    } catch (err) {
-      if (err instanceof Error && "code" in err && err.code !== "ENOENT") {
-        throw err;
-      }
-    }
-    const newEvents = weekEvents.filter((e2) => !existingIds.has(eventIdentity(e2)));
-    if (newEvents.length === 0) continue;
-    const lines = `${newEvents.map((e2) => JSON.stringify(e2)).join("\n")}
-`;
-    await (0, import_promises7.appendFile)(filePath, lines, "utf8");
-  }
-}
-async function readEventsSince(dataDir, since) {
-  const eventsDir = (0, import_node_path9.join)(dataDir, "events");
-  let files;
-  try {
-    files = await (0, import_promises7.readdir)(eventsDir);
-  } catch (err) {
-    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-      return [];
-    }
-    throw err;
-  }
-  const sinceWeek = getISOWeekKey(since);
-  const jsonlFiles = files.filter((f3) => f3.endsWith(".jsonl") && f3 >= `${sinceWeek}.jsonl`).sort();
-  const events = [];
-  for (const file of jsonlFiles) {
-    const raw = await (0, import_promises7.readFile)((0, import_node_path9.join)(eventsDir, file), "utf8");
-    for (const line of raw.split("\n")) {
-      if (line.trim() === "") continue;
-      try {
-        const parsed = JSON.parse(line);
-        if (parsed.ts >= since) {
-          events.push(parsed);
-        }
-      } catch {
-      }
-    }
-  }
-  events.sort((a2, b2) => a2.ts.localeCompare(b2.ts));
-  return events;
-}
-async function writeExperienceLog(dataDir, log) {
-  const metaDir = (0, import_node_path9.join)(dataDir, "_meta");
-  await (0, import_promises7.mkdir)(metaDir, { recursive: true });
-  await (0, import_promises7.writeFile)((0, import_node_path9.join)(metaDir, "experience.json"), JSON.stringify(log, null, 2), "utf8");
-}
-async function readExperienceLog(dataDir) {
-  const path2 = (0, import_node_path9.join)(dataDir, "_meta", "experience.json");
-  try {
-    const raw = await (0, import_promises7.readFile)(path2, "utf8");
-    const { ExperienceLogSchema: ExperienceLogSchema2 } = await Promise.resolve().then(() => (init_experience(), experience_exports));
-    return ExperienceLogSchema2.parse(JSON.parse(raw));
-  } catch (err) {
-    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-      return null;
-    }
-    throw err;
-  }
-}
-var CHECKPOINT_PATH = (dataDir) => (0, import_node_path9.join)(dataDir, "_meta", "evolve-checkpoint.json");
-async function readEvolveCheckpoint(dataDir) {
-  try {
-    const raw = await (0, import_promises7.readFile)(CHECKPOINT_PATH(dataDir), "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-async function writeEvolveCheckpoint(dataDir, checkpoint) {
-  const metaDir = (0, import_node_path9.join)(dataDir, "_meta");
-  await (0, import_promises7.mkdir)(metaDir, { recursive: true });
-  await (0, import_promises7.writeFile)(CHECKPOINT_PATH(dataDir), JSON.stringify(checkpoint, null, 2), "utf8");
-}
-async function clearEvolveCheckpoint(dataDir) {
-  try {
-    await (0, import_promises7.unlink)(CHECKPOINT_PATH(dataDir));
-  } catch {
-  }
-}
-async function writeSnapshot(dataDir, snapshot) {
-  const snapshotsDir = (0, import_node_path9.join)(dataDir, "snapshots");
-  await (0, import_promises7.mkdir)(snapshotsDir, { recursive: true });
-  await (0, import_promises7.writeFile)(
-    (0, import_node_path9.join)(snapshotsDir, `${snapshot.date}.json`),
-    JSON.stringify(snapshot, null, 2),
-    "utf8"
-  );
-}
-async function readLatestSnapshot(dataDir) {
-  const snapshotsDir = (0, import_node_path9.join)(dataDir, "snapshots");
-  let files;
-  try {
-    files = await (0, import_promises7.readdir)(snapshotsDir);
-  } catch (err) {
-    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-      return null;
-    }
-    throw err;
-  }
-  const jsonFiles = files.filter((f3) => f3.endsWith(".json")).sort();
-  const latest = jsonFiles[jsonFiles.length - 1];
-  if (!latest) return null;
-  try {
-    const raw = await (0, import_promises7.readFile)((0, import_node_path9.join)(snapshotsDir, latest), "utf8");
-    const { SnapshotSchema: SnapshotSchema2 } = await Promise.resolve().then(() => (init_snapshot(), snapshot_exports));
-    return SnapshotSchema2.parse(JSON.parse(raw));
-  } catch {
-    return null;
-  }
-}
-async function writeTailoredResume(dataDir, slug, markdown) {
-  const tailoredDir = (0, import_node_path9.join)(dataDir, "tailored");
-  await (0, import_promises7.mkdir)(tailoredDir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(tailoredDir, `${slug}.md`);
-  await (0, import_promises7.writeFile)(filePath, markdown, "utf8");
-  return filePath;
-}
-async function writeProjects(dataDir, projects) {
-  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
-  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
-  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "projects.json"), JSON.stringify(projects, null, 2), "utf8");
-}
-async function writeClaims(dataDir, claims) {
-  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
-  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
-  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "claims.json"), JSON.stringify(claims, null, 2), "utf8");
-}
-async function writeCurateResult(dataDir, result) {
-  const agentDir = (0, import_node_path9.join)(dataDir, "agent");
-  await (0, import_promises7.mkdir)(agentDir, { recursive: true });
-  await (0, import_promises7.writeFile)((0, import_node_path9.join)(agentDir, "curate.json"), JSON.stringify(result, null, 2), "utf8");
-}
-async function writeResumeDraft(dataDir, slug, draft) {
-  const draftsDir = (0, import_node_path9.join)(dataDir, "agent", "drafts");
-  await (0, import_promises7.mkdir)(draftsDir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(draftsDir, `${slug}.resume.json`);
-  await (0, import_promises7.writeFile)(filePath, JSON.stringify(draft, null, 2), "utf8");
-  return filePath;
-}
-async function readResumeDraft(dataDir, slug) {
-  const filePath = (0, import_node_path9.join)(dataDir, "agent", "drafts", `${slug}.resume.json`);
-  try {
-    const raw = await (0, import_promises7.readFile)(filePath, "utf8");
-    const { ResumeDraftSchema: ResumeDraftSchema3 } = await Promise.resolve().then(() => (init_agent(), agent_exports));
-    return ResumeDraftSchema3.parse(JSON.parse(raw));
-  } catch (err) {
-    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-      return null;
-    }
-    throw err;
-  }
-}
-async function writeResumeHtml(dataDir, slug, html) {
-  const resumesDir = (0, import_node_path9.join)(dataDir, "resumes");
-  await (0, import_promises7.mkdir)(resumesDir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(resumesDir, `${slug}.html`);
-  await (0, import_promises7.writeFile)(filePath, html, "utf8");
-  return filePath;
-}
-async function writeResumeMd(dataDir, slug, markdown) {
-  const resumesDir = (0, import_node_path9.join)(dataDir, "resumes");
-  await (0, import_promises7.mkdir)(resumesDir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(resumesDir, `${slug}.md`);
-  await (0, import_promises7.writeFile)(filePath, markdown, "utf8");
-  return filePath;
-}
-async function writeCritique(dataDir, slug, critique2) {
-  const critiquesDir = (0, import_node_path9.join)(dataDir, "agent", "critiques");
-  await (0, import_promises7.mkdir)(critiquesDir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(critiquesDir, `${slug}.json`);
-  await (0, import_promises7.writeFile)(filePath, JSON.stringify(critique2, null, 2), "utf8");
-  return filePath;
-}
-async function writeRevision(dataDir, record) {
-  const draftsDir = (0, import_node_path9.join)(dataDir, "agent", "drafts");
-  await (0, import_promises7.mkdir)(draftsDir, { recursive: true });
-  const draftPath = (0, import_node_path9.join)(draftsDir, `${record.slug}.resume.json`);
-  await (0, import_promises7.writeFile)(draftPath, JSON.stringify(record.draft, null, 2), "utf8");
-  const recordPath = (0, import_node_path9.join)(draftsDir, `${record.slug}.revision.json`);
-  const recordWithoutDraft = { ...record, draft: void 0 };
-  await (0, import_promises7.writeFile)(recordPath, JSON.stringify(recordWithoutDraft, null, 2), "utf8");
-  return { draftPath, recordPath };
-}
-async function writeJdProfile(dataDir, profile) {
-  const dir = (0, import_node_path9.join)(dataDir, "agent", "jd-profiles");
-  await (0, import_promises7.mkdir)(dir, { recursive: true });
-  const filePath = (0, import_node_path9.join)(dir, `${profile.slug}.json`);
-  await (0, import_promises7.writeFile)(filePath, JSON.stringify(profile, null, 2), "utf8");
-  return filePath;
 }
 
 // src/core/tailor/jd-rerank.ts
@@ -15134,7 +16436,7 @@ var Eta$1 = class {
     }
   }
 };
-function readFile7(path2) {
+function readFile8(path2) {
   let res = "";
   try {
     res = fs.readFileSync(path2, "utf8");
@@ -15192,7 +16494,7 @@ var absolutePathRegExp = /^\\|^\//;
 var Eta = class extends Eta$1 {
   constructor(...args) {
     super(...args);
-    this.readFile = readFile7;
+    this.readFile = readFile8;
     this.resolvePath = resolvePath;
   }
 };
@@ -15364,6 +16666,130 @@ async function evolve(config, dataDir, since = EPOCH) {
   console.log(`[evolve] wrote experience log (${entries.length} entries) and snapshot ${today}`);
   return { log, diff };
 }
+async function evidence(dataDir) {
+  const expLog = await readExperienceLog(dataDir);
+  if (!expLog) {
+    throw new Error("No experience log found. Run 'delta evolve' first.");
+  }
+  const log = buildEvidenceBundlesFromEntries(expLog.entries);
+  const evidencePath = await writeEvidence(dataDir, log);
+  console.log(
+    `[evidence] wrote ${log.bundles.length} bundle${log.bundles.length === 1 ? "" : "s"} \u2192 ${evidencePath}`
+  );
+  return { log, evidencePath };
+}
+async function interpret(config, dataDir, options = {}) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const evLog = await readEvidence(dataDir);
+  if (!evLog) {
+    throw new Error("No evidence log found. Run 'delta evidence' first.");
+  }
+  if (evLog.bundles.length === 0) {
+    throw new Error("Evidence log contains zero bundles. Re-run 'delta evolve' then 'delta evidence'.");
+  }
+  const lang = options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+  console.log(
+    `[interpret] interpreting ${evLog.bundles.length} bundle${evLog.bundles.length === 1 ? "" : "s"} (lang: ${lang})`
+  );
+  const interpretOptions = { lang };
+  if (options.maxNarratives !== void 0) interpretOptions.maxNarratives = options.maxNarratives;
+  const log = await interpretBundles(llmConfig, evLog.bundles, interpretOptions);
+  const narrativesPath = await writeNarratives(dataDir, log);
+  console.log(
+    `[interpret] produced ${log.narratives.length} narrative${log.narratives.length === 1 ? "" : "s"} \u2192 ${narrativesPath}`
+  );
+  if (log.narratives.length > 0) {
+    for (const n2 of log.narratives) {
+      console.log(
+        `  [${n2.resumeWorthiness.toFixed(2)}] ${n2.title} (${n2.repos.join(", ")})  ${n2.candidateRole}`
+      );
+    }
+  }
+  return { log, narrativesPath };
+}
+async function select(config, dataDir, options = {}) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Re-run 'delta interpret'.");
+  }
+  const lang = options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+  const preMinW = options.minWorthiness !== void 0 ? { minWorthiness: options.minWorthiness } : {};
+  const { dropped } = preFilterNarratives(narLog.narratives, preMinW);
+  console.log(
+    `[select] ${narLog.narratives.length} narrative(s); pre-filter dropped ${dropped.length}; topN=${options.topN ?? 6} (lang: ${lang})`
+  );
+  for (const d2 of dropped) {
+    const flags = (d2.riskFlags ?? []).map((f3) => f3.kind).join(",") || "low-worthiness";
+    console.log(`  - dropped: ${d2.title} [${flags}] worthiness=${d2.resumeWorthiness.toFixed(2)}`);
+  }
+  const selectOptions = { lang };
+  if (options.topN !== void 0) selectOptions.topN = options.topN;
+  if (options.targetRole) selectOptions.targetRole = options.targetRole;
+  if (options.userHints && options.userHints.length > 0)
+    selectOptions.userHints = options.userHints;
+  if (options.minWorthiness !== void 0) selectOptions.minWorthiness = options.minWorthiness;
+  if (options.jdMatchSlug) {
+    const report = await readJdMatchReport(dataDir, options.jdMatchSlug);
+    if (!report) {
+      throw new Error(
+        `No jd-match report found for slug "${options.jdMatchSlug}". Run 'delta jd-match' first.`
+      );
+    }
+    selectOptions.jdMatches = report.matches;
+    selectOptions.jdSlug = report.jdSlug;
+  }
+  const plan = await buildResumePlan(llmConfig, narLog.narratives, selectOptions);
+  const planPath = await writePlan(dataDir, plan);
+  console.log(
+    `[select] selected ${plan.selectedProjectIds.length}, deprioritized ${plan.deprioritizedProjectIds.length} \u2192 ${planPath}`
+  );
+  console.log(`  positioning: ${plan.positioning}`);
+  plan.selectedProjectIds.forEach((id, i2) => {
+    console.log(`  ${i2 + 1}. ${id}`);
+  });
+  if (plan.skillEmphasis.length > 0) {
+    console.log(`  skillEmphasis: ${plan.skillEmphasis.map((s2) => s2.name).join(", ")}`);
+  }
+  return { plan, planPath, prefilterDroppedCount: dropped.length };
+}
+async function jdMatch(config, dataDir, options) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Re-run 'delta interpret'.");
+  }
+  const lang = options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+  const jdProfile = await parseJdProfile(llmConfig, options.jdText, lang);
+  const jdProfilePath = await writeJdProfile(dataDir, jdProfile);
+  const report = await matchNarrativesToJd(llmConfig, narLog.narratives, jdProfile, {
+    lang,
+    ...options.allowAdjacency !== void 0 ? { allowAdjacency: options.allowAdjacency } : {}
+  });
+  const reportPath = await writeJdMatchReport(dataDir, report);
+  console.log(
+    `[jd-match] "${jdProfile.jobTitle}" \u2192 ${report.matches.length} narrative match(es) written`
+  );
+  return { jdProfile, jdProfilePath, report, reportPath };
+}
 async function curate(dataDir, topN = 6) {
   const log = await readExperienceLog(dataDir);
   if (!log) {
@@ -15393,44 +16819,162 @@ async function compose(config, dataDir, options = { lang: "zh" }) {
     throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
   }
   const llmConfig = { ...config.llm, apiKey };
-  const log = await readExperienceLog(dataDir);
-  if (!log) {
-    throw new Error("No experience log found. Run 'delta evolve' first.");
+  const lang = options.lang ?? (config.language === "bilingual" ? "zh" : config.language);
+  if (options.legacy) {
+    const log = await readExperienceLog(dataDir);
+    if (!log) {
+      throw new Error("No experience log found. Run 'delta evolve' first.");
+    }
+    const topN = options.topN ?? 6;
+    const drafts = mergeExperienceEntries(log.entries);
+    const scored = scoreProjects(drafts);
+    const claims = buildCapabilityClaims(scored);
+    let jdProfile2 = null;
+    let jdProfilePath2 = null;
+    let finalProjects = scored;
+    let finalClaims = claims;
+    if (options.jd) {
+      jdProfile2 = await parseJdProfile(llmConfig, options.jd, lang);
+      jdProfilePath2 = await writeJdProfile(dataDir, jdProfile2);
+      finalProjects = scoreProjectsForJd(scored, jdProfile2);
+      finalClaims = scoreClaimsForJd(claims, jdProfile2);
+      console.log(
+        `[compose:legacy] JD parsed: "${jdProfile2.jobTitle}" (${jdProfile2.seniority}) \u2014 ${jdProfile2.requiredSkills.length} required skills`
+      );
+    }
+    const curateResult = {
+      version: 1,
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      projects: finalProjects,
+      claims: finalClaims
+    };
+    const legacyPlan = {
+      version: 1,
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      positioning: options.targetRole ?? "Generalist software engineer",
+      selectedProjectIds: curateResult.projects.slice(0, topN).map((p) => p.id),
+      selectionRationale: "Legacy compose path derived selected projects from curate ranking.",
+      deprioritizedProjectIds: curateResult.projects.slice(topN).map((p) => p.id),
+      skillEmphasis: [],
+      styleHints: [],
+      ...options.targetRole ? { targetRole: options.targetRole } : {},
+      ...options.jd && jdProfile2 ? { jdSlug: jdProfile2.slug } : {}
+    };
+    const legacyNarratives = curateResult.projects.map((project) => ({
+      projectKey: project.id,
+      title: project.title,
+      period: project.period,
+      scope: project.highlights.map((h2) => h2.text).slice(0, 2).join(" "),
+      candidateRole: "contributor",
+      coreProblem: project.highlights[0]?.text ?? project.title,
+      solutionShape: project.highlights.slice(1, 3).map((h2) => h2.text).join(" "),
+      proofPoints: project.highlights.map((h2) => ({
+        text: h2.text,
+        kind: "shipped",
+        evidenceRefs: h2.evidence && h2.evidence.length > 0 ? h2.evidence : project.evidenceEntryIds,
+        strength: "moderate"
+      })),
+      techStack: project.stack,
+      strengthSignals: project.tags,
+      riskFlags: project.weakSignals.map((signal) => ({ kind: signal })),
+      resumeWorthiness: project.importance,
+      sourceEvidenceIds: project.evidenceEntryIds.length > 0 ? project.evidenceEntryIds : [project.id],
+      repos: [project.repo]
+    }));
+    const draft2 = await composeDraft(llmConfig, config.login, legacyPlan, legacyNarratives, {
+      lang,
+      ...options.targetRole ? { targetRole: options.targetRole } : {},
+      ...options.jd ? { jd: options.jd } : {}
+    });
+    const slug2 = options.slug ?? (jdProfile2 ? jdProfile2.slug : "default");
+    const draftPath2 = await writeResumeDraft(dataDir, slug2, draft2);
+    const verifyFacts3 = await verifyDraftFacts(llmConfig, draft2, legacyNarratives, {
+      lang,
+      useLlm: false,
+      draftSlug: slug2
+    });
+    const verifyFactsPath2 = await writeVerifyFactsReport(dataDir, slug2, verifyFacts3);
+    const format2 = options.format ?? "both";
+    const style2 = options.style ?? "clean";
+    let htmlPath2 = null;
+    let mdPath2 = null;
+    if (format2 === "html" || format2 === "both") {
+      const html = renderWithStyle(draft2, style2);
+      htmlPath2 = await writeResumeHtml(dataDir, slug2, html);
+    }
+    if (format2 === "md" || format2 === "both") {
+      const md = renderResumeDraftMarkdown(draft2);
+      mdPath2 = await writeResumeMd(dataDir, slug2, md);
+    }
+    return {
+      draft: draft2,
+      draftPath: draftPath2,
+      htmlPath: htmlPath2,
+      mdPath: mdPath2,
+      jdProfile: jdProfile2,
+      jdProfilePath: jdProfilePath2,
+      verifyFacts: verifyFacts3,
+      verifyFactsPath: verifyFactsPath2
+    };
   }
-  const topN = options.topN ?? 6;
-  const drafts = mergeExperienceEntries(log.entries);
-  const scored = scoreProjects(drafts);
-  const claims = buildCapabilityClaims(scored);
-  const lang = config.language === "bilingual" ? "zh" : config.language;
   let jdProfile = null;
   let jdProfilePath = null;
-  let finalProjects = scored;
-  let finalClaims = claims;
+  let jdMatchReport = null;
+  let narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    const log = await readExperienceLog(dataDir);
+    if (!log) {
+      throw new Error("No experience log found. Run 'delta evolve' first.");
+    }
+    const evidenceLog = buildEvidenceBundlesFromEntries(log.entries);
+    await writeEvidence(dataDir, evidenceLog);
+    narLog = await interpretBundles(llmConfig, evidenceLog.bundles, { lang });
+    await writeNarratives(dataDir, narLog);
+    console.log(`[compose] generated ${narLog.narratives.length} narrative(s) from experience log`);
+  }
+  if (narLog.narratives.length === 0) {
+    throw new Error("Narratives log is empty. Run 'delta interpret' again after collecting data.");
+  }
   if (options.jd) {
     jdProfile = await parseJdProfile(llmConfig, options.jd, lang);
     jdProfilePath = await writeJdProfile(dataDir, jdProfile);
-    finalProjects = scoreProjectsForJd(scored, jdProfile);
-    finalClaims = scoreClaimsForJd(claims, jdProfile);
+    jdMatchReport = await matchNarrativesToJd(llmConfig, narLog.narratives, jdProfile, { lang });
+    await writeJdMatchReport(dataDir, jdMatchReport);
     console.log(
-      `[compose] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) \u2014 ${jdProfile.requiredSkills.length} required skills`
+      `[compose] JD parsed: "${jdProfile.jobTitle}" (${jdProfile.seniority}) \u2014 ${jdProfile.requiredSkills.length} required skills; ${jdMatchReport.matches.length} narrative match(es)`
     );
   }
-  const curateResult = {
-    version: 1,
-    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
-    projects: finalProjects,
-    claims: finalClaims
-  };
-  const composeOpts = { lang, topN };
-  if (options.targetRole) {
-    composeOpts.targetRole = options.targetRole;
-  } else if (jdProfile) {
-    composeOpts.targetRole = jdProfile.jobTitle;
+  const existingPlan = await readPlan(dataDir);
+  const shouldRebuildPlan = !existingPlan || options.targetRole !== void 0 || options.jd !== void 0 || options.topN !== void 0 && existingPlan.selectedProjectIds.length > options.topN;
+  let plan = shouldRebuildPlan ? null : existingPlan;
+  if (!plan) {
+    const selectOptions = { lang };
+    if (options.topN !== void 0) selectOptions.topN = options.topN;
+    if (options.targetRole) selectOptions.targetRole = options.targetRole;
+    else if (jdProfile) selectOptions.targetRole = jdProfile.jobTitle;
+    if (jdProfile) selectOptions.jdSlug = jdProfile.slug;
+    if (jdMatchReport) selectOptions.jdMatches = jdMatchReport.matches;
+    plan = await buildResumePlan(llmConfig, narLog.narratives, selectOptions);
+    await writePlan(dataDir, plan);
+    const { dropped } = preFilterNarratives(narLog.narratives);
+    console.log(
+      `[compose] built plan with ${plan.selectedProjectIds.length} selected project(s); pre-filter dropped ${dropped.length}`
+    );
   }
+  const composeOpts = { lang };
+  if (options.targetRole) composeOpts.targetRole = options.targetRole;
+  else if (plan.targetRole) composeOpts.targetRole = plan.targetRole;
+  else if (jdProfile) composeOpts.targetRole = jdProfile.jobTitle;
   if (options.jd) composeOpts.jd = options.jd;
-  const draft = await composeDraft(llmConfig, config.login, curateResult, composeOpts);
+  const draft = await composeDraft(llmConfig, config.login, plan, narLog.narratives, composeOpts);
   const slug = options.slug ?? (jdProfile ? jdProfile.slug : "default");
   const draftPath = await writeResumeDraft(dataDir, slug, draft);
+  const verifyFacts2 = await verifyDraftFacts(llmConfig, draft, narLog.narratives, {
+    lang,
+    useLlm: false,
+    draftSlug: slug
+  });
+  const verifyFactsPath = await writeVerifyFactsReport(dataDir, slug, verifyFacts2);
   const format = options.format ?? "both";
   const style = options.style ?? "clean";
   let htmlPath = null;
@@ -15443,7 +16987,16 @@ async function compose(config, dataDir, options = { lang: "zh" }) {
     const md = renderResumeDraftMarkdown(draft);
     mdPath = await writeResumeMd(dataDir, slug, md);
   }
-  return { draft, draftPath, htmlPath, mdPath, jdProfile, jdProfilePath };
+  return {
+    draft,
+    draftPath,
+    htmlPath,
+    mdPath,
+    jdProfile,
+    jdProfilePath,
+    verifyFacts: verifyFacts2,
+    verifyFactsPath
+  };
 }
 async function critique(config, dataDir, slug = "default") {
   const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
@@ -15461,6 +17014,37 @@ async function critique(config, dataDir, slug = "default") {
   const critiqueResult = await critiqueDraft(llmConfig, draft, slug, lang);
   const critiquePath = await writeCritique(dataDir, slug, critiqueResult);
   return { critique: critiqueResult, critiquePath };
+}
+async function verifyFacts(config, dataDir, slug = "default", options = {}) {
+  const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
+  if (!apiKey) {
+    throw new Error("LLM_API_KEY is required. Set it in your environment or .env.local file.");
+  }
+  const llmConfig = { ...config.llm, apiKey };
+  const draft = await readResumeDraft(dataDir, slug);
+  if (!draft) {
+    throw new Error(`No resume draft found for slug "${slug}". Run 'delta compose' first.`);
+  }
+  const narLog = await readNarratives(dataDir);
+  if (!narLog) {
+    throw new Error("No narratives log found. Run 'delta interpret' first.");
+  }
+  const lang = config.language === "bilingual" ? "zh" : config.language;
+  const report = await verifyDraftFacts(llmConfig, draft, narLog.narratives, {
+    lang,
+    useLlm: options.useLlm ?? false,
+    draftSlug: slug
+  });
+  const reportPath = await writeVerifyFactsReport(dataDir, slug, report);
+  return { report, reportPath };
+}
+async function evalPipeline(config, dataDir, options = { fixturesDir: "src/core/eval/fixtures" }) {
+  const report = await runEval(config, {
+    fixturesDir: options.fixturesDir,
+    ...options.caseIds && options.caseIds.length > 0 ? { caseIds: options.caseIds } : {}
+  });
+  const reportPath = await writeEvalReport(dataDir, "latest", report);
+  return { report, reportPath };
 }
 async function revise(config, dataDir, instruction, options = {}) {
   const apiKey = config.llm.apiKey ?? process.env.LLM_API_KEY;
@@ -15586,7 +17170,7 @@ async function cleanRevisions(dataDir, options) {
   async function sweepDir(dir, pattern) {
     let files = [];
     try {
-      files = await (0, import_promises8.readdir)(dir);
+      files = await (0, import_promises9.readdir)(dir);
     } catch {
       return;
     }
@@ -15595,15 +17179,15 @@ async function cleanRevisions(dataDir, options) {
       const stemMatch = f3.match(/^(.+?)\.(html|md|resume\.json|revision\.json)$/);
       const fileStem = stemMatch?.[1] ?? f3;
       if (keep && (fileStem === keep || f3.startsWith(keep + "."))) {
-        kept.push((0, import_node_path10.join)(dir, f3));
+        kept.push((0, import_node_path11.join)(dir, f3));
         continue;
       }
-      if (!dryRun) await (0, import_promises8.unlink)((0, import_node_path10.join)(dir, f3));
-      deleted.push((0, import_node_path10.join)(dir, f3));
+      if (!dryRun) await (0, import_promises9.unlink)((0, import_node_path11.join)(dir, f3));
+      deleted.push((0, import_node_path11.join)(dir, f3));
     }
   }
-  await sweepDir((0, import_node_path10.join)(dataDir, "resumes"), revPattern);
-  await sweepDir((0, import_node_path10.join)(dataDir, "agent", "drafts"), draftPattern);
+  await sweepDir((0, import_node_path11.join)(dataDir, "resumes"), revPattern);
+  await sweepDir((0, import_node_path11.join)(dataDir, "agent", "drafts"), draftPattern);
   return { deleted, kept };
 }
 
@@ -15675,7 +17259,7 @@ var observeCmd = defineCommand({
   },
   async run({ args }) {
     await loadLocalEnv();
-    const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+    const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
     const config = ConfigSchema.parse(JSON.parse(configRaw));
     if (args.since) {
       const sinceDate = new Date(args.since);
@@ -15716,7 +17300,7 @@ var evolveCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -15761,7 +17345,7 @@ var tailorCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -15771,7 +17355,7 @@ var tailorCmd = defineCommand({
     let jdText;
     if (args.jd) {
       try {
-        jdText = await (0, import_promises9.readFile)(args.jd, "utf8");
+        jdText = await (0, import_promises10.readFile)(args.jd, "utf8");
       } catch (err) {
         const hint = err instanceof Error ? err.message : String(err);
         console.error(`[tailor] Failed to read JD file "${args.jd}": ${hint}`);
@@ -15785,7 +17369,7 @@ var tailorCmd = defineCommand({
 var composeCmd = defineCommand({
   meta: {
     name: "compose",
-    description: "Generate a polished resume draft via LLM from curated project data."
+    description: "Generate a polished resume draft from ResumePlan + ProjectNarrative data."
   },
   args: {
     "data-dir": {
@@ -15813,19 +17397,24 @@ var composeCmd = defineCommand({
     },
     "top-n": {
       type: "string",
-      description: "Number of top projects to include (default: 6)",
+      description: "Selection ceiling when compose needs to rebuild plan.json (default: 6)",
       default: "6"
     },
     jd: {
       type: "string",
       description: "Path to a job description file for targeted resume"
+    },
+    legacy: {
+      type: "boolean",
+      description: "Use the legacy curate -> compose path instead of the new plan-driven path",
+      default: false
     }
   },
   async run({ args }) {
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -15848,7 +17437,7 @@ var composeCmd = defineCommand({
     let jdText;
     if (args.jd) {
       try {
-        jdText = await (0, import_promises9.readFile)(args.jd, "utf8");
+        jdText = await (0, import_promises10.readFile)(args.jd, "utf8");
         const firstLine = jdText.trim().split("\n")[0] ?? "jd";
         slug = firstLine.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-").slice(0, 40);
         if (!targetRole) targetRole = firstLine.slice(0, 80);
@@ -15860,18 +17449,23 @@ var composeCmd = defineCommand({
     }
     const langOverride = args.lang;
     const effectiveLang = langOverride === "zh" || langOverride === "en" ? langOverride : config.language === "bilingual" ? "zh" : config.language;
-    console.log(`[compose] running \u2014 lang: ${effectiveLang}, format: ${format}, top-n: ${topN}`);
+    console.log(
+      `[compose] running \u2014 lang: ${effectiveLang}, format: ${format}, top-n: ${topN}, legacy: ${args.legacy ? "yes" : "no"}`
+    );
     if (targetRole) console.log(`[compose] target role: ${targetRole}`);
     const result = await compose(config, args["data-dir"], {
       lang: effectiveLang,
       format,
       slug,
       topN,
+      legacy: Boolean(args.legacy),
+      ...jdText ? { jd: jdText } : {},
       ...targetRole ? { targetRole } : {}
     });
     console.log(`[compose] draft \u2192 ${result.draftPath}`);
     if (result.htmlPath) console.log(`[compose] HTML  \u2192 ${result.htmlPath}`);
     if (result.mdPath) console.log(`[compose] MD    \u2192 ${result.mdPath}`);
+    if (result.verifyFactsPath) console.log(`[compose] verify-facts \u2192 ${result.verifyFactsPath}`);
     console.log(`
 Headline: ${result.draft.headline}`);
   }
@@ -15894,7 +17488,7 @@ var critiqueCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -15926,6 +17520,47 @@ var critiqueCmd = defineCommand({
 [critique] saved \u2192 ${result.critiquePath}`);
   }
 });
+var verifyFactsCmd = defineCommand({
+  meta: {
+    name: "verify-facts",
+    description: "Cross-check an existing resume draft against ProjectNarrative evidence."
+  },
+  args: {
+    "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
+    "config-path": { type: "string", description: "Path to config.json", default: "config.json" },
+    slug: {
+      type: "string",
+      description: "Resume draft slug to verify (default: default)",
+      default: "default"
+    },
+    "use-llm": {
+      type: "boolean",
+      description: "Run the optional LLM verification pass in addition to deterministic checks",
+      default: false
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(
+        `[verify-facts] Failed to load config from "${args["config-path"]}": ${hint}`
+      );
+      process.exit(1);
+    }
+    const result = await verifyFacts(config, args["data-dir"], args.slug, {
+      ...args["use-llm"] ? { useLlm: true } : {}
+    });
+    console.log(`[verify-facts] report \u2192 ${result.reportPath}`);
+    console.log(
+      `[verify-facts] ${result.report.claims.length} issue(s), coverage=${result.report.coverage.toFixed(2)}`
+    );
+  }
+});
 var reviseCmd = defineCommand({
   meta: {
     name: "revise",
@@ -15954,7 +17589,7 @@ var reviseCmd = defineCommand({
     await loadLocalEnv();
     let config;
     try {
-      const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
@@ -16016,7 +17651,7 @@ var renderCmd = defineCommand({
     if (args.style === "agent") {
       await loadLocalEnv();
       try {
-        const configRaw = await (0, import_promises9.readFile)(args["config-path"], "utf8");
+        const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
         config = ConfigSchema.parse(JSON.parse(configRaw));
       } catch (err) {
         const hint = err instanceof Error ? err.message : String(err);
@@ -16062,6 +17697,211 @@ var stylesCmd = defineCommand({
 Usage: delta render --style <name>`);
   }
 });
+var evidenceCmd = defineCommand({
+  meta: {
+    name: "evidence",
+    description: "Bridge: convert experience log into EvidenceBundle[] at data/agent/evidence.json (no LLM)."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    }
+  },
+  async run({ args }) {
+    const result = await evidence(args["data-dir"]);
+    console.log(`[evidence] ${result.log.bundles.length} bundle(s) \u2192 ${result.evidencePath}`);
+  }
+});
+var interpretCmd = defineCommand({
+  meta: {
+    name: "interpret",
+    description: "LLM step: turn EvidenceBundle[] into ProjectNarrative[] at data/agent/narratives.json."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json"
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)"
+    },
+    "max-narratives": {
+      type: "string",
+      description: "Soft cap on the number of narratives returned"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[interpret] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+    const langOverride = args.lang;
+    const opts = {};
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+    if (args["max-narratives"]) {
+      const n2 = Number.parseInt(args["max-narratives"], 10);
+      if (Number.isNaN(n2) || n2 < 1) {
+        console.error("[interpret] --max-narratives must be a positive integer");
+        process.exit(1);
+      }
+      opts.maxNarratives = n2;
+    }
+    const result = await interpret(config, args["data-dir"], opts);
+    console.log(
+      `[interpret] ${result.log.narratives.length} narrative(s) \u2192 ${result.narrativesPath}`
+    );
+  }
+});
+var selectCmd = defineCommand({
+  meta: {
+    name: "select",
+    description: "LLM step: pick projects + ordering + positioning. Reads narratives.json, writes plan.json."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json"
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)"
+    },
+    "top-n": {
+      type: "string",
+      description: "Maximum number of selected projects (default 6)"
+    },
+    "target-role": {
+      type: "string",
+      description: "Optional one-line target role to bias positioning"
+    },
+    "min-worthiness": {
+      type: "string",
+      description: "Pre-filter floor for resumeWorthiness (default 0.2)"
+    },
+    "jd-match-slug": {
+      type: "string",
+      description: "Optional jd-match report slug to bias ranking and positioning"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[select] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+    const opts = {};
+    const langOverride = args.lang;
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+    if (args["top-n"]) {
+      const n2 = Number.parseInt(args["top-n"], 10);
+      if (Number.isNaN(n2) || n2 < 1) {
+        console.error("[select] --top-n must be a positive integer");
+        process.exit(1);
+      }
+      opts.topN = n2;
+    }
+    if (args["target-role"]) opts.targetRole = args["target-role"];
+    if (args["jd-match-slug"]) opts.jdMatchSlug = args["jd-match-slug"];
+    if (args["min-worthiness"]) {
+      const v2 = Number.parseFloat(args["min-worthiness"]);
+      if (Number.isNaN(v2) || v2 < 0 || v2 > 1) {
+        console.error("[select] --min-worthiness must be a number in [0,1]");
+        process.exit(1);
+      }
+      opts.minWorthiness = v2;
+    }
+    const result = await select(config, args["data-dir"], opts);
+    console.log(
+      `[select] ${result.plan.selectedProjectIds.length} selected \u2192 ${result.planPath}`
+    );
+  }
+});
+var jdMatchCmd = defineCommand({
+  meta: {
+    name: "jd-match",
+    description: "LLM step: score ProjectNarrative[] against a JD. Reads narratives.json, writes jd-match report."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data"
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json"
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)"
+    },
+    jd: {
+      type: "string",
+      description: "Path to a job description file",
+      required: true
+    },
+    "allow-adjacency": {
+      type: "boolean",
+      description: "Allow adjacent strengths to be surfaced even without direct proof",
+      default: false
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[jd-match] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+    let jdText;
+    try {
+      jdText = await (0, import_promises10.readFile)(args.jd, "utf8");
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[jd-match] Failed to read JD file "${args.jd}": ${hint}`);
+      process.exit(1);
+    }
+    const opts = { jdText };
+    const langOverride = args.lang;
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+    if (args["allow-adjacency"]) opts.allowAdjacency = true;
+    const result = await jdMatch(config, args["data-dir"], opts);
+    console.log(`[jd-match] profile \u2192 ${result.jdProfilePath}`);
+    console.log(`[jd-match] report  \u2192 ${result.reportPath}`);
+    console.log(`[jd-match] slug: ${result.report.jdSlug}`);
+  }
+});
 var curateCmd = defineCommand({
   meta: {
     name: "curate",
@@ -16102,6 +17942,52 @@ Capability claims (resume-use):`);
 [curate] written to ${args["data-dir"]}/agent/`);
   }
 });
+var evalCmd = defineCommand({
+  meta: {
+    name: "eval",
+    description: "Run the minimal regression eval suite over fixed fixtures."
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory for writing eval reports",
+      default: "data"
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json"
+    },
+    "fixtures-dir": {
+      type: "string",
+      description: "Path to eval fixtures directory",
+      default: "src/core/eval/fixtures"
+    },
+    cases: {
+      type: "string",
+      description: "Comma-separated case ids to run"
+    }
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+    let config;
+    try {
+      const configRaw = await (0, import_promises10.readFile)(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[eval] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+    const caseIds = typeof args.cases === "string" && args.cases.trim().length > 0 ? args.cases.split(",").map((value) => value.trim()).filter((value) => value.length > 0) : void 0;
+    const result = await evalPipeline(config, args["data-dir"], {
+      fixturesDir: args["fixtures-dir"],
+      ...caseIds ? { caseIds } : {}
+    });
+    console.log(`[eval] report \u2192 ${result.reportPath}`);
+    console.log(`[eval] ${result.report.results.length} case(s) evaluated`);
+  }
+});
 var lintCmd = defineCommand({
   meta: {
     name: "lint",
@@ -16120,7 +18006,7 @@ var lintCmd = defineCommand({
     }
   },
   async run({ args }) {
-    const markdown = await (0, import_promises9.readFile)(args.file, "utf8");
+    const markdown = await (0, import_promises10.readFile)(args.file, "utf8");
     const lang = args.lang;
     const bannedWords = await loadBannedWords(lang);
     const wordViolations = checkBannedWords(markdown, bannedWords);
@@ -16245,13 +18131,19 @@ var main = defineCommand({
   subCommands: {
     observe: observeCmd,
     evolve: evolveCmd,
+    evidence: evidenceCmd,
+    interpret: interpretCmd,
+    "jd-match": jdMatchCmd,
+    select: selectCmd,
     curate: curateCmd,
     compose: composeCmd,
+    "verify-facts": verifyFactsCmd,
     critique: critiqueCmd,
     revise: reviseCmd,
     render: renderCmd,
     styles: stylesCmd,
     tailor: tailorCmd,
+    eval: evalCmd,
     lint: lintCmd,
     init: initCmd,
     clean: cleanCmd

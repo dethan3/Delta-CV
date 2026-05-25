@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "login": "fixture-user",
+  "headline": "Full-stack engineer building product delivery workflows",
+  "summary": "Full-stack engineer focused on turning internal tools into usable product workflows. Strong across TypeScript services, React interfaces, and pragmatic delivery automation. Best work combines fast iteration, platform glue, and conservative evidence-backed communication.",
+  "skills": [
+    { "category": "Full-Stack", "items": ["TypeScript", "React", "Node.js", "PostgreSQL"] },
+    { "category": "Delivery", "items": ["CI/CD", "GitHub Actions", "Docker"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "app-suite",
+      "title": "App Suite",
+      "period": { "from": "2025-01-01", "to": "2025-04-30" },
+      "bullets": [
+        "Built a TypeScript service and React admin flow that unified release requests across three internal tools.",
+        "Implemented audit logging and approval checkpoints to reduce manual follow-up during weekly releases."
+      ],
+      "stack": ["TypeScript", "React", "Node.js", "PostgreSQL"]
+    },
+    {
+      "projectId": "deploy-ops",
+      "title": "Deploy Ops",
+      "period": { "from": "2024-08-01", "to": "2024-12-31" },
+      "bullets": [
+        "Automated preview environment provisioning with GitHub Actions and Docker-based service templates.",
+        "Refactored deployment scripts into reusable workflow modules to simplify cross-repository rollouts."
+      ],
+      "stack": ["GitHub Actions", "Docker", "Bash"]
+    }
+  ],
+  "otherExperience": [],
+  "evidenceMap": {
+    "app-suite": ["ev-app-1", "ev-app-2"],
+    "deploy-ops": ["ev-deploy-1"]
+  }
+}

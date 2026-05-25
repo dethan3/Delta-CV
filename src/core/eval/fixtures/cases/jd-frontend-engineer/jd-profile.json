@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "parsedAt": "2026-05-25T00:00:00.000Z",
+  "slug": "jd-frontend-engineer",
+  "jobTitle": "Frontend Engineer",
+  "seniority": "mid",
+  "requiredSkills": ["React", "TypeScript", "Design Systems", "Accessibility"],
+  "niceToHaveSkills": ["Next.js", "Performance Optimization"],
+  "keyResponsibilities": ["Build frontend product interfaces", "Maintain UI consistency"],
+  "targetProfile": "Frontend engineer shipping maintainable product UI systems"
+}

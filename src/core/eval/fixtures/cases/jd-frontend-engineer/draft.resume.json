@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "login": "fixture-user",
+  "headline": "Frontend engineer focused on product UI systems",
+  "summary": "Frontend engineer building product interfaces, internal tooling, and reusable UI workflows. Strong in React, TypeScript, and the practical systems that keep delivery coherent across teams. Best work combines implementation speed with maintainable interaction patterns.",
+  "skills": [
+    { "category": "Frontend", "items": ["React", "TypeScript", "CSS", "Design Systems"] },
+    { "category": "Product Delivery", "items": ["Testing", "Storybook", "Accessibility"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "ui-console",
+      "title": "UI Console",
+      "period": { "from": "2024-09-01", "to": "2025-02-28" },
+      "bullets": [
+        "Built reusable React form and table patterns that reduced repeated admin UI work across internal tools.",
+        "Improved interaction consistency by documenting component usage and accessibility expectations in Storybook."
+      ],
+      "stack": ["React", "TypeScript", "CSS", "Storybook"]
+    }
+  ],
+  "otherExperience": [],
+  "evidenceMap": {
+    "ui-console": ["ev-ui-1", "ev-ui-2"]
+  }
+}

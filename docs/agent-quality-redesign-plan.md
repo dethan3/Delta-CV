@@ -8,7 +8,8 @@
 - 已完成 `delta evidence`：将现有 `ExperienceEntry` 机械桥接为 `EvidenceBundle`，不调用 LLM
 - 已完成 `delta interpret`：调用 LLM 将 `EvidenceBundle[]` 解释为 `ProjectNarrative[]`
 - 已完成 `delta select`：先规则 pre-filter，再调用 LLM 生成 `ResumePlan`
-- 旧链路 `observe -> evolve -> curate -> compose` 仍保持可用，尚未切到新主链
+- 已完成 `compose` 新执行器接线：默认主链已切到 `observe -> evolve -> interpret -> select -> compose`
+- 旧 `curate -> compose` 链路仍保留，可通过 `--legacy` fallback
 
 当前新增的中间产物如下：
 
@@ -18,9 +19,9 @@
 
 当前下一步重点：
 
-1. 将 `compose` 改为消费 `ResumePlan + ProjectNarrative[]`
-2. 再接入 `jd-match`
-3. 最后补 `verify-facts` 与 eval
+1. 补完整体验证：`typecheck` / smoke run
+2. 扩充 eval fixtures 与 judge 能力
+3. 根据回归结果继续收紧 prompt 与 normalization
 
 ## Background
 
@@ -443,7 +444,7 @@ Delta 当前的核心问题，不是“没有 Agent runtime”，而是“AI 参
 
 ### PR 2: 把 AI 前移到选材和岗位对齐
 
-状态：`进行中`
+状态：`已完成`
 
 目标：
 
@@ -475,14 +476,19 @@ Delta 当前的核心问题，不是“没有 Agent runtime”，而是“AI 参
 完成说明：
 
 - `PR2-A` 已完成：`delta select` 已可运行，当前流程是“规则 pre-filter + 单次 LLM 生成 ResumePlan + normalization 收口”
+- `PR2-B` 已完成：`jd-match` 已可运行，产物会落盘到 `data/agent/jd-matches/<jdSlug>.json`
+- `PR2-C` 已完成：`compose` 已改为消费 `ResumePlan + ProjectNarrative[]`
+- `pipeline.compose()` 默认已切到新主链，旧 `curate -> compose` 通过 `--legacy` 保留 fallback
+- `compose.{zh,en}.md` 已重写为“计划执行器”语义，明确服从 `positioning / selectedProjectIds / proofPoints / riskFlags`
 - 当前 `ResumePlan.skillEmphasis` 已升级为可审计结构，要求每条能力绑定 `supportingProjectIds`
-- 尚未完成：
-  - `compose` 改为消费 `ResumePlan + ProjectNarrative[]`
-  - `jd-match`
+- 验证备注：
+  - 代码接线与文档已更新，eval fixtures 已补齐最小固定样本
+  - 已完成一轮本地 `typecheck` / `build` / `eval` / `verify-facts` smoke，当前基线见 `docs/smoke-regression-baseline.md`
+  - 仍缺少带真实 LLM 与真实采集数据的端到端验收
 
 ### PR 3: 增加事实验证和最小评测
 
-状态：`未开始`
+状态：`已完成（最小可运行版）`
 
 目标：
 
@@ -511,6 +517,15 @@ Delta 当前的核心问题，不是“没有 Agent runtime”，而是“AI 参
 - 至少有 5-10 组固定样本做回归
 - prompt 或逻辑调整后可以客观比较前后质量
 
+完成说明：
+
+- `verify-facts` 已落地 deterministic 校验，并支持可选 LLM pass
+- `compose` 默认会落盘 `verify-facts` 报告，生成稿附带 fact warnings
+- CLI 已增加 `delta verify-facts` 与 `delta eval`
+- `eval` 已可读取固定 fixtures、运行规则评分并产出聚合报告
+- 已补 5 组固定 fixture cases，用于最小回归
+- 当前实现仍以 heuristic eval 为主，后续可继续引入 judge model 强化评分质量
+
 ## Recommended Execution Order
 
 当前建议执行顺序已经调整为：
@@ -533,7 +548,9 @@ Delta 当前的核心问题，不是“没有 Agent runtime”，而是“AI 参
 - `PR1-A` 已完成
 - `PR1-B` 已完成
 - `PR2-A` 已完成
-- 下一步是 `PR2-C`
+- `PR2-B` 已完成
+- `PR2-C` 已完成
+- `PR3` 已完成（最小可运行版）
 
 ## Non-Goals For Now
 
@@ -554,34 +571,3 @@ Delta 当前的核心问题，不是“没有 Agent runtime”，而是“AI 参
 - bullet 更具体，但更少虚构 outcome
 - 用户会更敢直接使用输出，而不是只把它当草稿
 - 质量改动可以通过 eval 量化，而不是只能凭主观体验判断
-
-未发现新的阻塞性问题。**PR2-A 基本完成到位，符合当前预期。**
-
-我核对后认为这一步做对了几件关键事：
-
-- `select` 已经从 stub 变成真实两段式流程：先规则 pre-filter，再单次 LLM 生成 `ResumePlan`。[select.ts](/home/evan/agent/delta/src/core/agent/select.ts:138)
-- `SkillEmphasis` 从“只是分类名”升级成“必须绑定 supporting projects”，这个改动是合理的，确实提高了可审计性。[plan.ts](/home/evan/agent/delta/src/core/schema/plan.ts:11)
-- normalization 也做得够防御：`selectedProjectIds`、`deprioritizedProjectIds`、`skillEmphasis[*].supportingProjectIds` 都做了收口，不是直接信任模型输出。[select.ts](/home/evan/agent/delta/src/core/agent/select.ts:176)
-- `pipeline.select()` 和 `delta select` 的接法干净，没去碰旧 `compose` 主链，范围控制是对的。[pipeline.ts](/home/evan/agent/delta/src/core/pipeline.ts:404) [cli.ts](/home/evan/agent/delta/src/cli.ts:544)
-
-我会给出的结论是：
-
-**PR2-A 合格，可以继续进入 PR2-C。**
-
-只有两个非阻塞提醒，最好带着进下一步：
-
-- `select` 的稳定性仍然受上游 `projectKey` 不稳定影响，这个风险不是 PR2-A 引入的，但它会直接影响 `ResumePlan.selectedProjectIds` 的可重复性。[select.ts](/home/evan/agent/delta/src/core/agent/select.ts:182)  
-  进入 PR2-C 前，最好别忘了这个债。
-- `pipeline.select()` 为了打印 pre-filter 结果，动态 import 了同模块里的 `preFilterNarratives`；这不是错误，但没必要，后面可以顺手改成静态导入以减少噪音。[pipeline.ts](/home/evan/agent/delta/src/core/pipeline.ts:438)
-
-所以这一步我的评价是：
-
-- **完成情况：好**
-- **设计方向：对**
-- **范围控制：合格**
-- **可进入下一步：可以**
-
-如果你要继续，我建议下一步就按你说的做 **PR2-C**，但先把 compose 的输入契约钉死，避免一边改 prompt 一边改 schema。
-
-## 下一步
-Exec 4 · PR2-C — 重构 compose 为执行器（消费 ResumePlan + ProjectNarrative[]），重写 compose.{zh,en}.md，并把 pipeline 的 compose 默认切到新路径（旧 curate→compose 留 --legacy flag fallback）。这一步完成"非 JD 路径"就端到端跑通了。

@@ -6,7 +6,23 @@ import { loadBannedWords } from "./core/io/assets.ts";
 import { loadLocalEnv } from "./core/io/env.ts";
 import { checkBannedWords } from "./core/lint/banned-words.ts";
 import { checkHighlightLimits, checkLineLength } from "./core/lint/line-length.ts";
-import { cleanRevisions, compose, critique, curate, evidence, evolve, interpret, observe, render, revise, select, tailor } from "./core/pipeline.ts";
+import {
+  cleanRevisions,
+  compose,
+  critique,
+  curate,
+  evalPipeline,
+  evidence,
+  evolve,
+  interpret,
+  jdMatch,
+  observe,
+  render,
+  revise,
+  select,
+  tailor,
+  verifyFacts,
+} from "./core/pipeline.ts";
 import { HTML_STYLES, HTML_STYLE_NAMES } from "./core/render/styles.ts";
 import { ConfigSchema } from "./core/schema/config.ts";
 import { VERSION } from "./version.ts";
@@ -157,7 +173,7 @@ const tailorCmd = defineCommand({
 const composeCmd = defineCommand({
   meta: {
     name: "compose",
-    description: "Generate a polished resume draft via LLM from curated project data.",
+    description: "Generate a polished resume draft from ResumePlan + ProjectNarrative data.",
   },
   args: {
     "data-dir": {
@@ -185,12 +201,17 @@ const composeCmd = defineCommand({
     },
     "top-n": {
       type: "string",
-      description: "Number of top projects to include (default: 6)",
+      description: "Selection ceiling when compose needs to rebuild plan.json (default: 6)",
       default: "6",
     },
     jd: {
       type: "string",
       description: "Path to a job description file for targeted resume",
+    },
+    legacy: {
+      type: "boolean",
+      description: "Use the legacy curate -> compose path instead of the new plan-driven path",
+      default: false,
     },
   },
   async run({ args }) {
@@ -248,7 +269,9 @@ const composeCmd = defineCommand({
           ? "zh"
           : config.language;
 
-    console.log(`[compose] running — lang: ${effectiveLang}, format: ${format}, top-n: ${topN}`);
+    console.log(
+      `[compose] running — lang: ${effectiveLang}, format: ${format}, top-n: ${topN}, legacy: ${args.legacy ? "yes" : "no"}`,
+    );
     if (targetRole) console.log(`[compose] target role: ${targetRole}`);
 
     const result = await compose(config, args["data-dir"], {
@@ -256,12 +279,15 @@ const composeCmd = defineCommand({
       format,
       slug,
       topN,
+      legacy: Boolean(args.legacy),
+      ...(jdText ? { jd: jdText } : {}),
       ...(targetRole ? { targetRole } : {}),
     });
 
     console.log(`[compose] draft → ${result.draftPath}`);
     if (result.htmlPath) console.log(`[compose] HTML  → ${result.htmlPath}`);
     if (result.mdPath) console.log(`[compose] MD    → ${result.mdPath}`);
+    if (result.verifyFactsPath) console.log(`[compose] verify-facts → ${result.verifyFactsPath}`);
     console.log(`\nHeadline: ${result.draft.headline}`);
   },
 });
@@ -317,6 +343,50 @@ const critiqueCmd = defineCommand({
     }
 
     console.log(`\n[critique] saved → ${result.critiquePath}`);
+  },
+});
+
+const verifyFactsCmd = defineCommand({
+  meta: {
+    name: "verify-facts",
+    description: "Cross-check an existing resume draft against ProjectNarrative evidence.",
+  },
+  args: {
+    "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
+    "config-path": { type: "string", description: "Path to config.json", default: "config.json" },
+    slug: {
+      type: "string",
+      description: "Resume draft slug to verify (default: default)",
+      default: "default",
+    },
+    "use-llm": {
+      type: "boolean",
+      description: "Run the optional LLM verification pass in addition to deterministic checks",
+      default: false,
+    },
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+
+    let config: ReturnType<typeof ConfigSchema.parse>;
+    try {
+      const configRaw = await readFile(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(
+        `[verify-facts] Failed to load config from "${args["config-path"]}": ${hint}`,
+      );
+      process.exit(1);
+    }
+
+    const result = await verifyFacts(config, args["data-dir"], args.slug, {
+      ...(args["use-llm"] ? { useLlm: true } : {}),
+    });
+    console.log(`[verify-facts] report → ${result.reportPath}`);
+    console.log(
+      `[verify-facts] ${result.report.claims.length} issue(s), coverage=${result.report.coverage.toFixed(2)}`,
+    );
   },
 });
 
@@ -574,6 +644,10 @@ const selectCmd = defineCommand({
       type: "string",
       description: "Pre-filter floor for resumeWorthiness (default 0.2)",
     },
+    "jd-match-slug": {
+      type: "string",
+      description: "Optional jd-match report slug to bias ranking and positioning",
+    },
   },
   async run({ args }) {
     await loadLocalEnv();
@@ -593,6 +667,7 @@ const selectCmd = defineCommand({
       topN?: number;
       targetRole?: string;
       minWorthiness?: number;
+      jdMatchSlug?: string;
     } = {};
     const langOverride = args.lang as "zh" | "en" | undefined;
     if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
@@ -606,6 +681,7 @@ const selectCmd = defineCommand({
       opts.topN = n;
     }
     if (args["target-role"]) opts.targetRole = args["target-role"];
+    if (args["jd-match-slug"]) opts.jdMatchSlug = args["jd-match-slug"];
     if (args["min-worthiness"]) {
       const v = Number.parseFloat(args["min-worthiness"]);
       if (Number.isNaN(v) || v < 0 || v > 1) {
@@ -619,6 +695,72 @@ const selectCmd = defineCommand({
     console.log(
       `[select] ${result.plan.selectedProjectIds.length} selected → ${result.planPath}`,
     );
+  },
+});
+
+const jdMatchCmd = defineCommand({
+  meta: {
+    name: "jd-match",
+    description:
+      "LLM step: score ProjectNarrative[] against a JD. Reads narratives.json, writes jd-match report.",
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory",
+      default: "data",
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json",
+    },
+    lang: {
+      type: "string",
+      description: "Output language: zh or en (overrides config)",
+    },
+    jd: {
+      type: "string",
+      description: "Path to a job description file",
+      required: true,
+    },
+    "allow-adjacency": {
+      type: "boolean",
+      description: "Allow adjacent strengths to be surfaced even without direct proof",
+      default: false,
+    },
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+
+    let config: ReturnType<typeof ConfigSchema.parse>;
+    try {
+      const configRaw = await readFile(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[jd-match] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+
+    let jdText: string;
+    try {
+      jdText = await readFile(args.jd, "utf8");
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[jd-match] Failed to read JD file "${args.jd}": ${hint}`);
+      process.exit(1);
+    }
+
+    const opts: { lang?: "zh" | "en"; jdText: string; allowAdjacency?: boolean } = { jdText };
+    const langOverride = args.lang as "zh" | "en" | undefined;
+    if (langOverride === "zh" || langOverride === "en") opts.lang = langOverride;
+    if (args["allow-adjacency"]) opts.allowAdjacency = true;
+
+    const result = await jdMatch(config, args["data-dir"], opts);
+    console.log(`[jd-match] profile → ${result.jdProfilePath}`);
+    console.log(`[jd-match] report  → ${result.reportPath}`);
+    console.log(`[jd-match] slug: ${result.report.jdSlug}`);
   },
 });
 
@@ -662,6 +804,59 @@ const curateCmd = defineCommand({
     }
 
     console.log(`\n[curate] written to ${args["data-dir"]}/agent/`);
+  },
+});
+
+const evalCmd = defineCommand({
+  meta: {
+    name: "eval",
+    description: "Run the minimal regression eval suite over fixed fixtures.",
+  },
+  args: {
+    "data-dir": {
+      type: "string",
+      description: "Path to the data directory for writing eval reports",
+      default: "data",
+    },
+    "config-path": {
+      type: "string",
+      description: "Path to config.json",
+      default: "config.json",
+    },
+    "fixtures-dir": {
+      type: "string",
+      description: "Path to eval fixtures directory",
+      default: "src/core/eval/fixtures",
+    },
+    cases: {
+      type: "string",
+      description: "Comma-separated case ids to run",
+    },
+  },
+  async run({ args }) {
+    await loadLocalEnv();
+
+    let config: ReturnType<typeof ConfigSchema.parse>;
+    try {
+      const configRaw = await readFile(args["config-path"], "utf8");
+      config = ConfigSchema.parse(JSON.parse(configRaw));
+    } catch (err) {
+      const hint = err instanceof Error ? err.message : String(err);
+      console.error(`[eval] Failed to load config from "${args["config-path"]}": ${hint}`);
+      process.exit(1);
+    }
+
+    const caseIds =
+      typeof args.cases === "string" && args.cases.trim().length > 0
+        ? args.cases.split(",").map((value) => value.trim()).filter((value) => value.length > 0)
+        : undefined;
+
+    const result = await evalPipeline(config, args["data-dir"], {
+      fixturesDir: args["fixtures-dir"],
+      ...(caseIds ? { caseIds } : {}),
+    });
+    console.log(`[eval] report → ${result.reportPath}`);
+    console.log(`[eval] ${result.report.results.length} case(s) evaluated`);
   },
 });
 
@@ -819,14 +1014,17 @@ const main = defineCommand({
     evolve: evolveCmd,
     evidence: evidenceCmd,
     interpret: interpretCmd,
+    "jd-match": jdMatchCmd,
     select: selectCmd,
     curate: curateCmd,
     compose: composeCmd,
+    "verify-facts": verifyFactsCmd,
     critique: critiqueCmd,
     revise: reviseCmd,
     render: renderCmd,
     styles: stylesCmd,
     tailor: tailorCmd,
+    eval: evalCmd,
     lint: lintCmd,
     init: initCmd,
     clean: cleanCmd,

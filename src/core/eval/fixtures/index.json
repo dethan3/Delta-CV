@@ -1,0 +1,29 @@
+[
+  {
+    "id": "general-fullstack",
+    "fixturePath": "cases/general-fullstack",
+    "description": "General full-stack resume with two product-oriented projects."
+  },
+  {
+    "id": "llm-platform",
+    "fixturePath": "cases/llm-platform",
+    "description": "LLM tooling and platform engineering narrative."
+  },
+  {
+    "id": "backend-scale",
+    "fixturePath": "cases/backend-scale",
+    "description": "Backend and reliability-focused resume."
+  },
+  {
+    "id": "jd-ai-engineer",
+    "fixturePath": "cases/jd-ai-engineer",
+    "description": "JD-targeted AI engineer resume sample.",
+    "jdSlug": "jd-ai-engineer"
+  },
+  {
+    "id": "jd-frontend-engineer",
+    "fixturePath": "cases/jd-frontend-engineer",
+    "description": "JD-targeted frontend engineer resume sample.",
+    "jdSlug": "jd-frontend-engineer"
+  }
+]

@@ -83,14 +83,20 @@ async function run(): Promise<void> {
       lang,
       format: "both",
       style: agentStyle,
-      topN: 6,
     });
     console.log(`[action] draft → ${composeResult.draftPath}`);
     if (composeResult.htmlPath) console.log(`[action] html  → ${composeResult.htmlPath}`);
     if (composeResult.mdPath) console.log(`[action] md    → ${composeResult.mdPath}`);
+    if (composeResult.verifyFactsPath)
+      console.log(`[action] verify-facts → ${composeResult.verifyFactsPath}`);
 
     // Add rendered outputs to PR
-    for (const filePath of [composeResult.htmlPath, composeResult.mdPath, composeResult.draftPath]) {
+    for (const filePath of [
+      composeResult.htmlPath,
+      composeResult.mdPath,
+      composeResult.draftPath,
+      composeResult.verifyFactsPath,
+    ]) {
       if (!filePath) continue;
       try {
         const content = await readFile(filePath, "utf8");

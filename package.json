@@ -38,6 +38,7 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
+    "eval": "tsx src/cli.ts eval",
     "verify:dist": "node scripts/check-dist-present.mjs",
     "verify:bundle-size": "node scripts/check-bundle-size.mjs",
     "verify:template-version": "node scripts/check-template-version.mjs",

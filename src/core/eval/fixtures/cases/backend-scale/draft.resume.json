@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "login": "fixture-user",
+  "headline": "Backend engineer focused on services, reliability, and delivery safety",
+  "summary": "Backend engineer working across service design, release automation, and operational reliability. Strong in API design, queue-backed workflows, and the tooling around safe delivery. Most effective when translating infrastructure concerns into repeatable developer workflows.",
+  "skills": [
+    { "category": "Backend", "items": ["Go", "TypeScript", "PostgreSQL", "Redis"] },
+    { "category": "Reliability", "items": ["Queues", "Monitoring", "Incident Response"] }
+  ],
+  "selectedProjects": [
+    {
+      "projectId": "service-gateway",
+      "title": "Service Gateway",
+      "period": { "from": "2024-10-01", "to": "2025-03-31" },
+      "bullets": [
+        "Designed a queue-backed API gateway that isolated bursty internal jobs from synchronous request paths.",
+        "Improved release safety by adding health checks and staged rollout controls to service deployment scripts."
+      ],
+      "stack": ["Go", "Redis", "PostgreSQL"]
+    }
+  ],
+  "otherExperience": [],
+  "evidenceMap": {
+    "service-gateway": ["ev-gateway-1", "ev-gateway-2"]
+  }
+}

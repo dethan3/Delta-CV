@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-25T00:00:00.000Z",
+  "narratives": [
+    {
+      "projectKey": "service-gateway",
+      "title": "Service Gateway",
+      "period": { "from": "2024-10-01", "to": "2025-03-31" },
+      "scope": "Service design and release controls for internal backend workflows.",
+      "candidateRole": "contributor",
+      "coreProblem": "Bursty background jobs were affecting request latency and release confidence.",
+      "solutionShape": "Separated sync and async paths with queue-backed processing and staged deployment checks.",
+      "proofPoints": [
+        { "text": "Designed a queue-backed API gateway", "kind": "design", "evidenceRefs": ["ev-gateway-1"], "strength": "strong" },
+        { "text": "Added health checks and staged rollout controls", "kind": "process", "evidenceRefs": ["ev-gateway-2"], "strength": "strong" }
+      ],
+      "techStack": ["Go", "Redis", "PostgreSQL"],
+      "strengthSignals": ["reliability"],
+      "riskFlags": [],
+      "resumeWorthiness": 0.8,
+      "sourceEvidenceIds": ["ev-gateway-1", "ev-gateway-2"],
+      "repos": ["service-gateway"]
+    }
+  ]
+}
