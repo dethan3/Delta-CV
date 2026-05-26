@@ -56,7 +56,10 @@ export function validateGeneratedHtml(html: string, draft: ResumeDraft): HtmlVal
   }
 
   const headlineWords = draft.headline.split(/\s+/).slice(0, 4).join(" ");
-  const headlineWordsEscaped = headlineWords.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const headlineWordsEscaped = headlineWords
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
   if (!html.includes(draft.login)) {
     errors.push(`Login "${draft.login}" not found in HTML output.`);
   }

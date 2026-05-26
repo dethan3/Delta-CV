@@ -24,7 +24,7 @@ async function run(): Promise<void> {
   const githubToken = getInput("github-token") || process.env.GITHUB_TOKEN || "";
   // Agent pipeline inputs (only used when mode includes "compose")
   const agentStyle = (getInput("style") || "clean") as "clean" | "developer" | "compact";
-  const agentLang = getInput("lang") as "zh" | "en" | "" || "";
+  const agentLang = (getInput("lang") as "zh" | "en" | "") || "";
 
   if (!githubToken) {
     throw new Error(
@@ -77,8 +77,7 @@ async function run(): Promise<void> {
 
   if (mode === "compose" || mode === "compose-bootstrap") {
     console.log("[action] stage 3/3: compose (agent pipeline)");
-    const lang =
-      agentLang || (config.language === "bilingual" ? "zh" : config.language);
+    const lang = agentLang || (config.language === "bilingual" ? "zh" : config.language);
     const composeResult = await compose(config, dataDir, {
       lang,
       format: "both",

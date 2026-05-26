@@ -4,8 +4,8 @@ import { loadPrompt } from "../prompts.ts";
 import type { LlmConfig } from "../schema/config.ts";
 import type { ProjectNarrative } from "../schema/narrative.ts";
 import {
-  ProjectEmphasisSchema,
   type JdMatch,
+  ProjectEmphasisSchema,
   type ResumePlan,
   SkillEmphasisSchema,
 } from "../schema/plan.ts";
@@ -261,7 +261,9 @@ export async function buildResumePlan(
   const projectEmphasisRaw = new Map(
     (out.projectEmphasis ?? []).map((entry) => [entry.projectId, entry]),
   );
-  const jdMatchesByProject = new Map((options.jdMatches ?? []).map((entry) => [entry.projectId, entry]));
+  const jdMatchesByProject = new Map(
+    (options.jdMatches ?? []).map((entry) => [entry.projectId, entry]),
+  );
   const projectEmphasis = selectedProjectIds.map((projectId) => {
     const narrative = kept.find((item) => item.projectKey === projectId);
     const raw = projectEmphasisRaw.get(projectId);
@@ -278,7 +280,8 @@ export async function buildResumePlan(
     }
     return {
       projectId,
-      whySelected: raw?.whySelected ?? `Selected to represent ${narrative.title} in the resume story.`,
+      whySelected:
+        raw?.whySelected ?? `Selected to represent ${narrative.title} in the resume story.`,
       resumeAngle: raw?.resumeAngle ?? jdMatch?.bestAngle ?? narrative.coreProblem,
       bulletFocus: Array.from(new Set(raw?.bulletFocus ?? [])).slice(0, 4),
       highlightProofPoints: Array.from(new Set(raw?.highlightProofPoints ?? [])).slice(0, 4),

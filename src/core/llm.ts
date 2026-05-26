@@ -42,37 +42,36 @@ async function callApi(
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     let res: Response;
     try {
-    if (config.provider === "anthropic") {
-      res = await fetch(`${ANTHROPIC_BASE_URL}/messages`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
+      if (config.provider === "anthropic") {
+        res = await fetch(`${ANTHROPIC_BASE_URL}/messages`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: config.model,
+            max_tokens: DEFAULT_MAX_TOKENS,
+            system,
+            messages,
+          }),
+        });
+      } else {
+        const body: Record<string, unknown> = {
           model: config.model,
-          max_tokens: DEFAULT_MAX_TOKENS,
-          system,
-          messages,
-        }),
-      });
-    } else {
-      const body: Record<string, unknown> = {
-        model: config.model,
-        messages: [{ role: "system", content: system }, ...messages],
-      };
-      if (jsonMode) body.response_format = { type: "json_object" };
-      res = await fetch(`${config.baseUrl ?? DEFAULT_OPENAI_BASE_URL}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify(body),
-      });
-    }
-
+          messages: [{ role: "system", content: system }, ...messages],
+        };
+        if (jsonMode) body.response_format = { type: "json_object" };
+        res = await fetch(`${config.baseUrl ?? DEFAULT_OPENAI_BASE_URL}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify(body),
+        });
+      }
     } catch (networkErr) {
       if (attempt < maxRetries) {
         await new Promise((r) => setTimeout(r, 2 ** attempt * 1000));

@@ -11,8 +11,18 @@
       "coreProblem": "Model output quality was hard to compare or trust across prompt revisions.",
       "solutionShape": "Combined structured-output prompting with fixed-case evaluation and evidence verification.",
       "proofPoints": [
-        { "text": "Paired prompt execution with fixed-case regression checks", "kind": "process", "evidenceRefs": ["ev-ai-1"], "strength": "strong" },
-        { "text": "Flagged unsupported claims before resume generation", "kind": "design", "evidenceRefs": ["ev-ai-2"], "strength": "strong" }
+        {
+          "text": "Paired prompt execution with fixed-case regression checks",
+          "kind": "process",
+          "evidenceRefs": ["ev-ai-1"],
+          "strength": "strong"
+        },
+        {
+          "text": "Flagged unsupported claims before resume generation",
+          "kind": "design",
+          "evidenceRefs": ["ev-ai-2"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["TypeScript", "LLM APIs", "JSON Schema", "Node.js"],
       "strengthSignals": ["ownership", "llm-ops"],

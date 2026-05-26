@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { generateObject } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
+import { type JdProfile, JdSenioritySchema } from "../schema/agent.ts";
 import type { LlmConfig } from "../schema/config.ts";
-import { JdSenioritySchema, type JdProfile } from "../schema/agent.ts";
 
 const JdParseOutputSchema = z.object({
   jobTitle: z.string(),
@@ -18,15 +18,12 @@ const JdParseOutputSchema = z.object({
  * E.g. "Senior AI Engineer" → "jd-senior-ai-engineer"
  */
 export function makeJdSlug(jobTitle: string): string {
-  return (
-    "jd-" +
-    jobTitle
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .slice(0, 40)
-  );
+  return `jd-${jobTitle
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 40)}`;
 }
 
 /**

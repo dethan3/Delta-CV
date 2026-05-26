@@ -4,7 +4,7 @@ import { loadPrompt } from "../prompts.ts";
 import type { JdProfile } from "../schema/agent.ts";
 import type { LlmConfig } from "../schema/config.ts";
 import type { ProjectNarrative } from "../schema/narrative.ts";
-import { JdMatchSchema, type JdMatchReport } from "../schema/plan.ts";
+import { type JdMatchReport, JdMatchSchema } from "../schema/plan.ts";
 
 export interface JdMatchOptions {
   lang: "zh" | "en";
@@ -122,29 +122,31 @@ export async function matchNarrativesToJd(
   const validRequiredSkills = new Set(jd.requiredSkills);
   const byProject = new Map(out.matches.map((m) => [m.projectId, m]));
 
-  const matches = narratives.map((n) => {
-    const raw = byProject.get(n.projectKey);
-    if (!raw) {
+  const matches = narratives
+    .map((n) => {
+      const raw = byProject.get(n.projectKey);
+      if (!raw) {
+        return {
+          projectId: n.projectKey,
+          relevanceScore: 0,
+          matchedRequirements: [],
+          adjacentStrengths: [],
+          bestAngle: fallbackBestAngle(n.title, options.lang),
+          doNotOverclaim: [],
+        };
+      }
       return {
         projectId: n.projectKey,
-        relevanceScore: 0,
-        matchedRequirements: [],
-        adjacentStrengths: [],
-        bestAngle: fallbackBestAngle(n.title, options.lang),
-        doNotOverclaim: [],
+        relevanceScore: Math.max(0, Math.min(1, raw.relevanceScore)),
+        matchedRequirements: raw.matchedRequirements.filter((req) => validRequiredSkills.has(req)),
+        adjacentStrengths: options.allowAdjacency
+          ? Array.from(new Set(raw.adjacentStrengths ?? []))
+          : [],
+        bestAngle: raw.bestAngle,
+        doNotOverclaim: Array.from(new Set(raw.doNotOverclaim ?? [])),
       };
-    }
-    return {
-      projectId: n.projectKey,
-      relevanceScore: Math.max(0, Math.min(1, raw.relevanceScore)),
-      matchedRequirements: raw.matchedRequirements.filter((req) => validRequiredSkills.has(req)),
-      adjacentStrengths: options.allowAdjacency
-        ? Array.from(new Set(raw.adjacentStrengths ?? []))
-        : [],
-      bestAngle: raw.bestAngle,
-      doNotOverclaim: Array.from(new Set(raw.doNotOverclaim ?? [])),
-    };
-  }).filter((m) => validProjectIds.has(m.projectId));
+    })
+    .filter((m) => validProjectIds.has(m.projectId));
 
   return {
     version: 1,

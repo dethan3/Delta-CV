@@ -5,7 +5,10 @@
   "headline": "AI engineer building evaluation-aware LLM tooling",
   "summary": "AI engineer focused on prompt execution, structured model output, and evaluation feedback loops. Strong in TypeScript-based orchestration, evidence-aware pipeline design, and pragmatic quality gates. Best work turns ambiguous model behavior into inspectable developer workflows.",
   "skills": [
-    { "category": "AI Engineering", "items": ["LLM APIs", "Prompt Design", "TypeScript", "Evaluation"] },
+    {
+      "category": "AI Engineering",
+      "items": ["LLM APIs", "Prompt Design", "TypeScript", "Evaluation"]
+    },
     { "category": "Developer Tooling", "items": ["CLI", "JSON Schema", "Node.js"] }
   ],
   "selectedProjects": [

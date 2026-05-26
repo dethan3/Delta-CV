@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { generateObject } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
-import type { LlmConfig } from "../schema/config.ts";
 import {
   CritiqueIssueCategorySchema,
   CritiqueIssueSeveritySchema,
   type CritiqueResult,
   type ResumeDraft,
 } from "../schema/agent.ts";
+import type { LlmConfig } from "../schema/config.ts";
 
 const CritiqueLlmOutputSchema = z.object({
   overallScore: z.number().min(0).max(10),

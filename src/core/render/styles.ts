@@ -1,8 +1,3 @@
-import type { ResumeDraft } from "../schema/agent.ts";
-import { renderResumeDraftHtml } from "./html-clean.ts";
-import { renderResumeDraftHtmlCompact } from "./html-compact.ts";
-import { renderResumeDraftHtmlDeveloper } from "./html-developer.ts";
-
 /** Static (no-LLM) style names. */
 export type StaticHtmlStyle = "clean" | "developer" | "compact";
 
@@ -12,25 +7,25 @@ export type HtmlStyle = StaticHtmlStyle | "agent";
 export interface StyleMeta {
   name: HtmlStyle;
   description: string;
-  /** Only present for static styles. */
-  renderer?: (draft: ResumeDraft) => string;
+  /** Built-in Eta template asset path for static styles. */
+  templateAssetPath?: string;
 }
 
 export const HTML_STYLES: Record<HtmlStyle, StyleMeta> = {
   clean: {
     name: "clean",
     description: "Dense, ATS-friendly, restrained visual style. Good default.",
-    renderer: renderResumeDraftHtml,
+    templateAssetPath: "html-templates/clean.eta",
   },
   developer: {
     name: "developer",
     description: "Monospace accents, badge tags, left-border cards. Technical aesthetic.",
-    renderer: renderResumeDraftHtmlDeveloper,
+    templateAssetPath: "html-templates/developer.eta",
   },
   compact: {
     name: "compact",
     description: "Serif font, tight spacing, two-column skills. Print-optimised single page.",
-    renderer: renderResumeDraftHtmlCompact,
+    templateAssetPath: "html-templates/compact.eta",
   },
   agent: {
     name: "agent",
@@ -47,16 +42,4 @@ export function isHtmlStyle(s: string): s is HtmlStyle {
 
 export function isStaticStyle(s: HtmlStyle): s is StaticHtmlStyle {
   return s !== "agent";
-}
-
-/**
- * Render a ResumeDraft using a static (non-LLM) HTML style.
- * Throws for "agent" style — use renderResumeDraftHtmlAgent() instead.
- */
-export function renderWithStyle(draft: ResumeDraft, style: StaticHtmlStyle): string {
-  const meta = HTML_STYLES[style];
-  if (!meta.renderer) {
-    throw new Error(`Style "${style}" has no static renderer.`);
-  }
-  return meta.renderer(draft);
 }

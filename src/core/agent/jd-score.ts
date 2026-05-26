@@ -40,10 +40,7 @@ export function scoreProjectForJd(project: ProjectMemory, jd: JdProfile): number
  * This ensures JD-relevant projects surface first while still respecting
  * their original evidence quality.
  */
-export function scoreProjectsForJd(
-  projects: ProjectMemory[],
-  jd: JdProfile,
-): ProjectMemory[] {
+export function scoreProjectsForJd(projects: ProjectMemory[], jd: JdProfile): ProjectMemory[] {
   return projects
     .map((p) => ({
       project: p,
@@ -57,10 +54,7 @@ export function scoreProjectsForJd(
  * Re-sort capability claims by JD relevance.
  * Claims matching required skills are boosted the most.
  */
-export function scoreClaimsForJd(
-  claims: CapabilityClaim[],
-  jd: JdProfile,
-): CapabilityClaim[] {
+export function scoreClaimsForJd(claims: CapabilityClaim[], jd: JdProfile): CapabilityClaim[] {
   return claims
     .map((c) => {
       const claimText = [c.claim, c.category, ...c.technologies].join(" ").toLowerCase();

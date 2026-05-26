@@ -6,10 +6,3 @@ export function esc(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
-
-/** Format ISO period strings to "yyyy-MM – yyyy-MM". */
-export function formatPeriod(from: string, to: string): string {
-  const f = from.slice(0, 7);
-  const t = to.slice(0, 7);
-  return f === t ? f : `${f} – ${t}`;
-}

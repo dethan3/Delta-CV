@@ -9,25 +9,26 @@ interface ScoringWeights {
 }
 
 const DEFAULT_WEIGHTS: ScoringWeights = {
-  depth: 0.30,
-  duration: 0.20,
+  depth: 0.3,
+  duration: 0.2,
   signal: 0.25,
   recency: 0.15,
-  collaboration: 0.10,
+  collaboration: 0.1,
 };
 
 const COLLABORATION_TAGS = new Set([
-  "code-review", "review", "open-source", "community", "mentoring",
+  "code-review",
+  "review",
+  "open-source",
+  "community",
+  "mentoring",
 ]);
 
 /** Months between two ISO date strings. Always >= 0. */
 function monthsAgo(isoDate: string): number {
   const then = new Date(isoDate);
   const now = new Date();
-  return (
-    (now.getFullYear() - then.getFullYear()) * 12 +
-    (now.getMonth() - then.getMonth())
-  );
+  return (now.getFullYear() - then.getFullYear()) * 12 + (now.getMonth() - then.getMonth());
 }
 
 /** Recency score: exponential decay, half-life ≈ 12 months. */
@@ -62,8 +63,7 @@ export function scoreProjects(
   const maxHighlights = Math.max(...drafts.map((p) => p.highlights.length));
 
   const scored = drafts.map((project) => {
-    const depth =
-      maxHighlights > 0 ? project.highlights.length / maxHighlights : 0;
+    const depth = maxHighlights > 0 ? project.highlights.length / maxHighlights : 0;
 
     const duration = Math.min(project.activeMonths / Math.max(maxActiveMonths, 1), 1);
 

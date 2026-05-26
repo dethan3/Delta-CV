@@ -15,7 +15,8 @@ export interface BulletSpecificitySignals {
   averageLength: number;
 }
 
-const METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?))/i;
+const METRIC_RE =
+  /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?))/i;
 const LOW_SIGNAL_METRIC_RE =
   /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
 const VERB_START_RE =
@@ -50,8 +51,13 @@ export function computeFactGroundedness(
   evidenceMap: Record<string, string[]>,
 ): FactGroundednessSignals {
   const bulletsTotal = bullets.length;
-  const projectIdsWithEvidence = Object.values(evidenceMap).filter((refs) => refs.length > 0).length;
-  const bulletsWithEvidenceRef = Math.min(bulletsTotal, projectIdsWithEvidence > 0 ? bulletsTotal : 0);
+  const projectIdsWithEvidence = Object.values(evidenceMap).filter(
+    (refs) => refs.length > 0,
+  ).length;
+  const bulletsWithEvidenceRef = Math.min(
+    bulletsTotal,
+    projectIdsWithEvidence > 0 ? bulletsTotal : 0,
+  );
   return {
     bulletsTotal,
     bulletsWithEvidenceRef,

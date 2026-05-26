@@ -11,8 +11,18 @@
       "coreProblem": "Internal admin tools repeated the same UI patterns with inconsistent quality.",
       "solutionShape": "Built reusable React patterns and documented them in Storybook.",
       "proofPoints": [
-        { "text": "Built reusable React form and table patterns", "kind": "shipped", "evidenceRefs": ["ev-ui-1"], "strength": "strong" },
-        { "text": "Documented component usage and accessibility expectations", "kind": "process", "evidenceRefs": ["ev-ui-2"], "strength": "strong" }
+        {
+          "text": "Built reusable React form and table patterns",
+          "kind": "shipped",
+          "evidenceRefs": ["ev-ui-1"],
+          "strength": "strong"
+        },
+        {
+          "text": "Documented component usage and accessibility expectations",
+          "kind": "process",
+          "evidenceRefs": ["ev-ui-2"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["React", "TypeScript", "CSS", "Storybook"],
       "strengthSignals": ["frontend"],

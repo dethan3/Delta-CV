@@ -11,8 +11,18 @@
       "coreProblem": "Bursty background jobs were affecting request latency and release confidence.",
       "solutionShape": "Separated sync and async paths with queue-backed processing and staged deployment checks.",
       "proofPoints": [
-        { "text": "Designed a queue-backed API gateway", "kind": "design", "evidenceRefs": ["ev-gateway-1"], "strength": "strong" },
-        { "text": "Added health checks and staged rollout controls", "kind": "process", "evidenceRefs": ["ev-gateway-2"], "strength": "strong" }
+        {
+          "text": "Designed a queue-backed API gateway",
+          "kind": "design",
+          "evidenceRefs": ["ev-gateway-1"],
+          "strength": "strong"
+        },
+        {
+          "text": "Added health checks and staged rollout controls",
+          "kind": "process",
+          "evidenceRefs": ["ev-gateway-2"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["Go", "Redis", "PostgreSQL"],
       "strengthSignals": ["reliability"],

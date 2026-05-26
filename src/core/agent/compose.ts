@@ -1,15 +1,15 @@
 import { z } from "zod";
 import { generateObject } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
+import {
+  type ProjectSection,
+  ProjectSectionSchema,
+  type ResumeDraft,
+  SkillGroupSchema,
+} from "../schema/agent.ts";
 import type { LlmConfig } from "../schema/config.ts";
 import type { ProjectNarrative } from "../schema/narrative.ts";
 import type { ResumePlan } from "../schema/plan.ts";
-import {
-  ProjectSectionSchema,
-  SkillGroupSchema,
-  type ProjectSection,
-  type ResumeDraft,
-} from "../schema/agent.ts";
 
 export interface ComposeOptions {
   lang: "zh" | "en";
@@ -101,7 +101,9 @@ function buildUserPrompt(
   supportingNarratives: ProjectNarrative[],
   options: ComposeOptions,
 ): string {
-  const projectEmphasisById = new Map(plan.projectEmphasis.map((entry) => [entry.projectId, entry]));
+  const projectEmphasisById = new Map(
+    plan.projectEmphasis.map((entry) => [entry.projectId, entry]),
+  );
   const input = {
     candidate: login,
     language: options.lang,
@@ -130,10 +132,7 @@ function buildEvidenceMap(selectedNarratives: ProjectNarrative[]): Record<string
     selectedNarratives.map((n) => [
       n.projectKey,
       Array.from(
-        new Set([
-          ...n.sourceEvidenceIds,
-          ...n.proofPoints.flatMap((pp) => pp.evidenceRefs),
-        ]),
+        new Set([...n.sourceEvidenceIds, ...n.proofPoints.flatMap((pp) => pp.evidenceRefs)]),
       ),
     ]),
   );
@@ -166,7 +165,9 @@ function normalizeHeadline(headline: string, plan: ResumePlan, lang: "zh" | "en"
   const words = raw.split(/\s+/).filter((word) => word.length > 0);
   if (words.length <= MAX_HEADLINE_WORDS) return raw;
 
-  const planWords = trimSentence(plan.positioning).split(/\s+/).filter((word) => word.length > 0);
+  const planWords = trimSentence(plan.positioning)
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
   const source = planWords.length > 0 ? planWords : words;
   return source.slice(0, MAX_HEADLINE_WORDS).join(" ");
 }
@@ -180,7 +181,10 @@ function normalizeSummary(summary: string, headline: string): string {
 
   const out: string[] = [];
   for (const part of parts) {
-    if (out.length === 0 && trimSentence(part).toLowerCase() === trimSentence(headline).toLowerCase()) {
+    if (
+      out.length === 0 &&
+      trimSentence(part).toLowerCase() === trimSentence(headline).toLowerCase()
+    ) {
       continue;
     }
     out.push(part);
@@ -201,15 +205,9 @@ function rewriteLowSignalMetricBullet(bullet: string): string {
       /\badding\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+of\s+(?:new\s+)?code\s+across\s+multiple\s+modules\b/gi,
       "adding substantial functionality across multiple modules",
     )
-    .replace(
-      /\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi,
-      "",
-    )
+    .replace(/\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "")
     .replace(/\s*,?\s*with\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "")
-    .replace(
-      /\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi,
-      "a large migration scope",
-    )
+    .replace(/\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi, "a large migration scope")
     .replace(
       /\breducing\s+(?:the\s+)?codebase\s+by\s+over\s+\d[\d,]*(?:,\d{3})*\s+lines\b/gi,
       "streamlining the implementation",
@@ -218,10 +216,7 @@ function rewriteLowSignalMetricBullet(bullet: string): string {
       /\breducing\s+(?:the\s+)?codebase\s+by\s+\d[\d,]*(?:,\d{3})*\s+lines\b/gi,
       "streamlining the implementation",
     )
-    .replace(
-      /\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi,
-      "a large migration scope",
-    )
+    .replace(/\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi, "a large migration scope")
     .replace(/\(\+\d[\d,]*\s+lines\)/gi, "")
     .replace(/\+\d[\d,]*\s+lines\b/gi, "")
     .replace(
@@ -230,7 +225,10 @@ function rewriteLowSignalMetricBullet(bullet: string): string {
     )
     .replace(CODE_CHURN_PAREN_RE, "")
     .replace(/\badding\s+over\s+substantial\b/gi, "adding substantial")
-    .replace(/\badding\s+substantial\s+implementation\s+work\b/gi, "adding substantial functionality")
+    .replace(
+      /\badding\s+substantial\s+implementation\s+work\b/gi,
+      "adding substantial functionality",
+    )
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,.])/g, "$1")
     .trim();

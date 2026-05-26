@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delta Resume Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #f4f7fb;
+      --panel: rgba(255,255,255,0.85);
+      --panel-strong: #fff;
+      --text: #132238;
+      --muted: #5b6b7f;
+      --line: #d8e1ec;
+      --accent: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(191, 219, 254, 0.7), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(186, 230, 253, 0.65), transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .app {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 20px;
+    }
+    .sidebar, .preview-shell {
+      background: var(--panel);
+      border: 1px solid rgba(216, 225, 236, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .sidebar {
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+      height: fit-content;
+    }
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      line-height: 1;
+    }
+    .lead {
+      margin: 0 0 20px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+    .field input, .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .primary {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+    }
+    .ghost {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+    .hint, .status {
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .status {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--line);
+      color: #31506f;
+    }
+    .preview-shell {
+      padding: 18px;
+      overflow: hidden;
+    }
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 4px 18px;
+    }
+    .preview-header h2 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .preview-meta {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .preview-surface {
+      background: white;
+      border-radius: 20px;
+      min-height: 920px;
+      border: 1px solid rgba(216, 225, 236, 0.9);
+      overflow: hidden;
+    }
+    .loading {
+      padding: 80px 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .theme-clean .resume {
+      padding: 40px 44px;
+      max-width: 840px;
+      margin: 0 auto;
+      color: #17212b;
+      font-size: 14px;
+      line-height: 1.58;
+    }
+    .theme-clean .hero { margin-bottom: 28px; }
+    .theme-clean .hero h1 { font-size: 34px; margin-bottom: 8px; }
+    .theme-clean .headline { color: #2563eb; font-size: 18px; margin-bottom: 10px; }
+    .theme-clean .summary { color: #334155; max-width: 70ch; }
+    .theme-clean .section { margin-top: 28px; }
+    .theme-clean .section h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #64748b;
+      border-bottom: 1px solid #dbe2ea;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+    .theme-clean .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 20px;
+    }
+    .theme-clean .project { margin-bottom: 20px; }
+    .theme-clean .project-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+      align-items: baseline;
+    }
+    .theme-clean .project-head strong { font-size: 17px; }
+    .theme-clean .stack { color: #64748b; font-size: 13px; margin-bottom: 8px; }
+
+    .theme-developer .resume {
+      padding: 36px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      color: #0f172a;
+      font-family: "Inter", sans-serif;
+      background: #ffffff;
+    }
+    .theme-developer .hero {
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #38bdf8;
+    }
+    .theme-developer .hero h1 {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+    .theme-developer .headline {
+      font-size: 16px;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+    .theme-developer .section {
+      margin-top: 24px;
+    }
+    .theme-developer .section h3 {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #0ea5e9;
+      border-left: 3px solid #0ea5e9;
+      padding-left: 10px;
+      margin-bottom: 14px;
+    }
+    .theme-developer .skills-grid { display: flex; flex-direction: column; gap: 10px; }
+    .theme-developer .skill-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .theme-developer .skill-row strong {
+      min-width: 150px;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 12px;
+    }
+    .theme-developer .project {
+      border-left: 2px solid #e2e8f0;
+      padding-left: 14px;
+      margin-bottom: 18px;
+    }
+    .theme-developer .project-head strong::before {
+      content: "./";
+      color: #10b981;
+      margin-right: 2px;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .theme-developer .project-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .theme-developer .stack {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .theme-compact .resume {
+      padding: 28px 32px;
+      max-width: 760px;
+      margin: 0 auto;
+      color: #111827;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .theme-compact .hero {
+      text-align: center;
+      border-bottom: 1.5px solid #0f172a;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .theme-compact .hero h1 { font-size: 28px; margin-bottom: 4px; }
+    .theme-compact .headline { font-style: italic; color: #334155; }
+    .theme-compact .section { margin-top: 16px; }
+    .theme-compact .section h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .theme-compact .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 14px;
+    }
+    .theme-compact .project { margin-bottom: 14px; }
+    .theme-compact .project-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .theme-compact .stack { color: #64748b; font-size: 12px; margin: 3px 0 6px; }
+
+    .resume .muted { color: #64748b; }
+    .resume ul { margin: 0; padding-left: 18px; }
+    .resume li { margin-bottom: 6px; }
+    .resume .other-list li { margin-bottom: 4px; }
+    .project-period { white-space: nowrap; color: #64748b; font-size: 12px; }
+
+    @media (max-width: 960px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="eyebrow">Delta Preview</div>
+      <h1>Local Resume Viewer</h1>
+      <p class="lead">Open one fixed HTML page in this repo, point it at a local `ResumeDraft` JSON, and switch styles instantly without regenerating HTML.</p>
+
+      <div class="field">
+        <label for="slug">Draft Slug</label>
+        <input id="slug" name="slug" value="default" />
+      </div>
+
+      <div class="field">
+        <label for="style">Preview Style</label>
+        <select id="style" name="style">
+          <option value="clean">clean</option>
+          <option value="developer">developer</option>
+          <option value="compact">compact</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="load">Load Draft</button>
+        <button class="ghost" id="copy-link">Copy URL</button>
+      </div>
+
+      <div class="status" id="status">Waiting for draft load.</div>
+      <p class="hint">Default data source: <code>../data/agent/drafts/&lt;slug&gt;.resume.js</code></p>
+      <p class="hint">If that local module is unavailable, the page falls back to <code>../data/agent/drafts/&lt;slug&gt;.resume.json</code> over HTTP.</p>
+    </aside>
+
+    <section class="preview-shell">
+      <div class="preview-header">
+        <h2>Repo HTML Template Preview</h2>
+        <div class="preview-meta" id="source-path">No draft loaded</div>
+      </div>
+      <div class="preview-surface">
+        <div class="loading" id="resume-root">Load a local draft to preview the resume template.</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="./preview-app.js"></script>
+</body>
+</html>

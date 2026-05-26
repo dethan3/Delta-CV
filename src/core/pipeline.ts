@@ -1,66 +1,66 @@
 import { readdir, unlink } from "node:fs/promises";
 import { join } from "node:path";
-import { readCursor, writeCursor } from "./collector/cursor.ts";
-import { denoiseEvents } from "./collector/denoise.ts";
-import { collectViaGraphQL } from "./collector/github-graphql.ts";
-import { collectIssuesViaRest } from "./collector/github-rest.ts";
 import { buildCapabilityClaims } from "./agent/capability.ts";
-import { composeDraft, type ComposeOptions } from "./agent/compose.ts";
+import { type ComposeOptions, composeDraft } from "./agent/compose.ts";
 import { critiqueDraft } from "./agent/critique.ts";
 import { buildEvidenceBundlesFromEntries } from "./agent/evidence.ts";
 import { interpretBundles } from "./agent/interpret.ts";
 import { matchNarrativesToJd } from "./agent/jd-match.ts";
-import { verifyDraftFacts } from "./agent/verify-facts.ts";
-import { runEval } from "./eval/runner.ts";
-import { buildResumePlan, preFilterNarratives } from "./agent/select.ts";
 import { parseJdProfile } from "./agent/jd-parse.ts";
 import { scoreClaimsForJd, scoreProjectsForJd } from "./agent/jd-score.ts";
 import { mergeExperienceEntries } from "./agent/merger.ts";
 import { reviseDraft, stripRevSuffix } from "./agent/revise.ts";
 import { scoreProjects } from "./agent/scorer.ts";
-import { renderResumeDraftHtmlAgent } from "./render/html-agent.ts";
-import { renderResumeDraftMarkdown } from "./render/markdown-v2.ts";
-import { type HtmlStyle, isHtmlStyle, isStaticStyle, renderWithStyle } from "./render/styles.ts";
-import { validateGeneratedHtml } from "./render/validate.ts";
+import { buildResumePlan, preFilterNarratives } from "./agent/select.ts";
+import { verifyDraftFacts } from "./agent/verify-facts.ts";
+import { readCursor, writeCursor } from "./collector/cursor.ts";
+import { denoiseEvents } from "./collector/denoise.ts";
+import { collectViaGraphQL } from "./collector/github-graphql.ts";
+import { collectIssuesViaRest } from "./collector/github-rest.ts";
 import { clusterEvents } from "./engine/cluster.ts";
 import { buildTagFrequency, computeFocus } from "./engine/focus.ts";
 import { buildSnapshot, diffSnapshots } from "./engine/snapshot.ts";
 import { tagEvents } from "./engine/tag.ts";
 import { generateEntryBatch } from "./engine/translate.ts";
-import { RateLimitError } from "./llm.ts";
+import { runEval } from "./eval/runner.ts";
 import {
   appendEvents,
   clearEvolveCheckpoint,
+  readEventsSince,
   readEvidence,
   readEvolveCheckpoint,
-  readEventsSince,
   readExperienceLog,
-  readLatestSnapshot,
   readJdMatchReport,
+  readLatestSnapshot,
   readNarratives,
   readPlan,
   readResumeDraft,
   writeClaims,
   writeCritique,
   writeCurateResult,
-  writeEvolveCheckpoint,
   writeEvalReport,
-  writeExperienceLog,
   writeEvidence,
+  writeEvolveCheckpoint,
+  writeExperienceLog,
   writeJdMatchReport,
+  writeJdProfile,
   writeNarratives,
   writePlan,
-  writeJdProfile,
   writeProjects,
+  writeResumeDraft,
   writeResumeHtml,
   writeResumeMd,
-  writeResumeDraft,
   writeRevision,
   writeSnapshot,
   writeTailoredResume,
   writeVerifyFactsReport,
 } from "./io/data.ts";
-import type { Config } from "./schema/config.ts";
+import { RateLimitError } from "./llm.ts";
+import { renderResumeDraftHtmlAgent } from "./render/html-agent.ts";
+import { renderResumeDraftMarkdown } from "./render/markdown-v2.ts";
+import { HTML_STYLES, type HtmlStyle, isHtmlStyle, isStaticStyle } from "./render/styles.ts";
+import { renderBuiltInHtmlTemplate, renderCustomHtmlTemplate } from "./render/template.ts";
+import { validateGeneratedHtml } from "./render/validate.ts";
 import type {
   CritiqueResult,
   CurateResult,
@@ -68,11 +68,12 @@ import type {
   ResumeDraft,
   RevisionRecord,
 } from "./schema/agent.ts";
+import type { Config } from "./schema/config.ts";
+import type { EvalReport, VerifyFactsReport } from "./schema/eval.ts";
 import type { EvidenceLog } from "./schema/evidence.ts";
 import type { ExperienceLog } from "./schema/experience.ts";
 import type { NarrativeLog } from "./schema/narrative.ts";
 import type { JdMatchReport, ResumePlan } from "./schema/plan.ts";
-import type { EvalReport, VerifyFactsReport } from "./schema/eval.ts";
 import type { SnapshotDiff } from "./schema/snapshot.ts";
 import { rerankByJd, slugifyJd } from "./tailor/jd-rerank.ts";
 import { renderResume } from "./tailor/render.ts";
@@ -196,11 +197,17 @@ export async function evolve(
   let smallBatch: typeof pendingClusters = [];
   for (const cluster of pendingClusters) {
     if (cluster.events.length > SOLO_THRESHOLD) {
-      if (smallBatch.length > 0) { batches.push(smallBatch); smallBatch = []; }
+      if (smallBatch.length > 0) {
+        batches.push(smallBatch);
+        smallBatch = [];
+      }
       batches.push([cluster]);
     } else {
       smallBatch.push(cluster);
-      if (smallBatch.length >= BATCH_SIZE) { batches.push(smallBatch); smallBatch = []; }
+      if (smallBatch.length >= BATCH_SIZE) {
+        batches.push(smallBatch);
+        smallBatch = [];
+      }
     }
   }
   if (smallBatch.length > 0) batches.push(smallBatch);
@@ -219,12 +226,20 @@ export async function evolve(
     while (batchCursor < batches.length) {
       if (rateLimitHit) return;
       const myIdx = batchCursor++;
-      const batch = batches[myIdx]!;
+      const batch = batches[myIdx];
+      if (!batch) {
+        return;
+      }
+      const firstCluster = batch[0];
+      const lastCluster = batch[batch.length - 1];
+      if (!firstCluster || !lastCluster) {
+        continue;
+      }
 
       const batchLabel =
         batch.length === 1
-          ? `${batch[0]!.repo} ${batch[0]!.period.from.slice(0, 7)}`
-          : `${batch.length} clusters (${batch[0]!.repo} … ${batch[batch.length - 1]!.repo})`;
+          ? `${firstCluster.repo} ${firstCluster.period.from.slice(0, 7)}`
+          : `${batch.length} clusters (${firstCluster.repo} … ${lastCluster.repo})`;
       const startNum = processed + 1;
       processed += batch.length;
       console.log(
@@ -262,8 +277,7 @@ export async function evolve(
 
   if (rateLimitHit) {
     console.warn(
-      `[evolve] rate limit hit after ${doneIds.size}/${clusters.length} clusters.` +
-        ` Checkpoint saved — run 'delta evolve' again to continue.`,
+      `[evolve] rate limit hit after ${doneIds.size}/${clusters.length} clusters. Checkpoint saved — run 'delta evolve' again to continue.`,
     );
     process.exit(0);
   }
@@ -367,7 +381,9 @@ export async function interpret(
     throw new Error("No evidence log found. Run 'delta evidence' first.");
   }
   if (evLog.bundles.length === 0) {
-    throw new Error("Evidence log contains zero bundles. Re-run 'delta evolve' then 'delta evidence'.");
+    throw new Error(
+      "Evidence log contains zero bundles. Re-run 'delta evolve' then 'delta evidence'.",
+    );
   }
 
   const lang: "zh" | "en" =
@@ -670,21 +686,28 @@ export async function compose(
       projectKey: project.id,
       title: project.title,
       period: project.period,
-      scope: project.highlights.map((h) => h.text).slice(0, 2).join(" "),
+      scope: project.highlights
+        .map((h) => h.text)
+        .slice(0, 2)
+        .join(" "),
       candidateRole: "contributor",
       coreProblem: project.highlights[0]?.text ?? project.title,
-      solutionShape: project.highlights.slice(1, 3).map((h) => h.text).join(" "),
+      solutionShape: project.highlights
+        .slice(1, 3)
+        .map((h) => h.text)
+        .join(" "),
       proofPoints: project.highlights.map((h) => ({
         text: h.text,
         kind: "shipped",
-        evidenceRefs: (h.evidence && h.evidence.length > 0) ? h.evidence : project.evidenceEntryIds,
+        evidenceRefs: h.evidence && h.evidence.length > 0 ? h.evidence : project.evidenceEntryIds,
         strength: "moderate" as const,
       })),
       techStack: project.stack,
       strengthSignals: project.tags,
       riskFlags: project.weakSignals.map((signal) => ({ kind: signal })),
       resumeWorthiness: project.importance,
-      sourceEvidenceIds: project.evidenceEntryIds.length > 0 ? project.evidenceEntryIds : [project.id],
+      sourceEvidenceIds:
+        project.evidenceEntryIds.length > 0 ? project.evidenceEntryIds : [project.id],
       repos: [project.repo],
     }));
 
@@ -709,8 +732,8 @@ export async function compose(
     let mdPath: string | null = null;
 
     if (format === "html" || format === "both") {
-      const html = renderWithStyle(draft, style);
-      htmlPath = await writeResumeHtml(dataDir, slug, html);
+      const rendered = await renderBuiltInStyleHtml(draft, style);
+      htmlPath = await writeResumeHtml(dataDir, slug, rendered.html);
     }
     if (format === "md" || format === "both") {
       const md = renderResumeDraftMarkdown(draft);
@@ -805,8 +828,8 @@ export async function compose(
   let mdPath: string | null = null;
 
   if (format === "html" || format === "both") {
-    const html = renderWithStyle(draft, style);
-    htmlPath = await writeResumeHtml(dataDir, slug, html);
+    const rendered = await renderBuiltInStyleHtml(draft, style);
+    htmlPath = await writeResumeHtml(dataDir, slug, rendered.html);
   }
   if (format === "md" || format === "both") {
     const md = renderResumeDraftMarkdown(draft);
@@ -857,9 +880,7 @@ export async function critique(
 
   const draft = await readResumeDraft(dataDir, slug);
   if (!draft) {
-    throw new Error(
-      `No resume draft found for slug "${slug}". Run 'delta compose' first.`,
-    );
+    throw new Error(`No resume draft found for slug "${slug}". Run 'delta compose' first.`);
   }
 
   const lang = config.language === "bilingual" ? "zh" : config.language;
@@ -945,9 +966,7 @@ export async function revise(
   const slug = options.slug ?? "default";
   const draft = await readResumeDraft(dataDir, slug);
   if (!draft) {
-    throw new Error(
-      `No resume draft found for slug "${slug}". Run 'delta compose' first.`,
-    );
+    throw new Error(`No resume draft found for slug "${slug}". Run 'delta compose' first.`);
   }
 
   const lang = config.language === "bilingual" ? "zh" : config.language;
@@ -959,8 +978,8 @@ export async function revise(
   let mdPath: string | null = null;
 
   if (format === "html" || format === "both") {
-    const html = renderWithStyle(record.draft, "clean");
-    htmlPath = await writeResumeHtml(dataDir, record.slug, html);
+    const rendered = await renderBuiltInStyleHtml(record.draft, "clean");
+    htmlPath = await writeResumeHtml(dataDir, record.slug, rendered.html);
   }
   if (format === "md" || format === "both") {
     const md = renderResumeDraftMarkdown(record.draft);
@@ -971,11 +990,23 @@ export async function revise(
 }
 
 export interface RenderRunResult {
-  style: HtmlStyle;
+  style: string;
   format: "html" | "md" | "both";
   htmlPath: string | null;
   mdPath: string | null;
+  templateName?: string;
   validationWarnings?: string[];
+}
+
+async function renderBuiltInStyleHtml(
+  draft: ResumeDraft,
+  style: "clean" | "developer" | "compact",
+) {
+  const meta = HTML_STYLES[style];
+  if (!meta.templateAssetPath) {
+    throw new Error(`Style "${style}" has no template asset configured.`);
+  }
+  return renderBuiltInHtmlTemplate(draft, meta.templateAssetPath);
 }
 
 /**
@@ -990,6 +1021,7 @@ export async function render(
     style?: string;
     format?: "html" | "md" | "both";
     instruction?: string;
+    template?: string;
     config?: Config;
   } = {},
 ): Promise<RenderRunResult> {
@@ -997,21 +1029,21 @@ export async function render(
   const format = options.format ?? "both";
   const styleArg = options.style ?? "clean";
 
-  if (!isHtmlStyle(styleArg)) {
+  if (!options.template && !isHtmlStyle(styleArg)) {
     throw new Error(
       `Unknown style "${styleArg}". Available: ${["clean", "developer", "compact", "agent"].join(", ")}`,
     );
   }
-  const style: HtmlStyle = styleArg;
+  const style: HtmlStyle = isHtmlStyle(styleArg) ? styleArg : "clean";
 
-  if (style === "agent") {
+  if (!options.template && style === "agent") {
     if (!options.instruction) {
       throw new Error(
         `--style agent requires --instruction. E.g. --instruction "深色极简风格，适合 AI 工程师"`,
       );
     }
     if (!options.config) {
-      throw new Error(`--style agent requires LLM config. Pass config to render().`);
+      throw new Error("--style agent requires LLM config. Pass config to render().");
     }
     const apiKey = options.config.llm.apiKey ?? process.env.LLM_API_KEY;
     if (!apiKey) {
@@ -1026,16 +1058,27 @@ export async function render(
 
   let htmlPath: string | null = null;
   let mdPath: string | null = null;
+  let templateName: string | undefined;
   let validationWarnings: string[] | undefined;
 
   if (format === "html" || format === "both") {
     let html: string;
-    if (style === "agent") {
-      const cfg = options.config!;
+    if (options.template) {
+      const rendered = await renderCustomHtmlTemplate(draft, options.template);
+      html = rendered.html;
+      templateName = rendered.templateName;
+      const validation = validateGeneratedHtml(html, draft);
+      validationWarnings = [...validation.errors, ...validation.warnings];
+    } else if (style === "agent") {
+      const cfg = options.config;
+      const instruction = options.instruction;
+      if (!cfg || !instruction) {
+        throw new Error("Agent render requires config and instruction.");
+      }
       const apiKey = cfg.llm.apiKey ?? process.env.LLM_API_KEY ?? "";
       const llmConfig = { ...cfg.llm, apiKey };
       const lang = cfg.language === "bilingual" ? "zh" : cfg.language;
-      html = await renderResumeDraftHtmlAgent(llmConfig, draft, options.instruction!, lang);
+      html = await renderResumeDraftHtmlAgent(llmConfig, draft, instruction, lang);
       const validation = validateGeneratedHtml(html, draft);
       if (!validation.valid) {
         console.warn(`[render] agent HTML validation errors:\n  ${validation.errors.join("\n  ")}`);
@@ -1047,16 +1090,26 @@ export async function render(
       }
       validationWarnings = [...validation.errors, ...validation.warnings];
     } else {
-      html = renderWithStyle(draft, style);
+      const rendered = await renderBuiltInStyleHtml(draft, style);
+      html = rendered.html;
+      templateName = rendered.templateName;
     }
-    htmlPath = await writeResumeHtml(dataDir, `${slug}-${style}`, html);
+    const outputSuffix = options.template ? (templateName ?? "custom-template") : style;
+    htmlPath = await writeResumeHtml(dataDir, `${slug}-${outputSuffix}`, html);
   }
   if (format === "md" || format === "both") {
     const md = renderResumeDraftMarkdown(draft);
     mdPath = await writeResumeMd(dataDir, slug, md);
   }
 
-  return { style, format, htmlPath, mdPath, ...(validationWarnings ? { validationWarnings } : {}) };
+  return {
+    style: options.template ? `template:${templateName ?? "custom"}` : style,
+    format,
+    htmlPath,
+    mdPath,
+    ...(templateName ? { templateName } : {}),
+    ...(validationWarnings ? { validationWarnings } : {}),
+  };
 }
 
 /** Tailor resume for a specific JD. Renders resume, optionally reranked by JD relevance. */
@@ -1114,10 +1167,7 @@ export interface CleanResult {
  * Remove intermediate revision files (resumes/ + agent/drafts/) for a given base slug.
  * Files matching `<base>-rev-*` are removed unless they match `keep`.
  */
-export async function cleanRevisions(
-  dataDir: string,
-  options: CleanOptions,
-): Promise<CleanResult> {
+export async function cleanRevisions(dataDir: string, options: CleanOptions): Promise<CleanResult> {
   const { slug, keep, dryRun = false } = options;
   const base = stripRevSuffix(slug);
   const revPattern = new RegExp(`^${base}-rev-[\\w-]+\\.(html|md)$`);
@@ -1128,12 +1178,16 @@ export async function cleanRevisions(
 
   async function sweepDir(dir: string, pattern: RegExp): Promise<void> {
     let files: string[] = [];
-    try { files = await readdir(dir); } catch { return; }
+    try {
+      files = await readdir(dir);
+    } catch {
+      return;
+    }
     for (const f of files) {
       if (!pattern.test(f)) continue;
       const stemMatch = f.match(/^(.+?)\.(html|md|resume\.json|revision\.json)$/);
       const fileStem = stemMatch?.[1] ?? f;
-      if (keep && (fileStem === keep || f.startsWith(keep + "."))) {
+      if (keep && (fileStem === keep || f.startsWith(`${keep}.`))) {
         kept.push(join(dir, f));
         continue;
       }

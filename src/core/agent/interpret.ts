@@ -153,7 +153,9 @@ function isSupportingDocsNarrative(narrative: {
   const docsStackCount = narrative.techStack.filter((item) =>
     DOCS_STACK.has(item.toLowerCase()),
   ).length;
-  return DOCS_SUPPORT_RE.test(text) && docsStackCount >= Math.max(1, narrative.techStack.length - 1);
+  return (
+    DOCS_SUPPORT_RE.test(text) && docsStackCount >= Math.max(1, narrative.techStack.length - 1)
+  );
 }
 
 function hasLowSignalMetricProofPoint(proofPoints: Array<{ text: string }>): boolean {
@@ -257,14 +259,16 @@ export async function interpretBundles(
     const riskFlags = [...(n.riskFlags ?? [])];
     let resumeWorthiness = n.resumeWorthiness;
 
-    if (isSupportingDocsNarrative({
-      title: n.title,
-      scope: n.scope,
-      coreProblem: n.coreProblem,
-      solutionShape: n.solutionShape,
-      proofPoints,
-      techStack: n.techStack,
-    })) {
+    if (
+      isSupportingDocsNarrative({
+        title: n.title,
+        scope: n.scope,
+        coreProblem: n.coreProblem,
+        solutionShape: n.solutionShape,
+        proofPoints,
+        techStack: n.techStack,
+      })
+    ) {
       if (!riskFlags.some((flag) => flag.kind === "supporting-docs")) {
         riskFlags.push({
           kind: "supporting-docs",
@@ -274,8 +278,10 @@ export async function interpretBundles(
       resumeWorthiness = Math.min(resumeWorthiness, 0.45);
     }
 
-    if (hasLowSignalMetricProofPoint(proofPoints) &&
-      !riskFlags.some((flag) => flag.kind === "low-signal-metric")) {
+    if (
+      hasLowSignalMetricProofPoint(proofPoints) &&
+      !riskFlags.some((flag) => flag.kind === "low-signal-metric")
+    ) {
       riskFlags.push({
         kind: "low-signal-metric",
         note: "Proof points rely on code churn or line-count metrics and should be rewritten around functionality or outcome.",

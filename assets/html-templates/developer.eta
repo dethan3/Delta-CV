@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="<%= it.view.lang %>">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= it.esc(it.view.login) %> — Resume</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e2e8f0;
+      --accent: #0ea5e9;
+      --green: #10b981;
+      --bg: #fff;
+      --bg-code: #f8fafc;
+      --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+      --section-gap: 1.5rem;
+    }
+    body {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2.2rem;
+    }
+    .resume-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: calc(var(--section-gap) + 0.4rem);
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--accent);
+    }
+    .resume-header h1 {
+      font-family: var(--font-mono);
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+      margin-bottom: 0.2rem;
+    }
+    .header-prompt {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .header-prompt::before { content: "$ "; color: var(--green); }
+    .headline {
+      font-size: 0.93rem;
+      color: #334155;
+      font-weight: 500;
+      max-width: 55ch;
+    }
+    .meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+    section { margin-bottom: var(--section-gap); }
+    section h2 {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      padding-left: 0.6rem;
+      margin-bottom: 0.9rem;
+    }
+    .summary {
+      font-size: 0.91rem;
+      color: #334155;
+      max-width: 70ch;
+      line-height: 1.65;
+    }
+    .skills-list { display: flex; flex-direction: column; gap: 0.45rem; }
+    .skill-row { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+    .skill-cat {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      min-width: 14ch;
+      flex-shrink: 0;
+    }
+    .skill-cat::after { content: ":"; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.1rem 0.4rem;
+      color: #0f172a;
+    }
+    .project {
+      margin-bottom: 1.3rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+    .project-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 0.15rem;
+    }
+    .project-title {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .project-title::before { content: "./"; color: var(--green); }
+    .project-period {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .project-stack { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0.3rem 0 0.5rem; }
+    .project ul { padding-left: 1rem; }
+    .project li {
+      font-size: 0.86rem;
+      margin-bottom: 0.25rem;
+      line-height: 1.55;
+      color: #334155;
+    }
+    .other-list { list-style: none; padding: 0; }
+    .other-list li {
+      font-size: 0.83rem;
+      margin-bottom: 0.25rem;
+      color: var(--muted);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .other-list li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .resume-footer {
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #cbd5e1;
+      text-align: right;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+    @media print {
+      body { padding: 0.5cm 1cm; max-width: 100%; font-size: 10.5pt; }
+      .resume-footer { display: none; }
+      .project { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .resume-header { flex-direction: column; }
+      .skill-cat { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="resume-header">
+    <div>
+      <h1><%= it.esc(it.view.login) %></h1>
+      <div class="header-prompt">resume --style developer</div>
+      <div class="headline"><%= it.esc(it.view.headline) %></div>
+      <div class="meta">github.com/<%= it.esc(it.view.login) %></div>
+    </div>
+  </header>
+
+  <section>
+    <h2><%= it.esc(it.view.labels.summary) %></h2>
+    <p class="summary"><%= it.esc(it.view.summary) %></p>
+  </section>
+
+  <% if (it.view.skills.length > 0) { %>
+  <section>
+    <h2><%= it.esc(it.view.labels.skills) %></h2>
+    <div class="skills-list">
+      <% it.view.skills.forEach((group) => { %>
+      <div class="skill-row">
+        <span class="skill-cat"><%= it.esc(group.category) %></span>
+        <div class="skill-tags">
+          <% group.items.slice(0, 10).forEach((item) => { %>
+          <span class="tag"><%= it.esc(item) %></span>
+          <% }) %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (it.view.selectedProjects.length > 0) { %>
+  <section>
+    <h2><%= it.esc(it.view.labels.projects) %></h2>
+    <% it.view.selectedProjects.forEach((project) => { %>
+    <div class="project">
+      <div class="project-header">
+        <span class="project-title"><%= it.esc(project.title) %></span>
+        <span class="project-period"><%= it.esc(project.period) %></span>
+      </div>
+      <div class="project-stack">
+        <% project.stack.slice(0, 6).forEach((item) => { %>
+        <span class="tag"><%= it.esc(item) %></span>
+        <% }) %>
+      </div>
+      <ul>
+        <% project.bullets.forEach((bullet) => { %>
+        <li><%= it.esc(bullet) %></li>
+        <% }) %>
+      </ul>
+    </div>
+    <% }) %>
+  </section>
+  <% } %>
+
+  <% if (it.view.otherExperience.length > 0) { %>
+  <section>
+    <h2><%= it.esc(it.view.labels.otherExperience) %></h2>
+    <ul class="other-list">
+      <% it.view.otherExperience.forEach((item) => { %>
+      <li><%= it.esc(item) %></li>
+      <% }) %>
+    </ul>
+  </section>
+  <% } %>
+
+  <footer class="resume-footer"><%= it.esc(it.view.labels.generatedBy) %> · <%= it.esc(it.view.generatedDate) %></footer>
+</body>
+</html>

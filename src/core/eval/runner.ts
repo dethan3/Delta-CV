@@ -1,17 +1,17 @@
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { compose } from "../pipeline.ts";
+import { verifyDraftFacts } from "../agent/verify-facts.ts";
 import { readResumeDraft, writeNarratives, writePlan } from "../io/data.ts";
-import type { NarrativeLog } from "../schema/narrative.ts";
-import type { ResumePlan } from "../schema/plan.ts";
+import { compose } from "../pipeline.ts";
 import type { ResumeDraft } from "../schema/agent.ts";
+import type { JdProfile } from "../schema/agent.ts";
 import type { Config } from "../schema/config.ts";
 import type { EvalCase, EvalDimension, EvalReport, VerifyFactsReport } from "../schema/eval.ts";
-import { computeBulletSpecificity, computeFactGroundedness, aggregateScores } from "./metrics.ts";
-import { verifyDraftFacts } from "../agent/verify-facts.ts";
-import type { JdProfile } from "../schema/agent.ts";
+import type { NarrativeLog } from "../schema/narrative.ts";
 import type { ProjectNarrative } from "../schema/narrative.ts";
+import type { ResumePlan } from "../schema/plan.ts";
+import { aggregateScores, computeBulletSpecificity, computeFactGroundedness } from "./metrics.ts";
 
 export interface EvalRunOptions {
   /** Path to the directory containing fixture cases. */
@@ -78,7 +78,8 @@ export async function runEval(config: Config, options: EvalRunOptions): Promise<
       {
         dimension: "bullet_specificity",
         score: scoreBulletSpecificity(spec),
-        comment: "Heuristic score based on verbs, supported metrics, and low-signal metric penalties.",
+        comment:
+          "Heuristic score based on verbs, supported metrics, and low-signal metric penalties.",
       },
       {
         dimension: "fact_groundedness",
@@ -132,7 +133,11 @@ async function loadOptionalJson<T>(caseDir: string, filename: string): Promise<T
   }
 }
 
-async function materializeDraft(config: Config, caseDir: string, evalCase: EvalCase): Promise<ResumeDraft> {
+async function materializeDraft(
+  config: Config,
+  caseDir: string,
+  evalCase: EvalCase,
+): Promise<ResumeDraft> {
   const prebuiltDraft = await loadOptionalJson<ResumeDraft>(caseDir, "draft.resume.json");
   if (prebuiltDraft) return prebuiltDraft;
 
@@ -144,7 +149,11 @@ async function materializeDraft(config: Config, caseDir: string, evalCase: EvalC
   const tmp = await mkdtemp(join(tmpdir(), "delta-eval-"));
   try {
     await mkdir(join(tmp, "_meta"), { recursive: true });
-    await writeFile(join(tmp, "_meta", "experience.json"), JSON.stringify(experienceRaw, null, 2), "utf8");
+    await writeFile(
+      join(tmp, "_meta", "experience.json"),
+      JSON.stringify(experienceRaw, null, 2),
+      "utf8",
+    );
 
     const narratives = await loadOptionalJson<NarrativeLog>(caseDir, "narratives.json");
     if (narratives) await writeNarratives(tmp, narratives);
@@ -183,13 +192,14 @@ function clampScore(value: number): number {
   return Math.max(0, Math.min(10, Math.round(value * 100) / 100));
 }
 
-function scoreSelectionQuality(
-  draft: ResumeDraft,
-  selectedNarratives: ProjectNarrative[],
-): number {
+function scoreSelectionQuality(draft: ResumeDraft, selectedNarratives: ProjectNarrative[]): number {
   const projectCount = draft.selectedProjects.length;
   const countScore =
-    projectCount >= 3 && projectCount <= 6 ? 2.5 : projectCount === 2 || projectCount === 7 ? 1.5 : 0.75;
+    projectCount >= 3 && projectCount <= 6
+      ? 2.5
+      : projectCount === 2 || projectCount === 7
+        ? 1.5
+        : 0.75;
   if (selectedNarratives.length === 0) return clampScore(countScore + 3);
 
   const averageWorthiness =
@@ -204,14 +214,19 @@ function scoreSelectionQuality(
     return sum + penalty;
   }, 0);
   const proofDensity =
-    selectedNarratives.reduce((sum, narrative) => sum + Math.min(3, narrative.proofPoints.length), 0) /
+    selectedNarratives.reduce(
+      (sum, narrative) => sum + Math.min(3, narrative.proofPoints.length),
+      0,
+    ) /
     (selectedNarratives.length * 3);
   return clampScore(countScore + averageWorthiness * 5 + proofDensity * 2 - riskPenalty);
 }
 
 function scorePositioningQuality(draft: ResumeDraft): number {
   const headlineScore = draft.headline.trim().length >= 12 ? 4 : 2.5;
-  const summarySentenceCount = draft.summary.split(/[.!?。！？]/).filter((s) => s.trim().length > 0).length;
+  const summarySentenceCount = draft.summary
+    .split(/[.!?。！？]/)
+    .filter((s) => s.trim().length > 0).length;
   const summaryScore = Math.min(4, summarySentenceCount >= 3 ? 4 : summarySentenceCount * 1.25);
   const skillScore = draft.skills.length > 0 ? 2 : 0.5;
   return clampScore(headlineScore + summaryScore + skillScore);
@@ -247,9 +262,16 @@ function scoreJdAlignment(
 ): number {
   if (!jdSlug) return 5;
   if (!jdProfile) return 4;
-  const text = [draft.headline, draft.summary, ...draft.skills.flatMap((s) => s.items), ...draft.selectedProjects.flatMap((p) => p.bullets)]
+  const text = [
+    draft.headline,
+    draft.summary,
+    ...draft.skills.flatMap((s) => s.items),
+    ...draft.selectedProjects.flatMap((p) => p.bullets),
+  ]
     .join(" ")
     .toLowerCase();
-  const hits = jdProfile.requiredSkills.filter((skill) => text.includes(skill.toLowerCase())).length;
+  const hits = jdProfile.requiredSkills.filter((skill) =>
+    text.includes(skill.toLowerCase()),
+  ).length;
   return clampScore((hits / Math.max(1, jdProfile.requiredSkills.length)) * 10);
 }

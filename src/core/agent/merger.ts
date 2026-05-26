@@ -1,7 +1,7 @@
-import type { ExperienceEntry, Highlight } from "../schema/experience.ts";
 import type { ProjectMemory } from "../schema/agent.ts";
-import { analyseEntrySignals, computeProjectSignalScore } from "./signal.ts";
+import type { ExperienceEntry, Highlight } from "../schema/experience.ts";
 import { classifyRepo } from "./capability.ts";
+import { analyseEntrySignals, computeProjectSignalScore } from "./signal.ts";
 
 /**
  * Merge all ExperienceEntry records that belong to the same repo into a

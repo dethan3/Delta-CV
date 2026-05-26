@@ -9,13 +9,17 @@ import type {
   ResumeDraft,
   RevisionRecord,
 } from "../schema/agent.ts";
+import type { EvalReport, VerifyFactsReport } from "../schema/eval.ts";
 import type { EventEnvelope } from "../schema/event.ts";
 import type { EvidenceLog } from "../schema/evidence.ts";
 import type { ExperienceLog } from "../schema/experience.ts";
 import type { NarrativeLog } from "../schema/narrative.ts";
 import type { JdMatchReport, ResumePlan } from "../schema/plan.ts";
 import type { Snapshot } from "../schema/snapshot.ts";
-import type { EvalReport, VerifyFactsReport } from "../schema/eval.ts";
+
+function serializeResumeDraftModule(draft: ResumeDraft): string {
+  return `const draft = ${JSON.stringify(draft, null, 2)};\n\nexport default draft;\n`;
+}
 
 /** Compute ISO 8601 week key in "yyyy-Www" format (e.g. "2026-W18"). */
 export function getISOWeekKey(isoDate: string): string {
@@ -286,6 +290,7 @@ export async function writeResumeDraft(
   await mkdir(draftsDir, { recursive: true });
   const filePath = join(draftsDir, `${slug}.resume.json`);
   await writeFile(filePath, JSON.stringify(draft, null, 2), "utf8");
+  await writeFile(join(draftsDir, `${slug}.resume.js`), serializeResumeDraftModule(draft), "utf8");
   return filePath;
 }
 
@@ -473,10 +478,7 @@ export async function readPlan(dataDir: string): Promise<ResumePlan | null> {
 }
 
 /** Write a JdMatchReport to data/agent/jd-matches/<jdSlug>.json. */
-export async function writeJdMatchReport(
-  dataDir: string,
-  report: JdMatchReport,
-): Promise<string> {
+export async function writeJdMatchReport(dataDir: string, report: JdMatchReport): Promise<string> {
   const dir = join(dataDir, "agent", "jd-matches");
   await mkdir(dir, { recursive: true });
   const filePath = join(dir, `${report.jdSlug}.json`);

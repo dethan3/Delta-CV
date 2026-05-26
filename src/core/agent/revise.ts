@@ -1,16 +1,16 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { z } from "zod";
 import { generateObject } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
-import type { LlmConfig } from "../schema/config.ts";
 import {
   ProjectSectionSchema,
-  ResumeDraftSchema,
-  SkillGroupSchema,
   type ResumeDraft,
+  ResumeDraftSchema,
   type RevisionRecord,
+  SkillGroupSchema,
 } from "../schema/agent.ts";
-import { z } from "zod";
+import type { LlmConfig } from "../schema/config.ts";
 
 const ReviseLlmOutputSchema = z.object({
   headline: z.string().min(1),

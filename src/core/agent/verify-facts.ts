@@ -13,14 +13,15 @@ export interface VerifyFactsOptions {
   draftSlug?: string;
 }
 
-const METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?|fps|mb|gb))/i;
+const METRIC_RE =
+  /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?|fps|mb|gb))/i;
 const LOW_SIGNAL_METRIC_RE =
   /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
-const OWNERSHIP_RE =
-  /\b(led|owned|drove|spearheaded|directed|主导|负责|牵头|owner|ownership)\b/i;
+const OWNERSHIP_RE = /\b(led|owned|drove|spearheaded|directed|主导|负责|牵头|owner|ownership)\b/i;
 const SCALE_RE =
   /\b(production-scale|high-throughput|high availability|high-traffic|large-scale|real-time|60fps|高并发|生产级|大规模|实时)\b/i;
-const ARCH_RE = /\b(distributed|multi-tenant|event-driven|virtual scrolling|微服务|分布式|事件驱动|虚拟滚动)\b/i;
+const ARCH_RE =
+  /\b(distributed|multi-tenant|event-driven|virtual scrolling|微服务|分布式|事件驱动|虚拟滚动)\b/i;
 
 const VerifyFactsLlmIssueSchema = z.object({
   severity: z.enum(["error", "warning", "info"]),
@@ -120,10 +121,11 @@ function fallbackFix(kind: string, lang: "zh" | "en"): string {
     if (kind === "architecture") return "避免架构级定性，直接描述已证明的实现方式。";
     return "补充可追溯证据，或删除这条表述。";
   }
-  if (kind === "metric") return "Remove the explicit metric and rewrite it as a conservative qualitative outcome.";
-  if (kind === "ownership")
-    return "Soften the ownership claim to contribution-oriented wording.";
-  if (kind === "scale") return "Drop the scale language and describe the concrete implementation instead.";
+  if (kind === "metric")
+    return "Remove the explicit metric and rewrite it as a conservative qualitative outcome.";
+  if (kind === "ownership") return "Soften the ownership claim to contribution-oriented wording.";
+  if (kind === "scale")
+    return "Drop the scale language and describe the concrete implementation instead.";
   if (kind === "architecture")
     return "Avoid architecture-level claims and describe only the proven implementation details.";
   return "Add traceable evidence or remove the claim.";
@@ -214,7 +216,8 @@ export async function verifyDraftFacts(
             location,
             text: bullet,
             kind: "metric",
-            reason: "The metric claim is only backed by moderate or soft evidence and should be phrased more conservatively.",
+            reason:
+              "The metric claim is only backed by moderate or soft evidence and should be phrased more conservatively.",
             suggestedFix: fallbackFix("metric", options.lang),
           });
         }
@@ -225,7 +228,8 @@ export async function verifyDraftFacts(
           location,
           text: bullet,
           kind: "metric",
-          reason: "Lines-of-code style metrics are low-signal and usually weaker than outcome or usage evidence.",
+          reason:
+            "Lines-of-code style metrics are low-signal and usually weaker than outcome or usage evidence.",
           suggestedFix: fallbackFix("metric", options.lang),
         });
       }
@@ -255,7 +259,8 @@ export async function verifyDraftFacts(
           location,
           text: bullet,
           kind: "architecture",
-          reason: "The bullet uses architecture terminology that is not directly grounded in the narrative.",
+          reason:
+            "The bullet uses architecture terminology that is not directly grounded in the narrative.",
           suggestedFix: fallbackFix("architecture", options.lang),
         });
       }

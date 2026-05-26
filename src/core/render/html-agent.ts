@@ -1,7 +1,7 @@
 import { generateText } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
-import type { LlmConfig } from "../schema/config.ts";
 import type { ResumeDraft } from "../schema/agent.ts";
+import type { LlmConfig } from "../schema/config.ts";
 import { stripMarkdownFences } from "./validate.ts";
 
 function formatDraftForRender(draft: ResumeDraft): string {

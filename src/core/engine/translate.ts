@@ -79,10 +79,7 @@ function formatBatchClusters(
     const block = formatEvents(cluster, allTags, maxEvents);
     return `--- Cluster ${i + 1}/${clusters.length}: ${cluster.repo} ${cluster.period.from.slice(0, 7)} ---\n${block}`;
   });
-  return (
-    parts.join("\n\n") +
-    `\n\nReturn a JSON array with exactly ${clusters.length} entries, one per cluster, in the same order.`
-  );
+  return `${parts.join("\n\n")}\n\nReturn a JSON array with exactly ${clusters.length} entries, one per cluster, in the same order.`;
 }
 
 /**
@@ -97,7 +94,11 @@ export async function generateEntryBatch(
   maxEvents = 40,
 ): Promise<ExperienceEntry[]> {
   if (clusters.length === 1) {
-    const entry = await generateEntry(config, clusters[0]!, allTags, lang, maxEvents);
+    const cluster = clusters[0];
+    if (!cluster) {
+      throw new Error("Expected one cluster when generating a single entry batch.");
+    }
+    const entry = await generateEntry(config, cluster, allTags, lang, maxEvents);
     return [entry];
   }
   const systemPromptBase = await loadPrompt("evolve", lang);
@@ -106,7 +107,10 @@ export async function generateEntryBatch(
 
   const entries = await generateObject(config, z.array(ExperienceEntrySchema), system, user);
   return entries.map((entry, i) => {
-    const cluster = clusters[i]!;
+    const cluster = clusters[i];
+    if (!cluster) {
+      throw new Error(`Missing cluster for batch result at index ${i}.`);
+    }
     return { ...entry, id: cluster.id, repo: cluster.repo, period: cluster.period };
   });
 }

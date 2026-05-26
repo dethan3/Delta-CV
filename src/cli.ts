@@ -229,7 +229,7 @@ const composeCmd = defineCommand({
 
     const format = args.format as "html" | "md" | "both";
     if (!["html", "md", "both"].includes(format)) {
-      console.error(`[compose] --format must be one of: html, md, both`);
+      console.error("[compose] --format must be one of: html, md, both");
       process.exit(1);
     }
 
@@ -295,7 +295,8 @@ const composeCmd = defineCommand({
 const critiqueCmd = defineCommand({
   meta: {
     name: "critique",
-    description: "Critique an existing resume draft and report issues with improvement suggestions.",
+    description:
+      "Critique an existing resume draft and report issues with improvement suggestions.",
   },
   args: {
     "data-dir": { type: "string", description: "Path to the data directory", default: "data" },
@@ -374,9 +375,7 @@ const verifyFactsCmd = defineCommand({
       config = ConfigSchema.parse(JSON.parse(configRaw));
     } catch (err) {
       const hint = err instanceof Error ? err.message : String(err);
-      console.error(
-        `[verify-facts] Failed to load config from "${args["config-path"]}": ${hint}`,
-      );
+      console.error(`[verify-facts] Failed to load config from "${args["config-path"]}": ${hint}`);
       process.exit(1);
     }
 
@@ -429,7 +428,7 @@ const reviseCmd = defineCommand({
 
     const format = args.format as "html" | "md" | "both";
     if (!["html", "md", "both"].includes(format)) {
-      console.error(`[revise] --format must be one of: html, md, both`);
+      console.error("[revise] --format must be one of: html, md, both");
       process.exit(1);
     }
 
@@ -473,16 +472,20 @@ const renderCmd = defineCommand({
       type: "string",
       description: "Design instruction for --style agent. E.g. '深色极简风格，适合 AI 工程师'",
     },
+    template: {
+      type: "string",
+      description: "Path to a local Eta HTML template file. Overrides --style when provided.",
+    },
   },
   async run({ args }) {
     const format = args.format as "html" | "md" | "both";
     if (!["html", "md", "both"].includes(format)) {
-      console.error(`[render] --format must be one of: html, md, both`);
+      console.error("[render] --format must be one of: html, md, both");
       process.exit(1);
     }
 
     let config: ReturnType<typeof ConfigSchema.parse> | undefined;
-    if (args.style === "agent") {
+    if (!args.template && args.style === "agent") {
       await loadLocalEnv();
       try {
         const configRaw = await readFile(args["config-path"], "utf8");
@@ -493,7 +496,7 @@ const renderCmd = defineCommand({
         process.exit(1);
       }
       if (!args.instruction) {
-        console.error(`[render] --style agent requires --instruction`);
+        console.error("[render] --style agent requires --instruction");
         process.exit(1);
       }
     }
@@ -502,6 +505,7 @@ const renderCmd = defineCommand({
       slug: args.slug,
       style: args.style,
       format,
+      ...(args.template ? { template: args.template } : {}),
       ...(args.instruction ? { instruction: args.instruction } : {}),
       ...(config ? { config } : {}),
     });
@@ -509,7 +513,7 @@ const renderCmd = defineCommand({
     if (result.htmlPath) console.log(`[render] HTML → ${result.htmlPath}`);
     if (result.mdPath) console.log(`[render] MD   → ${result.mdPath}`);
     if (result.validationWarnings?.length) {
-      console.log(`\n[render] validation notices:`);
+      console.log("\n[render] validation notices:");
       for (const w of result.validationWarnings) {
         console.log(`  ⚠ ${w}`);
       }
@@ -529,7 +533,7 @@ const stylesCmd = defineCommand({
       const meta = HTML_STYLES[name];
       console.log(`  ${name.padEnd(12)} ${meta.description}`);
     }
-    console.log(`\nUsage: delta render --style <name>`);
+    console.log("\nUsage: delta render --style <name>");
   },
 });
 
@@ -692,9 +696,7 @@ const selectCmd = defineCommand({
     }
 
     const result = await select(config, args["data-dir"], opts);
-    console.log(
-      `[select] ${result.plan.selectedProjectIds.length} selected → ${result.planPath}`,
-    );
+    console.log(`[select] ${result.plan.selectedProjectIds.length} selected → ${result.planPath}`);
   },
 });
 
@@ -798,9 +800,11 @@ const curateCmd = defineCommand({
     }
 
     const usable = result.claims.filter((c) => c.resumeUse);
-    console.log(`\nCapability claims (resume-use):`);
+    console.log("\nCapability claims (resume-use):");
     for (const c of usable) {
-      console.log(`  ${c.claim}  [conf: ${c.confidence.toFixed(2)}]  — ${c.technologies.slice(0, 5).join(", ")}`);
+      console.log(
+        `  ${c.claim}  [conf: ${c.confidence.toFixed(2)}]  — ${c.technologies.slice(0, 5).join(", ")}`,
+      );
     }
 
     console.log(`\n[curate] written to ${args["data-dir"]}/agent/`);
@@ -848,7 +852,10 @@ const evalCmd = defineCommand({
 
     const caseIds =
       typeof args.cases === "string" && args.cases.trim().length > 0
-        ? args.cases.split(",").map((value) => value.trim()).filter((value) => value.length > 0)
+        ? args.cases
+            .split(",")
+            .map((value) => value.trim())
+            .filter((value) => value.length > 0)
         : undefined;
 
     const result = await evalPipeline(config, args["data-dir"], {

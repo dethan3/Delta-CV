@@ -11,8 +11,18 @@
       "coreProblem": "Prompt iterations were hard to compare and inspect.",
       "solutionShape": "Wrapped model calls with JSON schema constraints and case-based evaluation hooks.",
       "proofPoints": [
-        { "text": "Normalised model output into stable JSON artifacts", "kind": "design", "evidenceRefs": ["ev-llm-1"], "strength": "strong" },
-        { "text": "Added regression-style evaluation hooks", "kind": "process", "evidenceRefs": ["ev-llm-2"], "strength": "strong" }
+        {
+          "text": "Normalised model output into stable JSON artifacts",
+          "kind": "design",
+          "evidenceRefs": ["ev-llm-1"],
+          "strength": "strong"
+        },
+        {
+          "text": "Added regression-style evaluation hooks",
+          "kind": "process",
+          "evidenceRefs": ["ev-llm-2"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["TypeScript", "Node.js", "JSON Schema", "Evaluation"],
       "strengthSignals": ["ownership", "llm-ops"],

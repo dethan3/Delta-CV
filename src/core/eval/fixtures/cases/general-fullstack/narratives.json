@@ -11,8 +11,18 @@
       "coreProblem": "Release work was split across disconnected tools.",
       "solutionShape": "Built one workflow service with approval and audit paths.",
       "proofPoints": [
-        { "text": "Unified release requests across three internal tools", "kind": "shipped", "evidenceRefs": ["ev-app-1"], "strength": "strong" },
-        { "text": "Added audit logging and approval checkpoints", "kind": "process", "evidenceRefs": ["ev-app-2"], "strength": "strong" }
+        {
+          "text": "Unified release requests across three internal tools",
+          "kind": "shipped",
+          "evidenceRefs": ["ev-app-1"],
+          "strength": "strong"
+        },
+        {
+          "text": "Added audit logging and approval checkpoints",
+          "kind": "process",
+          "evidenceRefs": ["ev-app-2"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["TypeScript", "React", "Node.js", "PostgreSQL"],
       "strengthSignals": ["ownership", "product-thinking"],
@@ -30,7 +40,12 @@
       "coreProblem": "Every repo managed preview environments differently.",
       "solutionShape": "Turned deployment automation into reusable workflow modules.",
       "proofPoints": [
-        { "text": "Automated preview environment provisioning", "kind": "shipped", "evidenceRefs": ["ev-deploy-1"], "strength": "strong" }
+        {
+          "text": "Automated preview environment provisioning",
+          "kind": "shipped",
+          "evidenceRefs": ["ev-deploy-1"],
+          "strength": "strong"
+        }
       ],
       "techStack": ["GitHub Actions", "Docker", "Bash"],
       "strengthSignals": ["platform"],
