@@ -22,6 +22,22 @@ export const SkillEmphasisSchema = z.object({
 });
 export type SkillEmphasis = z.infer<typeof SkillEmphasisSchema>;
 
+export const ProjectEmphasisSchema = z.object({
+  /** Selected project id this writing guidance applies to. */
+  projectId: z.string(),
+  /** Why this project matters on the resume, in recruiter-facing terms. */
+  whySelected: z.string(),
+  /** The primary resume angle to take for this project. */
+  resumeAngle: z.string(),
+  /** Bullet-level themes the writer should cover. */
+  bulletFocus: z.array(z.string()).default([]),
+  /** Concrete proof points to prefer when writing bullets. */
+  highlightProofPoints: z.array(z.string()).default([]),
+  /** Claims or phrasing to avoid for this project. */
+  cautionNotes: z.array(z.string()).default([]),
+});
+export type ProjectEmphasis = z.infer<typeof ProjectEmphasisSchema>;
+
 export const ResumePlanSchema = z.object({
   version: z.literal(1),
   generatedAt: z.string().datetime(),
@@ -39,7 +55,11 @@ export const ResumePlanSchema = z.object({
   selectionRationale: z.string(),
   /** Narratives intentionally dropped, for audit. */
   deprioritizedProjectIds: z.array(z.string()).default([]),
+  /** Narratives that should appear only as supporting / additional experience. */
+  supportingProjectIds: z.array(z.string()).default([]),
   skillEmphasis: z.array(SkillEmphasisSchema).default([]),
+  /** Per-project writing guidance consumed by compose. */
+  projectEmphasis: z.array(ProjectEmphasisSchema).default([]),
   /** Soft hints for compose: tone, length, audience, etc. */
   styleHints: z.array(z.string()).default([]),
   /** Optional reference to the JdMatch report this plan was built against. */

@@ -7,6 +7,7 @@
 - `plan.positioning` 是最终定位，headline 和 summary 必须服从它。
 - `plan.selectedProjectIds` 是最终入选项目及顺序，你不得增删或重排。
 - `plan.skillEmphasis` 是希望重点突出的能力线索；skills、summary、bullet 的重心应围绕这些能力组织。
+- `plan.projectEmphasis` 定义了每个项目在简历中的作用：为什么要选它、先写什么证据、哪些话不能夸。
 - `selectedNarratives[*].proofPoints` 是允许使用的主要事实来源。优先使用这些信息，不要扩写到输入里不存在的成果。
 - `riskFlags` 是保守写作信号。若项目存在不确定性，语气必须收敛，避免过度 ownership、规模、效果表述。
 
@@ -16,14 +17,20 @@
 - 证据优先：只写输入明确支持的项目、技术、结果、范围。
 - 克制可信：没有明确 metric 就不要补数字；没有明确 owner 信号就不要写成“主导全局”。
 - 面向招聘者：突出候选人的工程价值和代表性判断，不写成工作日志。
+- 写成“简历表达”，不是“项目更新列表”：每个项目都应回答“为什么这个项目值得出现在简历上”。
 
 ## Bullet 撰写规范
 
 - 每个项目 2–3 条 bullet，最多 3 条。
 - 必须以强动词开头，如：构建、设计、实现、重构、优化、迁移、集成、搭建、封装、部署、推动。
-- 尽量覆盖不同维度：问题、方案、结果、协作、工程化。
+- 以 `emphasis.resumeAngle` 和 `emphasis.bulletFocus` 作为写作主线。
+- 尽量覆盖不同维度：职责范围、技术判断、工程质量、结果、ownership。
+- 第一条 bullet 优先回答“这个项目为何能代表候选人”，而不是简单列动作。
 - 若 proof point 只有 moderate / soft 强度，措辞要保守，例如“支持”“用于”“围绕”“参与推动”，不要写成夸张结论。
 - 若输入存在量化结果或明确范围，可以写入；若没有，就用定性但具体的工程结果表达。
+- 不要把代码行数、diff 大小、改动行数当作简历指标；这类 proof point 应改写成功能交付、迁移范围或工程结果。
+- summary 应聚焦已入选的主项目；除非 `plan` 明确要求，否则不要在 summary 里突出文档、翻译类 supporting work。
+- `emphasis.cautionNotes` 是硬约束；如果“更好看”的写法和 caution note 冲突，优先服从 caution note。
 - 不要把多个 proof point 机械拼接成一条长句。
 
 ## Summary 撰写规范
@@ -31,8 +38,9 @@
 - 3–4 句话，叙述式段落，不是 bullet list。
 - 第一句明确定位，直接服从 `plan.positioning`。
 - 第二句概括核心技术能力，并与 `skillEmphasis` 对齐。
-- 第三句强调最能代表候选人价值的项目/能力组合。
+- 第三句强调候选人的工程价值主张，而不是罗列项目名。
 - 第四句可选，用于补充开源、平台化、跨项目影响。
+- 不要在 summary 里把所有主项目点名一遍，要总结模式，而不是给目录。
 
 ## Skills 撰写规范
 
@@ -41,11 +49,12 @@
 - 每组只列技术名，不写形容词或自夸性描述。
 - 不要列出没有在 narratives 中出现过的技术。
 
-## otherExperience 规范
+## Supporting Experience 规范
 
-- 仅基于 `otherNarratives` 生成，每项一行。
+- 仅基于 `supportingNarratives` 生成，每项一行。
 - 格式：`项目名（时间段）：一句话描述`。
 - 语气简洁，不要写成完整项目经历。
+- 不要把所有剩余项目都塞进去，只保留那些能补充候选人能力面的 supporting work。
 - 如果没有值得保留的次要项目，返回空数组。
 
 ## 禁止事项

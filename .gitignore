@@ -23,6 +23,7 @@ coverage/
 *.tsbuildinfo
 *.local
 .eslintcache
+/dist/
 
 # Local editor and agent state
 .DS_Store
@@ -31,6 +32,12 @@ coverage/
 .claude/
 .codex
 .codex/
+/.local/
+/config.*.json
+!/config.smoke.json
+
+# Local real-user validation artifacts should never be committed
+/src/core/eval/fixtures/cases/*-real/
 
 # Temporary files
 tmp/
@@ -40,5 +47,3 @@ temp/
 /data/
 /resume.md
 /tailored/
-
-# dist/ is intentionally not ignored. Local builds produce runnable CLI/Action bundles.

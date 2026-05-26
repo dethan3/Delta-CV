@@ -56,7 +56,9 @@ Constraints:
 const MAX_HEADLINE_WORDS = 25;
 const MAX_SUMMARY_SENTENCES = 4;
 const LOW_SIGNAL_METRIC_RE =
-  /\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/i;
+  /\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
+const CODE_CHURN_PAREN_RE =
+  /\(\s*(?:\+?\d[\d,]*\s*\/\s*-\d[\d,]*|\+?\d[\d,]*\s+lines?(?:\s+changed)?|over\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?|[\d,]+\s+lines?\s+of\s+(?:new\s+)?code)[^)]*\)/gi;
 
 function formatSelectedNarrativeForPrompt(n: ProjectNarrative): object {
   return {
@@ -96,9 +98,10 @@ function buildUserPrompt(
   login: string,
   plan: ResumePlan,
   selectedNarratives: ProjectNarrative[],
-  otherNarratives: ProjectNarrative[],
+  supportingNarratives: ProjectNarrative[],
   options: ComposeOptions,
 ): string {
+  const projectEmphasisById = new Map(plan.projectEmphasis.map((entry) => [entry.projectId, entry]));
   const input = {
     candidate: login,
     language: options.lang,
@@ -108,11 +111,15 @@ function buildUserPrompt(
       selectedProjectIds: plan.selectedProjectIds,
       selectionRationale: plan.selectionRationale,
       skillEmphasis: plan.skillEmphasis,
+      projectEmphasis: plan.projectEmphasis,
       styleHints: plan.styleHints,
       jdSlug: plan.jdSlug ?? null,
     },
-    selectedNarratives: selectedNarratives.map(formatSelectedNarrativeForPrompt),
-    otherNarratives: otherNarratives.map(formatOtherNarrativeForPrompt),
+    selectedNarratives: selectedNarratives.map((n) => ({
+      ...formatSelectedNarrativeForPrompt(n),
+      emphasis: projectEmphasisById.get(n.projectKey) ?? null,
+    })),
+    supportingNarratives: supportingNarratives.map(formatOtherNarrativeForPrompt),
   };
 
   return JSON.stringify(input, null, 2);
@@ -140,6 +147,10 @@ function buildFallbackProjectSection(n: ProjectNarrative): ProjectSection {
     bullets: n.proofPoints.slice(0, 3).map((pp) => pp.text),
     stack: n.techStack,
   };
+}
+
+function uniqueItems(items: string[]): string[] {
+  return Array.from(new Set(items.map((item) => item.trim()).filter((item) => item.length > 0)));
 }
 
 function trimSentence(text: string): string {
@@ -182,8 +193,44 @@ function normalizeSummary(summary: string, headline: string): string {
 
 function rewriteLowSignalMetricBullet(bullet: string): string {
   const rewritten = bullet
+    .replace(
+      /\badding\s+over\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+of\s+(?:new\s+)?code\s+across\s+multiple\s+modules\b/gi,
+      "adding substantial functionality across multiple modules",
+    )
+    .replace(
+      /\badding\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+of\s+(?:new\s+)?code\s+across\s+multiple\s+modules\b/gi,
+      "adding substantial functionality across multiple modules",
+    )
+    .replace(
+      /\bwith\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi,
+      "",
+    )
     .replace(/\s*,?\s*with\s+\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "")
-    .replace(/\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi, "substantial implementation work")
+    .replace(
+      /\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi,
+      "a large migration scope",
+    )
+    .replace(
+      /\breducing\s+(?:the\s+)?codebase\s+by\s+over\s+\d[\d,]*(?:,\d{3})*\s+lines\b/gi,
+      "streamlining the implementation",
+    )
+    .replace(
+      /\breducing\s+(?:the\s+)?codebase\s+by\s+\d[\d,]*(?:,\d{3})*\s+lines\b/gi,
+      "streamlining the implementation",
+    )
+    .replace(
+      /\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/gi,
+      "a large migration scope",
+    )
+    .replace(/\(\+\d[\d,]*\s+lines\)/gi, "")
+    .replace(/\+\d[\d,]*\s+lines\b/gi, "")
+    .replace(
+      /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b/gi,
+      "substantial implementation work",
+    )
+    .replace(CODE_CHURN_PAREN_RE, "")
+    .replace(/\badding\s+over\s+substantial\b/gi, "adding substantial")
+    .replace(/\badding\s+substantial\s+implementation\s+work\b/gi, "adding substantial functionality")
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,.])/g, "$1")
     .trim();
@@ -220,12 +267,14 @@ export async function composeDraft(
     throw new Error("compose: plan.selectedProjectIds does not match any available narratives.");
   }
 
-  const selectedIds = new Set(plan.selectedProjectIds);
-  const otherNarratives = narratives.filter((n) => !selectedIds.has(n.projectKey));
+  const supportingNarratives = plan.supportingProjectIds
+    .map((id) => narrativesById.get(id))
+    .filter((n): n is ProjectNarrative => Boolean(n))
+    .slice(0, 4);
 
   const systemPromptBase = await loadPrompt("compose", options.lang);
   const system = `${systemPromptBase}\n\n${OUTPUT_SCHEMA_DESCRIPTION}`;
-  const user = buildUserPrompt(login, plan, selectedNarratives, otherNarratives, options);
+  const user = buildUserPrompt(login, plan, selectedNarratives, supportingNarratives, options);
 
   const llmOutput = await generateObject(llmConfig, ComposeLlmOutputSchema, system, user);
   const modelSections = new Map(
@@ -253,8 +302,19 @@ export async function composeDraft(
     ...llmOutput,
     headline,
     summary,
+    skills: llmOutput.skills.map((group) => ({
+      category: group.category,
+      items: uniqueItems(group.items),
+    })),
     selectedProjects,
     evidenceMap: buildEvidenceMap(selectedNarratives),
+    otherExperience:
+      llmOutput.otherExperience.length > 0
+        ? llmOutput.otherExperience.slice(0, 4)
+        : supportingNarratives.slice(0, 4).map((n) => {
+            const period = `${n.period.from.slice(0, 10)} → ${n.period.to.slice(0, 10)}`;
+            return `${n.title} (${period}): ${n.scope}`;
+          }),
   };
 
   return draft;

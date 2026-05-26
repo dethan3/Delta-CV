@@ -15,7 +15,7 @@ export interface VerifyFactsOptions {
 
 const METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?|fps|mb|gb))/i;
 const LOW_SIGNAL_METRIC_RE =
-  /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b/i;
+  /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
 const OWNERSHIP_RE =
   /\b(led|owned|drove|spearheaded|directed|主导|负责|牵头|owner|ownership)\b/i;
 const SCALE_RE =

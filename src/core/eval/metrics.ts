@@ -10,23 +10,33 @@ import type { EvalDimension, EvalReport } from "../schema/eval.ts";
 export interface BulletSpecificitySignals {
   totalBullets: number;
   bulletsWithMetric: number;
+  bulletsWithLowSignalMetric: number;
   bulletsWithVerbStart: number;
   averageLength: number;
 }
 
 const METRIC_RE = /(?:\d+(?:\.\d+)?\s*(?:%|x|k|m|ms|s|sec|seconds?|mins?|minutes?|hours?|dau|qps|rps|req\/s|users?))/i;
+const LOW_SIGNAL_METRIC_RE =
+  /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\blines?\s+of\s+code\b|\bloc\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
 const VERB_START_RE =
   /^(built|designed|implemented|refactored|optimized|optimised|migrated|integrated|led|developed|architected|shipped|reduced|created|launched|构建|设计|实现|重构|优化|迁移|集成|主导|开发|搭建|封装|部署|推动)\b/i;
 
 export function computeBulletSpecificity(bullets: string[]): BulletSpecificitySignals {
   const totalBullets = bullets.length;
   const bulletsWithMetric = bullets.filter((b) => METRIC_RE.test(b)).length;
+  const bulletsWithLowSignalMetric = bullets.filter((b) => LOW_SIGNAL_METRIC_RE.test(b)).length;
   const bulletsWithVerbStart = bullets.filter((b) => VERB_START_RE.test(b.trim())).length;
   const averageLength =
     totalBullets === 0
       ? 0
       : bullets.reduce((sum, bullet) => sum + bullet.trim().length, 0) / totalBullets;
-  return { totalBullets, bulletsWithMetric, bulletsWithVerbStart, averageLength };
+  return {
+    totalBullets,
+    bulletsWithMetric,
+    bulletsWithLowSignalMetric,
+    bulletsWithVerbStart,
+    averageLength,
+  };
 }
 
 export interface FactGroundednessSignals {

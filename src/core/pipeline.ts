@@ -501,6 +501,9 @@ export async function select(
   if (plan.skillEmphasis.length > 0) {
     console.log(`  skillEmphasis: ${plan.skillEmphasis.map((s) => s.name).join(", ")}`);
   }
+  if (plan.supportingProjectIds.length > 0) {
+    console.log(`  supporting: ${plan.supportingProjectIds.length}`);
+  }
 
   return { plan, planPath, prefilterDroppedCount: dropped.length };
 }
@@ -655,7 +658,9 @@ export async function compose(
       selectedProjectIds: curateResult.projects.slice(0, topN).map((p) => p.id),
       selectionRationale: "Legacy compose path derived selected projects from curate ranking.",
       deprioritizedProjectIds: curateResult.projects.slice(topN).map((p) => p.id),
+      supportingProjectIds: [],
       skillEmphasis: [],
+      projectEmphasis: [],
       styleHints: [],
       ...(options.targetRole ? { targetRole: options.targetRole } : {}),
       ...(options.jd && jdProfile ? { jdSlug: jdProfile.slug } : {}),

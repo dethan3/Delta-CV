@@ -7,10 +7,11 @@ import type { NarrativeLog } from "../schema/narrative.ts";
 import type { ResumePlan } from "../schema/plan.ts";
 import type { ResumeDraft } from "../schema/agent.ts";
 import type { Config } from "../schema/config.ts";
-import type { EvalCase, EvalDimension, EvalReport } from "../schema/eval.ts";
+import type { EvalCase, EvalDimension, EvalReport, VerifyFactsReport } from "../schema/eval.ts";
 import { computeBulletSpecificity, computeFactGroundedness, aggregateScores } from "./metrics.ts";
 import { verifyDraftFacts } from "../agent/verify-facts.ts";
 import type { JdProfile } from "../schema/agent.ts";
+import type { ProjectNarrative } from "../schema/narrative.ts";
 
 export interface EvalRunOptions {
   /** Path to the directory containing fixture cases. */
@@ -56,14 +57,18 @@ export async function runEval(config: Config, options: EvalRunOptions): Promise<
 
     const bullets = draft.selectedProjects.flatMap((p) => p.bullets);
     const spec = computeBulletSpecificity(bullets);
-    const fact = computeFactGroundedness(bullets, draft.evidenceMap);
     const jdProfile = await loadOptionalJson<JdProfile>(caseDir, "jd-profile.json");
+    const selectedNarratives = draft.selectedProjects
+      .map((project) =>
+        narratives?.narratives.find((narrative) => narrative.projectKey === project.projectId),
+      )
+      .filter((narrative): narrative is ProjectNarrative => Boolean(narrative));
 
     const scores: EvalReport["results"][number]["scores"] = [
       {
         dimension: "selection_quality",
-        score: scoreSelectionQuality(draft),
-        comment: "Heuristic score based on project count and section balance.",
+        score: scoreSelectionQuality(draft, selectedNarratives),
+        comment: "Heuristic score based on narrative quality, risk flags, and project count.",
       },
       {
         dimension: "positioning_quality",
@@ -73,12 +78,12 @@ export async function runEval(config: Config, options: EvalRunOptions): Promise<
       {
         dimension: "bullet_specificity",
         score: scoreBulletSpecificity(spec),
-        comment: "Heuristic score based on verbs, metrics, and average bullet length.",
+        comment: "Heuristic score based on verbs, supported metrics, and low-signal metric penalties.",
       },
       {
         dimension: "fact_groundedness",
-        score: scoreFactGroundedness(fact.coverage, verify.claims.length),
-        comment: "Heuristic score based on coverage and verify-facts findings.",
+        score: scoreFactGroundedness(verify.coverage, verify.claims),
+        comment: "Heuristic score based on evidence coverage and weighted verify-facts findings.",
       },
       {
         dimension: "jd_alignment",
@@ -178,12 +183,30 @@ function clampScore(value: number): number {
   return Math.max(0, Math.min(10, Math.round(value * 100) / 100));
 }
 
-function scoreSelectionQuality(draft: ResumeDraft): number {
+function scoreSelectionQuality(
+  draft: ResumeDraft,
+  selectedNarratives: ProjectNarrative[],
+): number {
   const projectCount = draft.selectedProjects.length;
-  if (projectCount >= 3 && projectCount <= 6) return 8.5;
-  if (projectCount === 2 || projectCount === 7) return 7;
-  if (projectCount === 1) return 4;
-  return 5;
+  const countScore =
+    projectCount >= 3 && projectCount <= 6 ? 2.5 : projectCount === 2 || projectCount === 7 ? 1.5 : 0.75;
+  if (selectedNarratives.length === 0) return clampScore(countScore + 3);
+
+  const averageWorthiness =
+    selectedNarratives.reduce((sum, narrative) => sum + narrative.resumeWorthiness, 0) /
+    selectedNarratives.length;
+  const riskPenalty = selectedNarratives.reduce((sum, narrative) => {
+    const flags = new Set((narrative.riskFlags ?? []).map((flag) => flag.kind));
+    let penalty = 0;
+    if (flags.has("maintenance-only")) penalty += 2.5;
+    if (flags.has("supporting-docs")) penalty += 1.5;
+    if (flags.has("low-signal-metric")) penalty += 0.5;
+    return sum + penalty;
+  }, 0);
+  const proofDensity =
+    selectedNarratives.reduce((sum, narrative) => sum + Math.min(3, narrative.proofPoints.length), 0) /
+    (selectedNarratives.length * 3);
+  return clampScore(countScore + averageWorthiness * 5 + proofDensity * 2 - riskPenalty);
 }
 
 function scorePositioningQuality(draft: ResumeDraft): number {
@@ -198,12 +221,23 @@ function scoreBulletSpecificity(spec: ReturnType<typeof computeBulletSpecificity
   if (spec.totalBullets === 0) return 0;
   const verbRatio = spec.bulletsWithVerbStart / spec.totalBullets;
   const metricRatio = spec.bulletsWithMetric / spec.totalBullets;
+  const lowSignalMetricRatio = spec.bulletsWithLowSignalMetric / spec.totalBullets;
   const lengthFactor = spec.averageLength >= 35 ? 1 : spec.averageLength / 35;
-  return clampScore(4 * verbRatio + 3 * metricRatio + 3 * lengthFactor);
+  return clampScore(4 * verbRatio + 3 * metricRatio + 3 * lengthFactor - 2 * lowSignalMetricRatio);
 }
 
-function scoreFactGroundedness(coverage: number, issueCount: number): number {
-  return clampScore(coverage * 10 - issueCount * 1.5);
+function scoreFactGroundedness(
+  coverage: number,
+  claims: EvalReport["results"][number]["scores"] extends never
+    ? never
+    : VerifyFactsReport["claims"],
+): number {
+  const weightedPenalty = claims.reduce((sum, claim) => {
+    if (claim.severity === "error") return sum + 2;
+    if (claim.severity === "warning") return sum + 0.75;
+    return sum + 0.25;
+  }, 0);
+  return clampScore(coverage * 10 - weightedPenalty);
 }
 
 function scoreJdAlignment(

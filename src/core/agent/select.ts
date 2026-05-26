@@ -3,7 +3,12 @@ import { generateObject } from "../llm.ts";
 import { loadPrompt } from "../prompts.ts";
 import type { LlmConfig } from "../schema/config.ts";
 import type { ProjectNarrative } from "../schema/narrative.ts";
-import { type JdMatch, type ResumePlan, SkillEmphasisSchema } from "../schema/plan.ts";
+import {
+  ProjectEmphasisSchema,
+  type JdMatch,
+  type ResumePlan,
+  SkillEmphasisSchema,
+} from "../schema/plan.ts";
 
 export interface SelectOptions {
   lang: "zh" | "en";
@@ -32,6 +37,7 @@ Output ONLY valid JSON (no markdown fences) matching this exact schema:
   "selectedProjectIds": ["string (projectKey from input, in final desired order)"],
   "selectionRationale": "string (why these projects, why this order — 2-4 sentences)",
   "deprioritizedProjectIds": ["string (projectKeys intentionally dropped)"],
+  "supportingProjectIds": ["string (projectKeys worth keeping only in supporting/additional experience)"],
   "skillEmphasis": [
     {
       "name": "string (capability name)",
@@ -39,14 +45,25 @@ Output ONLY valid JSON (no markdown fences) matching this exact schema:
       "supportingProjectIds": ["string (subset of selectedProjectIds)"]
     }
   ],
+  "projectEmphasis": [
+    {
+      "projectId": "string (must be one of selectedProjectIds)",
+      "whySelected": "string (one sentence explaining recruiter value)",
+      "resumeAngle": "string (best framing angle for this project)",
+      "bulletFocus": ["string (2-4 short themes to cover in bullets)"],
+      "highlightProofPoints": ["string (specific proof points to lead with)"],
+      "cautionNotes": ["string (claims to avoid or soften)"]
+    }
+  ],
   "styleHints": ["string (soft hints for the compose stage)"]
 }
 Hard constraints:
 - selectedProjectIds MUST be a subset of input projectKey values; never invent keys.
 - Every input narrative gets a verdict: it appears in EITHER selectedProjectIds OR
-  deprioritizedProjectIds — not both, not neither.
+  supportingProjectIds OR deprioritizedProjectIds — not more than one, not neither.
 - selectedProjectIds.length MUST be <= topN.
 - skillEmphasis[*].supportingProjectIds MUST be a subset of selectedProjectIds.
+- projectEmphasis[*].projectId MUST be a subset of selectedProjectIds, with exactly one entry per selected project.
 - DO NOT select any narrative whose riskFlags contain { "kind": "maintenance-only" }
   (these are pre-filtered out anyway).
 - selectionRationale must be substantive — not a one-line placeholder.
@@ -58,7 +75,9 @@ const LlmOutputSchema = z.object({
   selectedProjectIds: z.array(z.string()),
   selectionRationale: z.string(),
   deprioritizedProjectIds: z.array(z.string()).default([]),
+  supportingProjectIds: z.array(z.string()).default([]),
   skillEmphasis: z.array(SkillEmphasisSchema).default([]),
+  projectEmphasis: z.array(ProjectEmphasisSchema).default([]),
   styleHints: z.array(z.string()).default([]),
 });
 
@@ -191,15 +210,33 @@ export async function buildResumePlan(
   // Clamp deprioritized: must be known and not also selected.
   const deprioritizedSeen = new Set<string>();
   const deprioritizedProjectIds: string[] = [];
+  const supportingSeen = new Set<string>();
+  const supportingProjectIds: string[] = [];
   for (const id of out.deprioritizedProjectIds ?? []) {
     if (!knownKeys.has(id) || selectedSeen.has(id) || deprioritizedSeen.has(id)) continue;
     deprioritizedSeen.add(id);
     deprioritizedProjectIds.push(id);
   }
+  for (const id of out.supportingProjectIds ?? []) {
+    if (
+      !knownKeys.has(id) ||
+      selectedSeen.has(id) ||
+      deprioritizedSeen.has(id) ||
+      supportingSeen.has(id)
+    ) {
+      continue;
+    }
+    supportingSeen.add(id);
+    supportingProjectIds.push(id);
+  }
 
   // Every kept narrative must have a verdict. Force missing into deprioritized.
   for (const n of kept) {
-    if (!selectedSeen.has(n.projectKey) && !deprioritizedSeen.has(n.projectKey)) {
+    if (
+      !selectedSeen.has(n.projectKey) &&
+      !deprioritizedSeen.has(n.projectKey) &&
+      !supportingSeen.has(n.projectKey)
+    ) {
       deprioritizedSeen.add(n.projectKey);
       deprioritizedProjectIds.push(n.projectKey);
     }
@@ -221,6 +258,36 @@ export async function buildResumePlan(
     }))
     .filter((s) => s.supportingProjectIds.length > 0);
 
+  const projectEmphasisRaw = new Map(
+    (out.projectEmphasis ?? []).map((entry) => [entry.projectId, entry]),
+  );
+  const jdMatchesByProject = new Map((options.jdMatches ?? []).map((entry) => [entry.projectId, entry]));
+  const projectEmphasis = selectedProjectIds.map((projectId) => {
+    const narrative = kept.find((item) => item.projectKey === projectId);
+    const raw = projectEmphasisRaw.get(projectId);
+    const jdMatch = jdMatchesByProject.get(projectId);
+    if (!narrative) {
+      return {
+        projectId,
+        whySelected: "Selected as a representative project.",
+        resumeAngle: "Focus on the strongest evidence-backed engineering contribution.",
+        bulletFocus: [],
+        highlightProofPoints: [],
+        cautionNotes: [],
+      };
+    }
+    return {
+      projectId,
+      whySelected: raw?.whySelected ?? `Selected to represent ${narrative.title} in the resume story.`,
+      resumeAngle: raw?.resumeAngle ?? jdMatch?.bestAngle ?? narrative.coreProblem,
+      bulletFocus: Array.from(new Set(raw?.bulletFocus ?? [])).slice(0, 4),
+      highlightProofPoints: Array.from(new Set(raw?.highlightProofPoints ?? [])).slice(0, 4),
+      cautionNotes: Array.from(
+        new Set([...(raw?.cautionNotes ?? []), ...(jdMatch?.doNotOverclaim ?? [])]),
+      ).slice(0, 4),
+    };
+  });
+
   const plan: ResumePlan = {
     version: 1,
     generatedAt: new Date().toISOString(),
@@ -228,7 +295,9 @@ export async function buildResumePlan(
     selectedProjectIds,
     selectionRationale: out.selectionRationale,
     deprioritizedProjectIds,
+    supportingProjectIds,
     skillEmphasis,
+    projectEmphasis,
     styleHints: out.styleHints ?? [],
   };
   if (options.targetRole) plan.targetRole = options.targetRole;

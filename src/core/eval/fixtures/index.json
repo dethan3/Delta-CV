@@ -25,5 +25,10 @@
     "fixturePath": "cases/jd-frontend-engineer",
     "description": "JD-targeted frontend engineer resume sample.",
     "jdSlug": "jd-frontend-engineer"
+  },
+  {
+    "id": "dethan3-real",
+    "fixturePath": "cases/dethan3-real",
+    "description": "Real regression sample generated from the public GitHub activity of `dethan3`."
   }
 ]

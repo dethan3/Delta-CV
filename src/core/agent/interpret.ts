@@ -62,6 +62,11 @@ Hard constraints:
 const LlmOutputSchema = z.object({
   narratives: z.array(ProjectNarrativeSchema),
 });
+const DOCS_SUPPORT_RE =
+  /\b(docs?|documentation|wiki|translation|translated|article|guide|content|community|study group)\b/i;
+const LOW_SIGNAL_METRIC_RE =
+  /\b\d[\d,]*(?:\.\d+)?\s+lines?\s+of\s+(?:new\s+)?code\b|\+\d[\d,]*\s+lines?\b|\bover\s+\d[\d,]*(?:,\d{3})*\s+lines?(?:\s+changed)?\b|\b\d[\d,]*(?:,\d{3})*\s+lines?\s+changed\b/i;
+const DOCS_STACK = new Set(["markdown", "md", "git"]);
 
 /** Slug-safe stable key from sorted repos + optional workstream label. */
 export function makeProjectKey(repos: string[], workstream?: string): string {
@@ -126,6 +131,33 @@ function formatBundlesForPrompt(bundles: EvidenceBundle[]): string {
     tags: b.tags,
   }));
   return JSON.stringify({ bundles: compact }, null, 2);
+}
+
+function isSupportingDocsNarrative(narrative: {
+  title: string;
+  scope: string;
+  coreProblem: string;
+  solutionShape: string;
+  proofPoints: Array<{ text: string }>;
+  techStack: string[];
+}): boolean {
+  const text = [
+    narrative.title,
+    narrative.scope,
+    narrative.coreProblem,
+    narrative.solutionShape,
+    ...narrative.proofPoints.map((pp) => pp.text),
+  ]
+    .join(" ")
+    .toLowerCase();
+  const docsStackCount = narrative.techStack.filter((item) =>
+    DOCS_STACK.has(item.toLowerCase()),
+  ).length;
+  return DOCS_SUPPORT_RE.test(text) && docsStackCount >= Math.max(1, narrative.techStack.length - 1);
+}
+
+function hasLowSignalMetricProofPoint(proofPoints: Array<{ text: string }>): boolean {
+  return proofPoints.some((pp) => LOW_SIGNAL_METRIC_RE.test(pp.text));
 }
 
 /**
@@ -222,6 +254,34 @@ export async function interpretBundles(
       continue;
     }
 
+    const riskFlags = [...(n.riskFlags ?? [])];
+    let resumeWorthiness = n.resumeWorthiness;
+
+    if (isSupportingDocsNarrative({
+      title: n.title,
+      scope: n.scope,
+      coreProblem: n.coreProblem,
+      solutionShape: n.solutionShape,
+      proofPoints,
+      techStack: n.techStack,
+    })) {
+      if (!riskFlags.some((flag) => flag.kind === "supporting-docs")) {
+        riskFlags.push({
+          kind: "supporting-docs",
+          note: "Documentation, translation, or community content is supporting evidence, not usually a core resume project.",
+        });
+      }
+      resumeWorthiness = Math.min(resumeWorthiness, 0.45);
+    }
+
+    if (hasLowSignalMetricProofPoint(proofPoints) &&
+      !riskFlags.some((flag) => flag.kind === "low-signal-metric")) {
+      riskFlags.push({
+        kind: "low-signal-metric",
+        note: "Proof points rely on code churn or line-count metrics and should be rewritten around functionality or outcome.",
+      });
+    }
+
     narratives.push({
       projectKey: makeStableProjectKey(repos, validSources),
       title: n.title,
@@ -233,8 +293,8 @@ export async function interpretBundles(
       proofPoints,
       techStack: n.techStack,
       strengthSignals: n.strengthSignals ?? [],
-      riskFlags: n.riskFlags ?? [],
-      resumeWorthiness: n.resumeWorthiness,
+      riskFlags,
+      resumeWorthiness,
       sourceEvidenceIds: validSources,
       repos,
     });
