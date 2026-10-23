@@ -10,6 +10,10 @@ Delta CV 收集你的 commit、PR、issue 和 review，将其聚合成有意义�
 
 ## 快速开始
 
+使用 Node.js 24.22.1 或更新的 24.x 补丁版（见 `.nvmrc`），以及
+`package.json` 固定的 pnpm 版本。自托管 Actions runner 需支持 `node24`，
+并更新其内置 Node.js 运行时。
+
 ```bash
 # 1. 安装依赖并构建 CLI
 pnpm install

@@ -12,6 +12,10 @@ Delta CV collects your commits, PRs, issues, and reviews, clusters them into mea
 
 ## Quickstart
 
+Use Node.js 24.22.1 or a newer 24.x patch (see `.nvmrc`) and the pnpm
+version pinned in `package.json`. Self-hosted Actions runners must support
+`node24` and keep their bundled Node.js runtime patched.
+
 ```bash
 # 1. Install dependencies and build the CLI
 pnpm install
