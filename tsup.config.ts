@@ -3,7 +3,7 @@ import { type Options, defineConfig } from "tsup";
 const common = {
   format: ["cjs"],
   outDir: "dist",
-  target: "node20",
+  target: "node24",
   noExternal: [/.*/], // bundle all dependencies into a single file (like ncc)
   splitting: false,
   minify: false,
